@@ -19,6 +19,34 @@
 
   <div class="map_button">
 
+  <!-- Modal Profile -->
+  <div id="profileModal" class="modal">
+    <div class="modal-content">
+
+      <span class="modal_header">
+          <h3 class="black100">Профиль</h3>
+          <span class="icon_button graybg close" data-close="profileModal">
+            <img src="{{ url_for('static', filename='img/icon/cross.svg') }}" alt="Close" class="icon">
+          </span>
+      </span>
+      
+      
+    </div>
+  </div>
+
+  <!-- Modal Game Settings -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <span class="modal_header">
+          <h3 class="black100">Профиль</h3>
+          <span class="icon_button graybg close" data-close="settingsModal">
+            <img src="{{ url_for('static', filename='img/icon/cross.svg') }}" alt="Close" class="icon">
+          </span>
+      </span>
+    </div>
+  </div>
+
+
     <!--Profile-->
     <button id="profileButton" class="icon_button">
       <img src="{{ url_for('static', filename='img/icon/user.svg') }}" alt="Profile Icon" class="icon">

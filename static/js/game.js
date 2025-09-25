@@ -53,3 +53,40 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+
+
+// Функция открытия модалки
+function openModal(id) {
+  document.getElementById(id).style.display = "flex";
+}
+
+// Функция закрытия модалки
+function closeModal(id) {
+  document.getElementById(id).style.display = "none";
+}
+
+// Обработчики кнопок
+document.getElementById("profileButton").addEventListener("click", () => {
+  openModal("profileModal");
+});
+
+document.querySelectorAll("#gameSettingsButton").forEach(btn => {
+  btn.addEventListener("click", () => {
+    openModal("settingsModal");
+  });
+});
+
+// Закрытие по крестику
+document.querySelectorAll(".close").forEach(el => {
+  el.addEventListener("click", () => {
+    closeModal(el.dataset.close);
+  });
+});
+
+// Закрытие по клику вне окна
+window.addEventListener("click", (e) => {
+  if (e.target.classList.contains("modal")) {
+    e.target.style.display = "none";
+  }
+});

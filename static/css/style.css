@@ -56,3 +56,45 @@ body{
   overflow: hidden;
   border-radius: 24px;
 }
+
+
+/* Базовый стиль модалки */
+.modal {
+  display: none; /* скрыта по умолчанию */
+  position: fixed;
+  z-index: 1000; /* поверх карты и интерфейса */
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 12px;
+  background-color: var(--black020);
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal_header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 12px;
+}
+
+/* Контент модалки */
+.modal-content {
+    background-color: var(--white100);
+    width: 100%;
+    border-radius: 16px;
+    height: 50vh;
+}
+
+/* Крестик */
+.close {
+  float: right;
+  font-size: 24px;
+  cursor: pointer;
+}

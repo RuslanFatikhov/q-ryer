@@ -3,12 +3,19 @@ button{
 }
 
 .icon_button{
+    display: flex;
     background-color: var(--white100);
     min-width: 54px;
     min-height: 54px;
-    width: 54px;
-    height: 54px;
+    width: 54px !important;
+    height: 54px !important;
     border-radius: 16px;
+    align-items: center;
+    justify-content: center;
+}
+
+.graybg{
+    background-color: var(--white20);
 }
 
 .icon_button img{

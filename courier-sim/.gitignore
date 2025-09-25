@@ -1,0 +1,51 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+.env
+.venv
+venv/
+ENV/
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python tooling
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Logs
+logs/
+*.log
+
+# Database files (локальные, SQLite)
+*.db
+
+# Flask-Migrate / Alembic cache
+migrations/versions/*.pyc
+
+# Data files (если не хочешь хранить реальные geojson в гите)
+courier-sim/data/*.geojson
+
+# Docker / Compose artifacts
+*.pid
+*.seed
+*.bak
+
+# Coverage / Testing
+htmlcov/
+.tox/
+.coverage
+.pytest_cache/

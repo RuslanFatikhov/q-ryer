@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Courier Sim{% endblock %}
+
+{% block head %}
+  <!-- Mapbox GL CSS -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+  <!--Map-->
+
+  <div class="map_header">
+    <div class="balance">
+      <h3 class="white100">$<span id="balanceAmount">0</span> </h3>
+    </div>
+  </div>
+
+  <div class="map_button">
+
+    <!--Profile-->
+    <button id="profileButton" class="icon_button">
+      <img src="{{ url_for('static', filename='img/icon/user.svg') }}" alt="Profile Icon" class="icon">
+    </button>
+
+    <!--Start game-->
+    <button id="startGame" class="action_button">
+      <h3 class="white100">Начать смену</h3>
+    </button>
+
+    <!--Game_setting-->
+    <button id="gameSettingsButton" class="icon_button">
+      <img src="{{ url_for('static', filename='img/icon/filter.svg') }}" alt="Profile Icon" class="icon">
+    </button>
+
+    <!--Game_setting-->
+    <button id="gameSettingsButton" class="icon_button myloc">
+      <img src="{{ url_for('static', filename='img/icon/target.svg') }}" alt="Profile Icon" class="icon">
+    </button>
+
+    
+  </div>
+
+  <div id="map"></div>
+
+{% endblock %}
+
+{% block scripts %}
+  <!-- Подключаем библиотеку Mapbox (новая версия v3.0.0) -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
+
+  <!-- Устанавливаем токен (после подключения библиотеки, до game.js) -->
+  <script>
+    mapboxgl.accessToken = "{{ mapbox_token }}";
+  </script>
+
+  <!-- Подключаем игровой код -->
+  <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}

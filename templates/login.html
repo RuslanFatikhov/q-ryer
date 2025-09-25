@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Вход — Courier Sim{% endblock %}
+
+{% block content %}
+<main style="max-width:480px;margin:40px auto;padding:16px;">
+  <h2 style="margin-bottom:16px;">Вход в Courier Sim</h2>
+  <form id="login-form" style="display:flex;gap:12px;align-items:flex-end;">
+    <div style="flex:1;">
+      <label for="user_id" style="display:block;margin-bottom:6px;">ID пользователя</label>
+      <input id="user_id" name="user_id" type="number" min="1" required
+             style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;">
+    </div>
+    <button type="submit" style="padding:10px 16px;border:0;border-radius:8px;background:#111;color:#fff;cursor:pointer;">
+      Войти
+    </button>
+  </form>
+  <p id="login-status" style="margin-top:12px;color:#666;"></p>
+</main>
+{% endblock %}

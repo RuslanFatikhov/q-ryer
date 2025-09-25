@@ -1,0 +1,43 @@
+:root{
+
+    --black100: #121212;
+    --black020:rgba(18,18,18,0.2);
+    --black010:rgba(18,18,18,0.1);
+
+    --white100:#fefefe;
+    --white30:#CCCCCC;
+    --white20:#E6E6E6;
+
+
+
+
+    --red100: #ff0000;
+    --red005:rgba(255,0,0,0.05);
+
+    --shadow: filter: drop-shadow(0px 4px 16px rgba(18,18,18,0.25));
+}
+
+.black100{
+    color: var(--black100);
+}
+
+.white100{
+    color: var(--white100);
+}
+
+.red100{
+    color: var(--red100);
+}
+
+.bg-black100{
+    background-color: var(--black100);
+}
+
+.bg-white100{
+    background-color: var(--white100);
+}
+
+.bg-red005{
+    background-color: var(--red005);
+}
+

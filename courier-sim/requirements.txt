@@ -1,0 +1,26 @@
+# Flask и основные компоненты
+Flask==3.0.0
+Flask-SQLAlchemy==3.1.1
+Flask-SocketIO==5.3.6
+Flask-CORS==4.0.0
+
+# База данных
+psycopg2-binary==2.9.9  # PostgreSQL адаптер
+SQLAlchemy==2.0.23
+
+# SocketIO поддержка (для Python 3.12+)
+python-socketio==5.10.0
+python-engineio==4.7.1
+
+# HTTP запросы для Google OAuth
+requests==2.31.0
+
+# WSGI сервер для продакшена
+gunicorn==21.2.0
+
+# Утилиты
+python-dotenv==1.0.0  # Для .env файлов
+
+# Для разработки (опционально)
+# pytest==7.4.3
+# pytest-flask==1.3.0

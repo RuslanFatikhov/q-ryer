@@ -9,80 +9,283 @@
 
 {% block content %}
 
-  <!--Map-->
+  <!-- Временная отладочная панель -->
+  <div id="debugPanel" class="debug-panel" style="display: none;">
+    <div>GPS: <span id="debugGPS">❌</span></div>
+    <div>State: <span id="debugState">init</span></div>
+    <div>Button: <span id="debugButton">—</span></div>
+  </div>
 
+  <!--Map Header с балансом-->
   <div class="map_header">
     <div class="balance">
-      <h3 class="white100">$<span id="balanceAmount">0</span> </h3>
+      <h3 class="white100">$<span id="balanceAmount">0</span></h3>
     </div>
   </div>
 
+  <!--Map Controls-->
   <div class="map_button">
 
-  <!-- Modal Profile -->
-  <div id="profileModal" class="modal">
-    <div class="modal-content">
-
-      <span class="modal_header">
+    <!-- Modal Profile -->
+    <div id="profileModal" class="modal">
+      <div class="modal-content">
+        <span class="modal_header">
           <h3 class="black100">Профиль</h3>
           <span class="icon_button graybg close" data-close="profileModal">
             <img src="{{ url_for('static', filename='img/icon/cross.svg') }}" alt="Close" class="icon">
           </span>
-      </span>
-      
-      
+        </span>
+        
+        <div style="padding: 16px; flex: 1;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <div style="width: 80px; height: 80px; background: #f0f0f0; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
+              <img src="{{ url_for('static', filename='img/icon/user.svg') }}" alt="User" style="width: 40px; height: 40px;">
+            </div>
+            <h3 class="black100">Гостевой пользователь</h3>
+            <p style="color: #666; margin-top: 4px;">ID: <span id="profileUserId">1</span></p>
+          </div>
+          
+          <div style="background: #f8f9fa; border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+            <h4 class="black100" style="margin-bottom: 12px;">Статистика</h4>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span>Доставок:</span>
+              <span id="profileDeliveries">0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span>Баланс:</span>
+              <span id="profileBalance">$0.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>Статус GPS:</span>
+              <span id="profileGpsStatus" style="color: #ff4444;">Нет доступа</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- Modal Game Settings -->
-  <div id="settingsModal" class="modal">
-    <div class="modal-content">
-      <span class="modal_header">
-          <h3 class="black100">Профиль</h3>
+    <!-- Modal Game Settings -->
+    <div id="settingsModal" class="modal">
+      <div class="modal-content">
+        <span class="modal_header">
+          <h3 class="black100">Настройки</h3>
           <span class="icon_button graybg close" data-close="settingsModal">
             <img src="{{ url_for('static', filename='img/icon/cross.svg') }}" alt="Close" class="icon">
           </span>
-      </span>
+        </span>
+        
+        <div style="padding: 16px; flex: 1;">
+          <div style="margin-bottom: 24px;">
+            <h4 class="black100" style="margin-bottom: 12px;">Радиус поиска заказов</h4>
+            <input type="range" id="searchRadius" min="1" max="10" value="5" 
+                   style="width: 100%; margin-bottom: 8px;">
+            <div style="display: flex; justify-content: space-between; color: #666; font-size: 14px;">
+              <span>1 км</span>
+              <span id="radiusValue">5 км</span>
+              <span>10 км</span>
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 24px;">
+            <h4 class="black100" style="margin-bottom: 12px;">Уведомления</h4>
+            <label style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0;">
+              <span>Звук при новом заказе</span>
+              <input type="checkbox" id="soundNotifications" checked>
+            </label>
+            <label style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0;">
+              <span>Вибрация</span>
+              <input type="checkbox" id="vibrationNotifications" checked>
+            </label>
+          </div>
+          
+          <div style="background: #f8f9fa; border-radius: 12px; padding: 16px;">
+            <h4 class="black100" style="margin-bottom: 8px;">Информация о GPS</h4>
+            <div style="color: #666; font-size: 14px;">
+              <div>Точность: <span id="settingsGpsAccuracy">—</span></div>
+              <div>Качество: <span id="settingsGpsQuality">—</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
+    <!-- Modal Order Found - добавить после settingsModal -->
+    <div id="orderModal" class="modal">
+      <div class="modal-content">
+        <span class="modal_header">
+          <h3 class="black100">Новый заказ</h3>
+          <span class="icon_button graybg close" data-close="orderModal">
+            <img src="{{ url_for('static', filename='img/icon/cross.svg') }}" alt="Close" class="icon">
+          </span>
+        </span>
+        
+        <div style="padding: 16px; flex: 1; display: flex; flex-direction: column;">
+          <!-- Pickup информация -->
+          <div style="display: flex; align-items: center; margin-bottom: 16px; padding: 12px; background: #f8f9fa; border-radius: 12px;">
+            <img src="{{ url_for('static', filename='img/icon/bag.svg') }}" style="width: 24px; height: 24px; margin-right: 12px;">
+            <div>
+              <h4 class="black100" id="orderPickupName">KFC Almaly</h4>
+              <p style="color: #666; font-size: 14px;">Забрать заказ</p>
+            </div>
+          </div>
+          
+          <!-- Dropoff информация -->
+          <div style="display: flex; align-items: center; margin-bottom: 16px; padding: 12px; background: #f8f9fa; border-radius: 12px;">
+            <img src="{{ url_for('static', filename='img/icon/home.svg') }}" style="width: 24px; height: 24px; margin-right: 12px;">
+            <div>
+              <h4 class="black100" id="orderDropoffAddress">ул. Абая 150</h4>
+              <p style="color: #666; font-size: 14px;">Доставить заказ</p>
+            </div>
+          </div>
+          
+          <!-- Детали заказа -->
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="display: flex; align-items: center;">
+              <img src="{{ url_for('static', filename='img/icon/distance.svg') }}" style="width: 16px; height: 16px; margin-right: 6px;">
+              Расстояние:
+            </span>
+            <span id="orderDistance">2.3 км</span>
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="display: flex; align-items: center;">
+              <img src="{{ url_for('static', filename='img/icon/time.svg') }}" style="width: 16px; height: 16px; margin-right: 6px;">
+              Время:
+            </span>
+            <span id="orderTime">~15 мин</span>
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+            <span><strong>Оплата:</strong></span>
+            <span style="color: #00aa44; font-weight: bold;" id="orderPayout">$4.50</span>
+          </div>
+          
+          <!-- Кнопки действий -->
+          <div style="margin-top: auto; display: flex; gap: 12px;">
+            <button class="icon_button" onclick="closeModal('orderModal')" style="background-color: #ff4444;">
+              <img src="{{ url_for('static', filename='img/icon/cross.svg') }}" alt="Decline" style="filter: invert(1);">
+            </button>
+            
+            <button id="acceptOrderButton" class="action_button" style="background-color: #00aa44;">
+              <h3 class="white100">Взять заказ</h3>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <!--Profile-->
+    <!--Profile Button-->
     <button id="profileButton" class="icon_button">
       <img src="{{ url_for('static', filename='img/icon/user.svg') }}" alt="Profile Icon" class="icon">
     </button>
 
-    <!--Start game-->
-    <button id="startGame" class="action_button">
-      <h3 class="white100">Начать смену</h3>
+    <!--Main Action Button (Start Shift)-->
+    <button id="startGame" class="action_button" style="background-color: #ff6600;">
+      <h3 class="white100">Разрешить GPS</h3>
     </button>
 
-    <!--Game_setting-->
-    <button id="gameSettingsButton" class="icon_button">
-      <img src="{{ url_for('static', filename='img/icon/filter.svg') }}" alt="Profile Icon" class="icon">
+    <!--Settings Button-->
+    <button class="icon_button" onclick="openModal('settingsModal')">
+      <img src="{{ url_for('static', filename='img/icon/filter.svg') }}" alt="Settings Icon" class="icon">
     </button>
 
-    <!--Game_setting-->
-    <button id="gameSettingsButton" class="icon_button myloc">
-      <img src="{{ url_for('static', filename='img/icon/target.svg') }}" alt="Profile Icon" class="icon">
+    <!--Center on User Button-->
+    <button id="centerLocationButton" class="icon_button myloc">
+      <img src="{{ url_for('static', filename='img/icon/target.svg') }}" alt="My Location Icon" class="icon">
     </button>
 
-    
   </div>
 
+  <!--Mapbox Map Container-->
   <div id="map"></div>
 
 {% endblock %}
 
 {% block scripts %}
-  <!-- Подключаем библиотеку Mapbox (новая версия v3.0.0) -->
+  <!-- Подключаем библиотеку Mapbox (версия v3.0.0) -->
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
 
-  <!-- Устанавливаем токен (после подключения библиотеки, до game.js) -->
+  <!-- Устанавливаем токен Mapbox (после подключения библиотеки) -->
   <script>
-    mapboxgl.accessToken = "{{ mapbox_token }}";
+    if (typeof mapboxgl !== 'undefined') {
+      mapboxgl.accessToken = "{{ mapbox_token }}";
+      console.log("✅ Mapbox токен установлен");
+    } else {
+      console.error("❌ Mapbox GL не загружен");
+    }
   </script>
 
-  <!-- Подключаем игровой код -->
+  <!-- Подключаем модуль геолокации (должен быть загружен первым) -->
+  <script src="{{ url_for('static', filename='js/geolocation.js') }}"></script>
+
+  <!-- Подключаем основной игровой код -->
   <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+
+  <!-- Дополнительные обработчики для настроек -->
+  <script>
+    // Обработчик изменения радиуса поиска
+    document.addEventListener('DOMContentLoaded', () => {
+      // Показываем отладочную панель в режиме разработки
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        document.getElementById('debugPanel').style.display = 'block';
+        
+        // Обновляем отладочную информацию
+        setInterval(() => {
+          const debugGPS = document.getElementById('debugGPS');
+          const debugState = document.getElementById('debugState');
+          const debugButton = document.getElementById('debugButton');
+          
+          if (window.geoManager && debugGPS) {
+            debugGPS.textContent = window.geoManager.currentPosition ? '✅' : '❌';
+          }
+          
+          if (window.gameState && debugState) {
+            debugState.textContent = `shift:${window.gameState.isOnShift} search:${window.gameState.isSearching}`;
+          }
+          
+          if (debugButton) {
+            const button = document.getElementById('startGame');
+            if (button) {
+              debugButton.textContent = button.querySelector('h3').textContent.slice(0, 15);
+            }
+          }
+        }, 1000);
+      }
+      
+      const radiusSlider = document.getElementById('searchRadius');
+      const radiusValue = document.getElementById('radiusValue');
+      
+      if (radiusSlider && radiusValue) {
+        radiusSlider.addEventListener('input', (e) => {
+          radiusValue.textContent = e.target.value + ' км';
+        });
+      }
+      
+      // Обновление информации о GPS в настройках
+      setInterval(() => {
+        if (window.geoManager && window.geoManager.currentPosition) {
+          const accuracy = window.geoManager.currentPosition.coords.accuracy;
+          const quality = window.geoManager.getGPSQuality();
+          
+          const accuracyEl = document.getElementById('settingsGpsAccuracy');
+          const qualityEl = document.getElementById('settingsGpsQuality');
+          const profileGpsEl = document.getElementById('profileGpsStatus');
+          
+          if (accuracyEl) accuracyEl.textContent = Math.round(accuracy) + ' м';
+          if (qualityEl) {
+            qualityEl.textContent = {
+              'excellent': 'Отличное',
+              'good': 'Хорошее', 
+              'fair': 'Удовлетворительное',
+              'poor': 'Плохое'
+            }[quality] || quality;
+          }
+          if (profileGpsEl) {
+            profileGpsEl.textContent = 'Подключен';
+            profileGpsEl.style.color = '#00aa44';
+          }
+        }
+      }, 2000);
+    });
+  </script>
 {% endblock %}

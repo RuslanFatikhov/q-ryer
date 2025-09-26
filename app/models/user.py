@@ -8,7 +8,6 @@ from app import db
 from sqlalchemy import func
 
 class User(db.Model):
-    reports = db.relationship("Report", back_populates="user", lazy=True)
     """Модель пользователя/игрока в симуляторе курьера"""
     
     __tablename__ = 'users'
@@ -36,9 +35,9 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
-    # Связи с другими моделями
-    orders = db.relationship('Order', backref='user', lazy='dynamic', cascade='all, delete-orphan')
-    reports = db.relationship('Report', backref='user', lazy='dynamic', cascade='all, delete-orphan')
+    # Связи с другими моделями (без backref, так как они определены в других моделях)
+    orders = db.relationship('Order', back_populates='user', lazy='dynamic', cascade='all, delete-orphan')
+    reports = db.relationship('Report', back_populates='user', lazy='dynamic', cascade='all, delete-orphan')
     
     def __repr__(self):
         return f'<User {self.username}(id={self.id})>'

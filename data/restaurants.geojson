@@ -2,7 +2,7 @@
   "type": "FeatureCollection",
   "generator": "overpass-turbo",
   "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
-  "timestamp": "2025-09-25T10:50:00Z",
+  "timestamp": "2025-09-26T04:54:32Z",
   "features": [
     {
       "type": "Feature",
@@ -3106,6 +3106,31 @@
         ]
       },
       "id": "way/495078759"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/517244013",
+        "addr:housenumber": "68/51",
+        "addr:street": "улица Кабанбай Батыра",
+        "amenity": "restaurant",
+        "building": "yes",
+        "name": "Хачапури Хинкалевич",
+        "name:en": "Khachapuri",
+        "name:ru": "Хачапури Хинкалевич",
+        "opening_hours": "Mo-Su 12:00-00:00",
+        "phone": "+77759796984",
+        "website": "http://www.hinkalnaya.kz",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9575434,
+          43.2503251
+        ]
+      },
+      "id": "way/517244013"
     },
     {
       "type": "Feature",
@@ -11818,28 +11843,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/4573422907",
-        "addr:housenumber": "68/51",
-        "addr:street": "улица Кабанбай Батыра",
-        "amenity": "cafe",
-        "name:en": "Khachapuri",
-        "name:ru": "Хачапури Хинкалевич",
-        "opening_hours": "Mo-Su 12:00-00:00",
-        "phone": "+77759796984",
-        "website": "http://www.hinkalnaya.kz"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9575582,
-          43.2504531
-        ]
-      },
-      "id": "node/4573422907"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/4575190190",
         "amenity": "cafe",
         "name": "Томирис"
@@ -16280,13 +16283,13 @@
       "properties": {
         "@id": "node/5875234031",
         "amenity": "restaurant",
-        "name:en": "Harissa"
+        "name": "Harissa"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.9570613,
-          43.250298
+          76.9573009,
+          43.2503371
         ]
       },
       "id": "node/5875234031"

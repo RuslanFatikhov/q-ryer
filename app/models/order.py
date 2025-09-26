@@ -10,7 +10,6 @@ from sqlalchemy import func
 from app.utils.gps_helper import calculate_distance
 
 class Order(db.Model):
-    reports = db.relationship("Report", back_populates="order", lazy=True)
     """
     Модель заказа доставки
     
@@ -69,10 +68,9 @@ class Order(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     expires_at = db.Column(db.DateTime, nullable=False)  # Время истечения заказа
     
-    # Связи (убираем связи с несуществующими моделями)
-    # restaurant = db.relationship('Restaurant', backref='orders')
-    # building = db.relationship('Building', backref='orders')
-    reports = db.relationship('Report', backref='order', lazy='dynamic', cascade='all, delete-orphan')
+    # Связи (используем back_populates для согласованности)
+    user = db.relationship('User', back_populates='orders')
+    reports = db.relationship('Report', back_populates='order', lazy='dynamic', cascade='all, delete-orphan')
     
     def __repr__(self):
         return f'<Order {self.id} ({self.status})>'
@@ -90,20 +88,34 @@ class Order(db.Model):
                 self.dropoff_lat, self.dropoff_lng
             )
             
+            # Получаем конфигурацию безопасно
+            try:
+                from flask import current_app
+                config = current_app.config.get('GAME_CONFIG', {})
+            except RuntimeError:
+                # Если нет app context, используем значения по умолчанию
+                config = {
+                    'delivery_speed_kmh': 5,
+                    'delivery_base_time': 300,
+                    'pickup_timeout': 3600
+                }
+            
             # Рассчитываем таймер доставки
-            from flask import current_app
-            config = current_app.config['GAME_CONFIG']
             self.timer_seconds = int(
-                (self.distance_km / config['delivery_speed_kmh']) * 3600 + 
-                config['delivery_base_time']
+                (self.distance_km / config.get('delivery_speed_kmh', 5)) * 3600 + 
+                config.get('delivery_base_time', 300)
             )
             
             # Рассчитываем сумму выплаты
-            from app.utils.economy import calculate_payout
-            self.amount = calculate_payout(self.distance_km)
+            try:
+                from app.utils.economy import calculate_payout
+                self.amount = calculate_payout(self.distance_km, config)
+            except:
+                # Простой расчет если функция недоступна
+                self.amount = 1.5 + 0.5 + 0.5 + (self.distance_km * 0.8)
             
             # Устанавливаем время истечения (1 час на pickup)
-            self.expires_at = datetime.utcnow() + timedelta(seconds=config['pickup_timeout'])
+            self.expires_at = datetime.utcnow() + timedelta(seconds=config.get('pickup_timeout', 3600))
     
     def to_dict(self):
         """

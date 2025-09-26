@@ -71,7 +71,6 @@ def generate_random_order() -> Optional["Dict"]:
         return None
 
 def create_order_for_user(user_id: int, order_data: Dict) -> Optional["Order"]:
-    from app.models.order import Order  # локальный импорт
     """
     Создание заказа в базе данных для пользователя.
     
@@ -82,10 +81,13 @@ def create_order_for_user(user_id: int, order_data: Dict) -> Optional["Order"]:
     Returns:
         Order: Созданный заказ или None
     """
+    from app.models.order import Order  # локальный импорт
+    
     try:
         # Проверяем, что у пользователя нет активного заказа
         user = User.query.get(user_id)
         if not user:
+            logger.error(f"User {user_id} not found")
             return None
         
         active_order = user.get_active_order()
@@ -93,9 +95,11 @@ def create_order_for_user(user_id: int, order_data: Dict) -> Optional["Order"]:
             logger.warning(f"User {user_id} already has active order {active_order.id}")
             return None
         
-        # Создаем заказ
+        # Создаем заказ с правильными полями
         order = Order(
             user_id=user_id,
+            pickup_name=order_data['pickup_name'],
+            dropoff_address=order_data['dropoff_address'],
             pickup_lat=order_data['pickup_lat'],
             pickup_lng=order_data['pickup_lng'],
             dropoff_lat=order_data['dropoff_lat'],

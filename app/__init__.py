@@ -46,6 +46,7 @@ def create_app(config_name=None):
 
     # Регистрируем SocketIO обработчики
     from app.socketio_handlers import game_events
+    # Обработчики регистрируются через декораторы при импорте
     # (game_events регистрируются через декораторы)
 
     # Создаем таблицы в базе данных
@@ -58,7 +59,7 @@ def create_app(config_name=None):
     @app.route("/api/health")
     def health_check():
         try:
-            db.session.execute("SELECT 1")
+            db.session.execute(db.text("SELECT 1"))
             return {"status": "healthy", "database": "connected"}
         except Exception as e:
             return {"status": "unhealthy", "error": str(e)}, 500

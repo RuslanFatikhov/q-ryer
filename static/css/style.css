@@ -98,3 +98,134 @@ body{
   font-size: 24px;
   cursor: pointer;
 }
+
+/* Улучшенные стили модалок */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    max-height: 80vh;
+}
+
+.modal_header {
+    border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
+}
+
+/* Анимации для уведомлений */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.notification-enter {
+    animation: slideInDown 0.3s ease forwards;
+}
+
+/* Стили для индикатора загрузки */
+.loading-indicator {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+
+
+/* Debug */
+.debug-panel {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 1000;
+    font-family: monospace;
+}
+/* Дополнительные стили для модалки заказа */
+.modal.order-modal .modal-content {
+  height: auto;
+  max-height: 80vh;
+  min-height: 400px;
+}
+
+.order-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order-location {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.order-location img {
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+}
+
+.order-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.order-actions button {
+  border: none;
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.order-actions .decline-btn {
+  flex: 1;
+  background: #f0f0f0;
+  color: #666;
+}
+
+.order-actions .accept-btn {
+  flex: 2;
+  background: #00aa44;
+  color: white;
+}
+
+.order-actions button:hover {
+  transform: translateY(-1px);
+}
+
+.loading-indicator {
+  display: inline-block;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

@@ -72,13 +72,11 @@ def stop_shift():
         if not user:
             return jsonify({'error': 'User not found'}), 404
         
-        # Проверяем, нет ли активного заказа
+        # Получаем активный заказ и отменяем его если есть
         active_order = user.get_active_order()
         if active_order:
-            return jsonify({
-                'error': 'Cannot end shift with active order',
-                'active_order': active_order.to_dict()
-            }), 400
+            logger.info(f"Auto-cancelling order {active_order.id} before ending shift")
+            active_order.cancel_order('shift_ended')
         
         # Устанавливаем статус офлайн
         user.set_online_status(False)
@@ -142,30 +140,55 @@ def get_new_order():
         logger.error(f"Error getting new order: {str(e)}")
         return jsonify({'error': 'Failed to get order'}), 500
 
+
 @player_bp.route('/order/accept', methods=['POST'])
 def accept_order():
     """
     Принять заказ игроком.
-    Заказ уже создан, просто меняем статус.
+    Меняет статус заказа с pending на active.
     """
     try:
         data = request.get_json()
         user_id = data.get('user_id')
         order_id = data.get('order_id')
         
+        # Проверяем наличие обязательных параметров
         if not user_id or not order_id:
             return jsonify({'error': 'user_id and order_id are required'}), 400
         
-        # Проверяем валидность действия
-        validation = validate_order_action(user_id, 'accept')
-        if not validation.get('valid', False):
-            return jsonify({'error': validation.get('error')}), 400
+        # Проверяем существование пользователя
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
         
+        # Проверяем, что у пользователя нет других активных заказов
+        active_order = user.get_active_order()
+        if active_order and active_order.id != order_id:
+            return jsonify({
+                'error': 'User already has another active order',
+                'active_order_id': active_order.id
+            }), 400
+        
+        # Получаем заказ для принятия
         order = Order.query.get(order_id)
-        if not order or order.user_id != user_id:
-            return jsonify({'error': 'Order not found or not assigned to user'}), 404
+        if not order:
+            return jsonify({'error': 'Order not found'}), 404
         
-        # Заказ уже создан и назначен пользователю при генерации
+        # Проверяем, что заказ в статусе pending
+        if order.status != 'pending':
+            return jsonify({
+                'error': f'Order cannot be accepted. Current status: {order.status}'
+            }), 400
+        
+        # Проверяем, что заказ не истек
+        if order.is_expired():
+            return jsonify({'error': 'Order has expired'}), 400
+        
+        # Принимаем заказ - меняем статус на active
+        success = order.accept_order(user_id)
+        if not success:
+            return jsonify({'error': 'Failed to accept order'}), 400
+        
         logger.info(f"User {user_id} accepted order {order_id}")
         
         return jsonify({

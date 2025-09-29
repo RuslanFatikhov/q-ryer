@@ -58,21 +58,28 @@ class OrderModal {
   }
 
   // Закрытие модалки
-  close() {
+  close(orderAccepted = false) {
+    console.log("Закрываем модалку заказа, принят:", orderAccepted);
+    
     if (this.modal) {
       this.modal.style.display = "none";
     }
     
-    // Очищаем текущий заказ при отклонении
-    this.gameState.setCurrentOrder(null);
-    
-    if (window.mapManager) {
-      window.mapManager.clearOrderMarkers();
-    }
-    
-    // Запускаем поиск заново если смена активна
-    if (this.gameState.isOnShift) {
-      this.shiftManager.startSearching();
+    // Если заказ НЕ был принят - очищаем состояние
+    if (!orderAccepted) {
+      console.log("Заказ отклонён, очищаем состояние");
+      this.gameState.setCurrentOrder(null);
+      
+      if (window.mapManager) {
+        window.mapManager.clearOrderMarkers();
+      }
+      
+      // Запускаем поиск заново если смена активна
+      if (this.gameState.isOnShift) {
+        this.shiftManager.startSearching();
+      }
+    } else {
+      console.log("Заказ принят, маркеры остаются");
     }
   }
 
@@ -84,7 +91,13 @@ class OrderModal {
     }
     
     try {
-      console.log("Принимаем заказ:", this.gameState.currentOrder.id);
+      const orderId = this.gameState.currentOrder.id;
+      const userId = this.gameState.userId;
+      
+      console.log("Принимаем заказ:", {
+        order_id: orderId,
+        user_id: userId
+      });
       
       const response = await fetch('/api/order/accept', {
         method: 'POST',
@@ -92,25 +105,45 @@ class OrderModal {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: this.gameState.userId,
-          order_id: this.gameState.currentOrder.id
+          user_id: userId,
+          order_id: orderId
         })
       });
       
+      // Читаем ответ как JSON
+      const result = await response.json();
+      
       if (!response.ok) {
-        throw new Error('Не удалось принять заказ');
+        console.error("Ошибка от сервера:", result);
+        throw new Error(result.error || 'Не удалось принять заказ');
       }
       
-      console.log("Заказ принят успешно");
-      this.close();
-      
-      const button = document.getElementById("startGame");
-      const buttonText = button?.querySelector("h3");
-      if (buttonText) {
-        buttonText.textContent = "К ресторану";
-        button.style.backgroundColor = "#007cbf";
-      }
-      
+      console.log("Заказ принят успешно:", result);
+    console.log("Заказ принят успешно:", result);
+    
+    // КРИТИЧНО: Сохраняем заказ в gameState
+    if (result.order) {
+      result.order.status = 'active';
+      this.gameState.setCurrentOrder(result.order);
+      console.log("✅ Заказ сохранён в gameState:", result.order.id);
+    }
+    
+    // Показываем маркеры
+    if (window.mapManager && result.order) {
+      window.mapManager.showOrder(result.order);
+    }
+    
+    // Обновляем кнопку
+    const button = document.getElementById("startGame");
+    const buttonText = button?.querySelector("h3");
+    if (buttonText) {
+      buttonText.textContent = "К ресторану";
+      button.style.backgroundColor = "#007cbf";
+    }
+    
+    // Закрываем модалку
+    this.close(true);
+
     } catch (error) {
       console.error("Ошибка принятия заказа:", error);
       alert("Ошибка: " + error.message);

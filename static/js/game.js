@@ -131,6 +131,34 @@ function initializeUI() {
 
   // Модальные окна
   initializeModals();
+
+  // Кнопка завершения смены в профиле
+  const endShiftBtn = document.getElementById("endShiftBtn");
+  if (endShiftBtn) {
+    endShiftBtn.addEventListener("click", async () => {
+      if (!confirm("Завершить смену? Активные заказы будут отменены.")) {
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/stop_shift', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({user_id: gameState.userId})
+        });
+        
+        if (response.ok) {
+          window.location.reload();
+        } else {
+          const error = await response.json();
+          alert("Ошибка: " + error.error);
+        }
+      } catch (e) {
+        alert("Ошибка: " + e.message);
+      }
+    });
+  }
+
 }
 
 /**
@@ -168,22 +196,8 @@ function restoreState() {
   if (restored) {
     console.log("Состояние восстановлено");
     
-    // Обновляем UI согласно состоянию
-    if (gameState.isOnShift) {
-      if (gameState.isSearching) {
-        shiftManager.updateShiftButton('searching');
-      } else if (gameState.currentOrder) {
-        // Заказ активен
-        const button = document.getElementById("startGame");
-        const buttonText = button?.querySelector("h3");
-        if (buttonText) {
-          buttonText.textContent = "К ресторану";
-          button.style.backgroundColor = "#007cbf";
-        }
-      } else {
-        shiftManager.updateShiftButton('end_shift');
-      }
-    }
+    // НЕ обновляем UI здесь - пусть handleShiftButtonClick сам разберётся
+    // при первом клике на кнопку
   }
 }
 

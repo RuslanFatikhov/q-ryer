@@ -59,6 +59,14 @@ class GameState {
       
       this.state = { ...state };
       delete this.state.lastSaved;
+      
+      // ВАЖНО: Сбрасываем смену и поиск при загрузке
+      // Пользователь должен начать смену заново
+      this.state.isOnShift = false;
+      this.state.isSearching = false;
+      
+      console.log("Состояние восстановлено (смена сброшена)");
+      
       return true;
     } catch (error) {
       console.error("Ошибка восстановления состояния:", error);

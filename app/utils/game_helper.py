@@ -342,7 +342,58 @@ def get_order_for_user(user_id: int) -> Optional["Dict"]:
         logger.error(f"Error getting order for user {user_id}: {str(e)}")
         return None
 
+
 def validate_order_action(user_id: int, action: str) -> Dict:
+    """
+    Валидация возможности выполнения действия с заказом.
+    
+    Args:
+        user_id (int): ID пользователя
+        action (str): Действие (accept, pickup, deliver, cancel)
+    
+    Returns:
+        dict: Результат валидации
+    """
+    try:
+        user = User.query.get(user_id)
+        if not user:
+            return {'valid': False, 'error': 'User not found'}
+        
+        active_order = user.get_active_order()
+        
+        if action == 'accept':
+            # Для accept проверяем, что нет других активных заказов
+            if active_order:
+                return {'valid': False, 'error': 'User already has an active order'}
+            return {'valid': True}
+        
+        # Для остальных действий нужен активный заказ
+        if not active_order:
+            return {'valid': False, 'error': 'No active order'}
+        
+        if action == 'pickup':
+            if active_order.pickup_time:
+                return {'valid': False, 'error': 'Order already picked up'}
+            return {'valid': True}
+        
+        elif action == 'deliver':
+            if not active_order.pickup_time:
+                return {'valid': False, 'error': 'Order not picked up yet'}
+            if active_order.delivery_time:
+                return {'valid': False, 'error': 'Order already delivered'}
+            return {'valid': True}
+        
+        elif action == 'cancel':
+            if active_order.status in ['completed', 'cancelled']:
+                return {'valid': False, 'error': 'Order already completed or cancelled'}
+            return {'valid': True}
+        
+        else:
+            return {'valid': False, 'error': 'Unknown action'}
+        
+    except Exception as e:
+        logger.error(f"Error validating order action: {str(e)}")
+        return {'valid': False, 'error': 'Validation error'}
     """
     Валидация возможности выполнения действия с заказом.
     

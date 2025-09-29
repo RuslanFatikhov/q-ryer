@@ -60,6 +60,11 @@
               <span id="profileGpsStatus" style="color: #ff4444;">Нет доступа</span>
             </div>
           </div>
+          
+          <!-- Кнопка завершения смены -->
+          <button id="endShiftBtn" class="action_button" style="background-color: #ff4444; display: none; margin-top: 12px;">
+            <h3 class="white100">Завершить смену</h3>
+          </button>
         </div>
       </div>
     </div>
@@ -265,6 +270,17 @@
       if (radiusSlider && radiusValue) {
         radiusSlider.addEventListener('input', (e) => {
           radiusValue.textContent = e.target.value + ' км';
+        });
+      }
+      
+      // Показ/скрытие кнопки "Завершить смену"
+      const profileButton = document.getElementById("profileButton");
+      if (profileButton) {
+        profileButton.addEventListener("click", () => {
+          const endShiftBtn = document.getElementById("endShiftBtn");
+          if (endShiftBtn && window.gameState) {
+            endShiftBtn.style.display = window.gameState.isOnShift ? "flex" : "none";
+          }
         });
       }
       

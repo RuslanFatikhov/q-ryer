@@ -85,9 +85,11 @@ class User(db.Model):
         db.session.commit()
     
     def get_active_order(self):
-        """Получение активного заказа пользователя"""
+        """Получение активного заказа пользователя (pending или active)"""
         from .order import Order
-        return Order.query.filter_by(user_id=self.id, status='active').first()
+        return Order.query.filter_by(user_id=self.id).filter(
+            Order.status.in_(['pending', 'active'])
+        ).first()
     
     def get_statistics(self):
         """Получение статистики пользователя"""

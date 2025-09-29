@@ -162,11 +162,11 @@
           
           <!-- Кнопки действий -->
           <div style="margin-top: auto; display: flex; gap: 12px;">
-            <button class="icon_button" onclick="closeModal('orderModal')" style="background-color: #ff4444;">
+            <button class="icon_button" class="decline-btn" style="background-color: #ff4444;">
               <img src="{{ url_for('static', filename='img/icon/cross.svg') }}" alt="Decline" style="filter: invert(1);">
             </button>
             
-            <button id="acceptOrderButton" class="action_button" style="background-color: #00aa44;">
+            <button class="accept-btn" class="action_button" style="background-color: #00aa44;">
               <h3 class="white100">Взять заказ</h3>
             </button>
           </div>
@@ -218,10 +218,17 @@
   <!-- Подключаем модуль геолокации (должен быть загружен первым) -->
   <script src="{{ url_for('static', filename='js/geolocation.js') }}"></script>
 
-  <!-- Подключаем основной игровой код -->
+  <!-- Подключаем модули -->
+  <script src="{{ url_for('static', filename='js/modules/gameState.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/modules/mapManager.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/modules/orderModal.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/modules/shiftManager.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/modules/socketManager.js') }}"></script>
+
+  <!-- Главный файл -->
   <script src="{{ url_for('static', filename='js/game.js') }}"></script>
 
-  <!-- Дополнительные обработчики для настроек -->
+  <!-- Дополнительные обработчики -->
   <script>
     // Обработчик изменения радиуса поиска
     document.addEventListener('DOMContentLoaded', () => {

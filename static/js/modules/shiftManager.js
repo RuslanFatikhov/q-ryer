@@ -5,6 +5,11 @@ class ShiftManager {
   constructor(gameState, socketManager) {
     this.gameState = gameState;
     this.socketManager = socketManager;
+    
+    // Флаг для отслеживания, что смена началась в ЭТОЙ сессии браузера
+    // (а не восстановлена из localStorage)
+    this._shiftStartedInThisSession = false;
+    
     this.SHIFT_STATES = {
       REQUESTING_GPS: 'requesting_gps',
       START_SHIFT: 'start_shift',
@@ -18,8 +23,6 @@ class ShiftManager {
   // Обработчик клика по кнопке смены
   async handleShiftButtonClick() {
     console.log("Клик по кнопке смены");
-    
-    // Заказы проверяются на сервере, не нужно удалять здесь
     
     console.log("Состояние:", {
       hasGPS: !!window.geoManager?.currentPosition,
@@ -42,28 +45,39 @@ class ShiftManager {
         return;
       }
       
-      // 2. Если смена не начата - начинаем
+      // 2. ВАЖНО: Если смена восстановлена из localStorage, но GPS только что получили
+      // то нужно сбросить флаг смены, чтобы пользователь начал заново
+      if (this.gameState.isOnShift && !this._shiftStartedInThisSession) {
+        console.log("⚠️ Смена восстановлена из localStorage, но не начата в этой сессии - сбрасываем");
+        this.gameState.setShiftStatus(false);
+        this.gameState.setSearchingStatus(false);
+        // Оставляем заказ для восстановления после перезапуска смены
+        this.updateShiftButton(this.SHIFT_STATES.START_SHIFT);
+        return;
+      }
+      
+      // 3. Если смена не начата - начинаем
       if (!this.gameState.isOnShift) {
         console.log("→ Начинаем смену");
         await this.startShift();
         return;
       }
       
-      // 3. Если идет поиск - останавливаем
+      // 4. Если идет поиск - останавливаем
       if (this.gameState.isSearching) {
         console.log("→ Останавливаем поиск");
         await this.stopSearching();
         return;
       }
       
-      // 4. Если есть активный заказ - открываем навигацию
+      // 5. Если есть активный заказ - открываем навигацию
       if (this.gameState.currentOrder) {
         console.log("→ Открываем навигацию к заказу");
         this.openNavigation();
         return;
       }
       
-      // 5. Иначе - завершаем смену
+      // 6. Иначе - завершаем смену
       console.log("→ Завершаем смену");
       await this.endShift();
       
@@ -103,15 +117,21 @@ class ShiftManager {
         throw new Error(error.error || 'Не удалось начать смену');
       }
 
+      // ВАЖНО: Устанавливаем флаг, что смена началась в этой сессии
+      this._shiftStartedInThisSession = true;
+      
       this.gameState.setShiftStatus(true);
       console.log("✅ Смена начата");
       
+      // Запускаем отслеживание GPS
       window.geoManager.startTracking((position) => {
         this.sendPositionUpdate(position);
       });
 
+      // Логинимся в WebSocket
       this.socketManager.loginUser(this.gameState.userId);
       
+      // Небольшая задержка перед началом поиска
       setTimeout(() => {
         this.startSearching();
       }, 500);
@@ -167,6 +187,9 @@ class ShiftManager {
         throw new Error(error.error || 'Не удалось закончить смену');
       }
 
+      // Сбрасываем флаг смены в этой сессии
+      this._shiftStartedInThisSession = false;
+      
       this.gameState.setShiftStatus(false);
       this.gameState.setSearchingStatus(false);
       this.gameState.setCurrentOrder(null);
@@ -304,24 +327,6 @@ class ShiftManager {
     if (window.mapManager) {
       window.mapManager.updateUserMarker(position.coords);
     }
-  }
-  // Открытие навигации к ресторану
-  openNavigation() {
-    if (!this.gameState.currentOrder) {
-      console.error("Нет активного заказа");
-      return;
-    }
-    
-    const order = this.gameState.currentOrder;
-    const lat = order.pickup.lat;
-    const lng = order.pickup.lng;
-    const name = order.pickup.name;
-    
-    // Формируем URL для 2GIS
-    const url = `https://2gis.kz/almaty?m=${lng},${lat}`;
-    
-    console.log("Открываем 2GIS:", url);
-    window.open(url, '_blank');
   }
 }
 

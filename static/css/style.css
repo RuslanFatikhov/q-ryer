@@ -81,20 +81,14 @@ body{
 .modal_header{
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   padding-left: 12px;
   padding-right: 12px;
   padding-top: 12px;
 }
 
-/* Контент модалки */
-.modal-content {
-    background-color: var(--white100);
-    width: 100%;
-    border-radius: 16px;
-    height: 50vh;
-}
+
 
 /* Крестик */
 .close {
@@ -107,13 +101,16 @@ body{
 .modal-content {
     display: flex;
     flex-direction: column;
-    min-height: 300px;
+    width: 100%;
+    background-color: var(--white100);
+    border-radius: 16px;
+    min-height: 100px;
     max-height: 80vh;
 }
 
-.modal_header {
-    border-bottom: 1px solid #e0e0e0;
-    flex-shrink: 0;
+.icon_20{
+  width: 20px;
+  height: 20px;
 }
 
 /* Анимации для уведомлений */
@@ -164,12 +161,7 @@ body{
     z-index: 1000;
     font-family: monospace;
 }
-/* Дополнительные стили для модалки заказа */
-.modal.order-modal .modal-content {
-  height: auto;
-  max-height: 80vh;
-  min-height: 400px;
-}
+
 
 .order-details {
   display: flex;

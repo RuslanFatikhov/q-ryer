@@ -6,6 +6,7 @@ class MapManager {
     this.map = null;
     this.userMarker = null;
     this.orderMarkers = [];
+    this.zoneCircles = []; // Круги для визуализации зон
   }
 
   // Инициализация карты
@@ -22,6 +23,66 @@ class MapManager {
     
     this.map.on('load', () => {
       console.log("Карта загружена");
+      
+      // Добавляем источники для кругов зон
+      this.map.addSource('pickup-zone', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: []
+        }
+      });
+      
+      this.map.addSource('dropoff-zone', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: []
+        }
+      });
+      
+      // Добавляем слои для отображения зон
+      this.map.addLayer({
+        id: 'pickup-zone-fill',
+        type: 'fill',
+        source: 'pickup-zone',
+        paint: {
+          'fill-color': '#00aa44',
+          'fill-opacity': 0.15
+        }
+      });
+      
+      this.map.addLayer({
+        id: 'pickup-zone-outline',
+        type: 'line',
+        source: 'pickup-zone',
+        paint: {
+          'line-color': '#00aa44',
+          'line-width': 2,
+          'line-dasharray': [2, 2]
+        }
+      });
+      
+      this.map.addLayer({
+        id: 'dropoff-zone-fill',
+        type: 'fill',
+        source: 'dropoff-zone',
+        paint: {
+          'fill-color': '#ff4444',
+          'fill-opacity': 0.15
+        }
+      });
+      
+      this.map.addLayer({
+        id: 'dropoff-zone-outline',
+        type: 'line',
+        source: 'dropoff-zone',
+        paint: {
+          'line-color': '#ff4444',
+          'line-width': 2,
+          'line-dasharray': [2, 2]
+        }
+      });
     });
 
     return this.map;
@@ -62,7 +123,7 @@ class MapManager {
     });
   }
 
-  // Показ заказа на карте
+  // Показ заказа на карте с зонами
   showOrder(order) {
     if (!this.map) return;
     
@@ -90,6 +151,9 @@ class MapManager {
     
     this.orderMarkers = [pickupMarker, dropoffMarker];
     
+    // Показываем зоны
+    this.showZones(order);
+    
     // Центрируем карту на маршруте
     const bounds = new mapboxgl.LngLatBounds();
     bounds.extend([order.pickup.lng, order.pickup.lat]);
@@ -103,10 +167,86 @@ class MapManager {
     this.map.fitBounds(bounds, { padding: 80 });
   }
 
+  // Отображение зон pickup и dropoff
+  showZones(order) {
+    if (!this.map || !this.map.isStyleLoaded()) return;
+    
+    const radiusMeters = 30; // Радиус зоны в метрах
+    const radiusDegrees = radiusMeters / 111000; // Примерное преобразование в градусы
+    
+    // Создаем круг для pickup зоны
+    const pickupCircle = this.createCircle(
+      [order.pickup.lng, order.pickup.lat],
+      radiusDegrees,
+      64
+    );
+    
+    // Создаем круг для dropoff зоны
+    const dropoffCircle = this.createCircle(
+      [order.dropoff.lng, order.dropoff.lat],
+      radiusDegrees,
+      64
+    );
+    
+    // Обновляем источники данных
+    this.map.getSource('pickup-zone').setData({
+      type: 'FeatureCollection',
+      features: [pickupCircle]
+    });
+    
+    this.map.getSource('dropoff-zone').setData({
+      type: 'FeatureCollection',
+      features: [dropoffCircle]
+    });
+  }
+
+  // Создание геометрии круга
+  createCircle(center, radiusDegrees, points) {
+    const coordinates = [];
+    
+    for (let i = 0; i < points; i++) {
+      const angle = (i / points) * 2 * Math.PI;
+      const dx = radiusDegrees * Math.cos(angle);
+      const dy = radiusDegrees * Math.sin(angle);
+      
+      coordinates.push([
+        center[0] + dx / Math.cos(center[1] * Math.PI / 180),
+        center[1] + dy
+      ]);
+    }
+    
+    // Замыкаем круг
+    coordinates.push(coordinates[0]);
+    
+    return {
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: [coordinates]
+      }
+    };
+  }
+
+  // Очистка зон
+  clearZones() {
+    if (!this.map || !this.map.isStyleLoaded()) return;
+    
+    this.map.getSource('pickup-zone')?.setData({
+      type: 'FeatureCollection',
+      features: []
+    });
+    
+    this.map.getSource('dropoff-zone')?.setData({
+      type: 'FeatureCollection',
+      features: []
+    });
+  }
+
   // Очистка маркеров заказов
   clearOrderMarkers() {
     this.orderMarkers.forEach(marker => marker.remove());
     this.orderMarkers = [];
+    this.clearZones();
   }
 
   // Установка центра и зума

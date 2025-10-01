@@ -1,0 +1,94 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Пользователи{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Пользователи</h1>
+    <div class="page-actions">
+        <!-- Фильтры -->
+        <select id="statusFilter" class="filter-select">
+            <option value="all">Все статусы</option>
+            <option value="online">Онлайн</option>
+            <option value="offline">Оффлайн</option>
+        </select>
+        
+        <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="Поиск по имени..."
+        >
+    </div>
+</div>
+
+<!-- Таблица пользователей -->
+<div class="table-container">
+    <table class="data-table" id="usersTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Имя</th>
+                <th>Email</th>
+                <th>Баланс</th>
+                <th>Доставок</th>
+                <th>Статус</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody id="usersTableBody">
+            <!-- Заполняется через JS -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Пагинация -->
+<div class="pagination" id="pagination">
+    <!-- Заполняется через JS -->
+</div>
+
+<!-- Модальное окно редактирования пользователя -->
+<div id="editUserModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Редактирование пользователя</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId">
+                
+                <div class="form-group">
+                    <label>Имя пользователя</label>
+                    <input type="text" id="editUsername" disabled>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editBalance">Баланс ($)</label>
+                    <input 
+                        type="number" 
+                        id="editBalance" 
+                        step="0.01" 
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="editIsActive">
+                        Аккаунт активен
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    Сохранить
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('admin_pages.static', filename='users.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Админка{% endblock %} - Courier Sim</title>
+    
+    <!-- Базовые стили -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/typo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('admin_pages.static', filename='admin.css') }}">
+    
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="admin-nav">
+        <div class="nav-container">
+            <h2 class="nav-logo">Courier Sim Admin</h2>
+            <div class="nav-links">
+                <a href="{{ url_for('admin_pages.users') }}" class="nav-link {% if request.endpoint == 'admin_pages.users' %}active{% endif %}">
+                    Пользователи
+                </a>
+                <a href="{{ url_for('admin_pages.orders') }}" class="nav-link {% if request.endpoint == 'admin_pages.orders' %}active{% endif %}">
+                    Заказы
+                </a>
+                <a href="{{ url_for('admin_pages.reports') }}" class="nav-link {% if request.endpoint == 'admin_pages.reports' %}active{% endif %}">
+                    Жалобы
+                </a>
+                <a href="{{ url_for('admin_pages.config') }}" class="nav-link {% if request.endpoint == 'admin_pages.config' %}active{% endif %}">
+                    Настройки
+                </a>
+                <a href="{{ url_for('admin_pages.logout') }}" class="nav-link logout">
+                    Выход
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash сообщения -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Основной контент -->
+    <main class="admin-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ВАЖНО: admin.js должен загружаться ПЕРВЫМ -->
+    <script src="{{ url_for('admin_pages.static', filename='admin.js') }}"></script>
+    
+    <!-- Скрипты страниц -->
+    {% block scripts %}{% endblock %}
+</body>
+</html>

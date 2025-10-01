@@ -5,18 +5,16 @@ class ShiftManager {
   constructor(gameState, socketManager) {
     this.gameState = gameState;
     this.socketManager = socketManager;
-    
-    // Флаг для отслеживания, что смена началась в ЭТОЙ сессии браузера
-    // (а не восстановлена из localStorage)
-    this._shiftStartedInThisSession = false;
-    
+    this.zoneCheckInterval = null; // Интервал проверки зон
     this.SHIFT_STATES = {
       REQUESTING_GPS: 'requesting_gps',
       START_SHIFT: 'start_shift',
       END_SHIFT: 'end_shift', 
       SEARCHING: 'searching',
       TO_PICKUP: 'to_pickup',
-      TO_DROPOFF: 'to_dropoff'
+      AT_PICKUP: 'at_pickup',      // Новый статус - в зоне ресторана
+      TO_DROPOFF: 'to_dropoff',
+      AT_DROPOFF: 'at_dropoff'     // Новый статус - в зоне клиента
     };
   }
 
@@ -24,12 +22,10 @@ class ShiftManager {
   async handleShiftButtonClick() {
     console.log("Клик по кнопке смены");
     
-    console.log("Состояние:", {
-      hasGPS: !!window.geoManager?.currentPosition,
-      isOnShift: this.gameState.isOnShift,
-      isSearching: this.gameState.isSearching,
-      hasOrder: !!this.gameState.currentOrder
-    });
+    const button = document.getElementById("startGame");
+    const buttonText = button?.querySelector("h3")?.textContent;
+    
+    console.log("Текст кнопки:", buttonText);
     
     try {
       // 1. Если нет GPS - запрашиваем
@@ -45,46 +41,51 @@ class ShiftManager {
         return;
       }
       
-      // 2. ВАЖНО: Если смена восстановлена из localStorage, но GPS только что получили
-      // то нужно сбросить флаг смены, чтобы пользователь начал заново
-      if (this.gameState.isOnShift && !this._shiftStartedInThisSession) {
-        console.log("⚠️ Смена восстановлена из localStorage, но не начата в этой сессии - сбрасываем");
-        this.gameState.setShiftStatus(false);
-        this.gameState.setSearchingStatus(false);
-        // Оставляем заказ для восстановления после перезапуска смены
-        this.updateShiftButton(this.SHIFT_STATES.START_SHIFT);
-        return;
-      }
-      
-      // 3. Если смена не начата - начинаем
+      // 2. Если смена не начата - начинаем
       if (!this.gameState.isOnShift) {
         console.log("→ Начинаем смену");
         await this.startShift();
         return;
       }
       
-      // 4. Если идет поиск - останавливаем
+      // 3. Если идет поиск - останавливаем
       if (this.gameState.isSearching) {
         console.log("→ Останавливаем поиск");
         await this.stopSearching();
         return;
       }
       
-      // 5. Если есть активный заказ - открываем навигацию
+      // 4. Если есть активный заказ
       if (this.gameState.currentOrder) {
+        const order = this.gameState.currentOrder;
+        
+        // 4a. Если кнопка "Забрать заказ" - выполняем pickup
+        if (buttonText === "Забрать заказ") {
+          console.log("→ Забираем заказ");
+          await this.pickupOrder();
+          return;
+        }
+        
+        // 4b. Если кнопка "Доставить заказ" - выполняем delivery
+        if (buttonText === "Доставить заказ") {
+          console.log("→ Доставляем заказ");
+          await this.deliverOrder();
+          return;
+        }
+        
+        // 4c. Иначе - открываем навигацию
         console.log("→ Открываем навигацию к заказу");
         this.openNavigation();
         return;
       }
       
-      // 6. Иначе - завершаем смену
+      // 5. Иначе - завершаем смену
       console.log("→ Завершаем смену");
       await this.endShift();
       
     } catch (error) {
       console.error("Ошибка при обработке клика:", error);
       
-      // Восстанавливаем правильное состояние кнопки
       if (!window.geoManager?.currentPosition) {
         this.updateShiftButton(this.SHIFT_STATES.REQUESTING_GPS);
       } else if (!this.gameState.isOnShift) {
@@ -117,21 +118,18 @@ class ShiftManager {
         throw new Error(error.error || 'Не удалось начать смену');
       }
 
-      // ВАЖНО: Устанавливаем флаг, что смена началась в этой сессии
-      this._shiftStartedInThisSession = true;
-      
       this.gameState.setShiftStatus(true);
       console.log("✅ Смена начата");
       
-      // Запускаем отслеживание GPS
       window.geoManager.startTracking((position) => {
         this.sendPositionUpdate(position);
       });
 
-      // Логинимся в WebSocket
       this.socketManager.loginUser(this.gameState.userId);
       
-      // Небольшая задержка перед началом поиска
+      // Запускаем проверку зон
+      this.startZoneChecking();
+      
       setTimeout(() => {
         this.startSearching();
       }, 500);
@@ -187,14 +185,14 @@ class ShiftManager {
         throw new Error(error.error || 'Не удалось закончить смену');
       }
 
-      // Сбрасываем флаг смены в этой сессии
-      this._shiftStartedInThisSession = false;
-      
       this.gameState.setShiftStatus(false);
       this.gameState.setSearchingStatus(false);
       this.gameState.setCurrentOrder(null);
       
       window.geoManager.stopTracking();
+      
+      // Останавливаем проверку зон
+      this.stopZoneChecking();
       
       if (window.mapManager) {
         window.mapManager.clearOrderMarkers();
@@ -209,6 +207,169 @@ class ShiftManager {
     }
   }
 
+  // Забор заказа в ресторане
+  async pickupOrder() {
+    console.log("Выполняем pickup заказа");
+    
+    try {
+      const response = await fetch('/api/order/pickup', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({user_id: this.gameState.userId})
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        console.log("✅ Заказ забран:", result);
+        
+        // Обновляем заказ в состоянии
+        const updatedOrder = result.order;
+        updatedOrder.pickup_time = result.order.pickup_time;
+        this.gameState.setCurrentOrder(updatedOrder);
+        
+        // Меняем кнопку на "К клиенту"
+        this.updateShiftButton(this.SHIFT_STATES.TO_DROPOFF);
+        
+        alert("✅ Заказ забран! Теперь доставьте его клиенту.");
+      } else {
+        alert("❌ Ошибка: " + result.error);
+      }
+    } catch (error) {
+      console.error("Ошибка pickup:", error);
+      alert("❌ Ошибка забора заказа: " + error.message);
+    }
+  }
+
+  // Доставка заказа клиенту
+  async deliverOrder() {
+    console.log("Выполняем delivery заказа");
+    
+    try {
+      const response = await fetch('/api/order/deliver', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({user_id: this.gameState.userId})
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        console.log("✅ Заказ доставлен:", result);
+        
+        const deliveryResult = result.delivery_result;
+        const payout = deliveryResult.payout;
+        
+        // Очищаем текущий заказ
+        this.gameState.setCurrentOrder(null);
+        
+        // Останавливаем проверку зон
+        this.stopZoneChecking();
+        
+        // Очищаем маркеры
+        if (window.mapManager) {
+          window.mapManager.clearOrderMarkers();
+        }
+        
+        // Показываем результат
+        const bonusText = payout.on_time ? `\n🎉 Бонус за своевременность: $${payout.bonus_amount}` : '';
+        alert(
+          `✅ Заказ доставлен!\n\n` +
+          `💰 Выплата: $${payout.total}${bonusText}\n` +
+          `📦 Новый баланс: $${result.new_balance}\n` +
+          `⏱️ Время доставки: ${Math.floor(deliveryResult.delivery_duration / 60)} мин`
+        );
+        
+        // Обновляем баланс в UI
+        const balanceEl = document.getElementById('balanceAmount');
+        if (balanceEl) {
+          balanceEl.textContent = result.new_balance.toFixed(2);
+        }
+        
+        // Начинаем поиск нового заказа
+        setTimeout(() => {
+          this.startSearching();
+        }, 1000);
+        
+      } else {
+        alert("❌ Ошибка: " + result.error);
+      }
+    } catch (error) {
+      console.error("Ошибка delivery:", error);
+      alert("❌ Ошибка доставки заказа: " + error.message);
+    }
+  }
+
+  // Запуск периодической проверки зон
+  startZoneChecking() {
+    // Останавливаем предыдущий интервал если есть
+    this.stopZoneChecking();
+    
+    // Проверяем зоны каждые 2 секунды
+    this.zoneCheckInterval = setInterval(() => {
+      this.checkZones();
+    }, 2000);
+    
+    console.log("✅ Проверка зон запущена");
+  }
+
+  // Остановка проверки зон
+  stopZoneChecking() {
+    if (this.zoneCheckInterval) {
+      clearInterval(this.zoneCheckInterval);
+      this.zoneCheckInterval = null;
+      console.log("🛑 Проверка зон остановлена");
+    }
+  }
+
+  // Проверка зон и обновление кнопки
+  async checkZones() {
+    if (!this.gameState.currentOrder || !window.geoManager?.currentPosition) {
+      return;
+    }
+    
+    const pos = window.geoManager.getCurrentPosition();
+    
+    try {
+      const response = await fetch('/api/position', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          user_id: this.gameState.userId,
+          lat: pos.lat,
+          lng: pos.lng,
+          accuracy: pos.accuracy
+        })
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        const zones = result.zones;
+        
+        // Обновляем кнопку в зависимости от зоны
+        const order = this.gameState.currentOrder;
+        
+        if (!order.pickup_time) {
+          // Едем к ресторану
+          if (zones.in_pickup_zone && zones.can_pickup) {
+            this.updateShiftButton(this.SHIFT_STATES.AT_PICKUP);
+          } else {
+            this.updateShiftButton(this.SHIFT_STATES.TO_PICKUP);
+          }
+        } else {
+          // Едем к клиенту
+          if (zones.in_dropoff_zone && zones.can_deliver) {
+            this.updateShiftButton(this.SHIFT_STATES.AT_DROPOFF);
+          } else {
+            this.updateShiftButton(this.SHIFT_STATES.TO_DROPOFF);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Ошибка проверки зон:", error);
+    }
+  }
+
   // Открыть навигацию к точке
   openNavigation() {
     const order = this.gameState.currentOrder;
@@ -217,14 +378,11 @@ class ShiftManager {
       return;
     }
     
-    // Определяем куда идти
     let target, targetName;
     if (!order.pickup_time) {
-      // Идём к ресторану
       target = order.pickup;
       targetName = order.pickup.name;
     } else {
-      // Идём к клиенту
       target = order.dropoff;
       targetName = order.dropoff.address;
     }
@@ -234,7 +392,6 @@ class ShiftManager {
     
     console.log("Открываем навигацию к:", targetName);
     
-    // Открываем 2GIS с маршрутом
     const url = `https://2gis.kz/almaty/directions/points/${lng},${lat}`;
     window.open(url, '_blank');
   }
@@ -280,16 +437,26 @@ class ShiftManager {
         break;
         
       case this.SHIFT_STATES.TO_PICKUP:
-      case 'to_pickup':
         buttonText.textContent = 'К ресторану';
         button.style.backgroundColor = "#007cbf";
         button.disabled = false;
         break;
         
+      case this.SHIFT_STATES.AT_PICKUP:
+        buttonText.textContent = 'Забрать заказ';
+        button.style.backgroundColor = "#00aa44";
+        button.disabled = false;
+        break;
+        
       case this.SHIFT_STATES.TO_DROPOFF:
-      case 'to_dropoff':
         buttonText.textContent = 'К клиенту';
         button.style.backgroundColor = "#9b59b6";
+        button.disabled = false;
+        break;
+        
+      case this.SHIFT_STATES.AT_DROPOFF:
+        buttonText.textContent = 'Доставить заказ';
+        button.style.backgroundColor = "#ff4444";
         button.disabled = false;
         break;
         

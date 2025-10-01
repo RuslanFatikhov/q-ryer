@@ -119,10 +119,16 @@ class Order(db.Model):
         now = datetime.utcnow()
         
         if self.status == 'pending':
+            # Время до истечения с момента создания
             remaining = (self.expires_at - now).total_seconds()
-        elif self.status == 'active' and self.pickup_time:
-            delivery_deadline = self.pickup_time + timedelta(seconds=self.timer_seconds * 2)
-            remaining = (delivery_deadline - now).total_seconds()
+        elif self.status == 'active':
+            if self.pickup_time:
+                # Заказ забран - время до дедлайна доставки
+                delivery_deadline = self.pickup_time + timedelta(seconds=self.timer_seconds * 2)
+                remaining = (delivery_deadline - now).total_seconds()
+            else:
+                # Заказ принят но не забран - используем expires_at
+                remaining = (self.expires_at - now).total_seconds()
         else:
             remaining = 0
         

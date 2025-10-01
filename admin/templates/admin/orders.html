@@ -1,0 +1,80 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Заказы{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Заказы</h1>
+    <div class="page-actions">
+        <!-- Фильтр по статусу -->
+        <select id="statusFilter" class="filter-select">
+            <option value="">Все статусы</option>
+            <option value="pending">Ожидание</option>
+            <option value="active">Активные</option>
+            <option value="completed">Завершенные</option>
+            <option value="cancelled">Отмененные</option>
+        </select>
+        
+        <!-- Фильтр по дате -->
+        <input 
+            type="date" 
+            id="dateFrom" 
+            class="date-input" 
+            placeholder="От"
+        >
+        <input 
+            type="date" 
+            id="dateTo" 
+            class="date-input" 
+            placeholder="До"
+        >
+        
+        <button id="applyFilters" class="btn btn-secondary">
+            Применить
+        </button>
+    </div>
+</div>
+
+<!-- Таблица заказов -->
+<div class="table-container">
+    <table class="data-table" id="ordersTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Пользователь</th>
+                <th>Откуда</th>
+                <th>Куда</th>
+                <th>Сумма</th>
+                <th>Статус</th>
+                <th>Дата</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody id="ordersTableBody">
+            <!-- Заполняется через JS -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Пагинация -->
+<div class="pagination" id="pagination">
+    <!-- Заполняется через JS -->
+</div>
+
+<!-- Модальное окно подробностей заказа -->
+<div id="orderDetailsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Детали заказа</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body" id="orderDetailsBody">
+            <!-- Заполняется через JS -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('admin_pages.static', filename='orders.js') }}"></script>
+{% endblock %}

@@ -3,18 +3,91 @@
 {% block title %}Вход — Courier Sim{% endblock %}
 
 {% block content %}
-<main style="max-width:480px;margin:40px auto;padding:16px;">
-  <h2 style="margin-bottom:16px;">Вход в Courier Sim</h2>
-  <form id="login-form" style="display:flex;gap:12px;align-items:flex-end;">
-    <div style="flex:1;">
-      <label for="user_id" style="display:block;margin-bottom:6px;">ID пользователя</label>
-      <input id="user_id" name="user_id" type="number" min="1" required
-             style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;">
-    </div>
-    <button type="submit" style="padding:10px 16px;border:0;border-radius:8px;background:#111;color:#fff;cursor:pointer;">
-      Войти
-    </button>
-  </form>
-  <p id="login-status" style="margin-top:12px;color:#666;"></p>
-</main>
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--black100); padding: 20px;">
+  <div style="background: var(--white100); padding: 40px; border-radius: 16px; max-width: 400px; width: 100%;">
+    <h1 style="text-align: center; margin-bottom: 8px;">Courier Sim</h1>
+    <p style="text-align: center; color: #666; margin-bottom: 32px;">Войдите чтобы начать игру</p>
+    
+    <!-- Форма входа -->
+    <form id="loginForm" style="margin-bottom: 24px;">
+      <div style="margin-bottom: 16px;">
+        <label for="username" style="display: block; margin-bottom: 8px; font-weight: 500;">
+          Имя пользователя
+        </label>
+        <input 
+          type="text" 
+          id="username" 
+          name="username"
+          placeholder="Введите ваше имя"
+          required
+          style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px;"
+        >
+      </div>
+      
+      <button 
+        type="submit" 
+        class="action_button"
+        style="width: 100%; margin-top: 8px;"
+      >
+        <h3 class="white100">Войти / Зарегистрироваться</h3>
+      </button>
+    </form>
+    
+    <p style="text-align: center; color: #999; font-size: 13px;">
+      Если аккаунта нет, он будет создан автоматически
+    </p>
+  </div>
+</div>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const username = document.getElementById('username').value.trim();
+  const button = e.target.querySelector('button');
+  const buttonText = button.querySelector('h3');
+  
+  if (!username) {
+    alert('Введите имя пользователя');
+    return;
+  }
+  
+  // Блокируем кнопку
+  button.disabled = true;
+  buttonText.textContent = 'Вход...';
+  
+  try {
+    const response = await fetch('/api/auth/guest_login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username: username })
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok && data.success) {
+      // Сохраняем userId в localStorage
+      localStorage.setItem('courier_user_id', data.user.id);
+      localStorage.setItem('courier_username', data.user.username);
+      
+      // Очищаем старое состояние игры
+      localStorage.removeItem('courierGameState');
+      
+      // Редирект на игру
+      window.location.href = '/game';
+    } else {
+      alert('Ошибка входа: ' + (data.error || 'Неизвестная ошибка'));
+      button.disabled = false;
+      buttonText.textContent = 'Войти / Зарегистрироваться';
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    alert('Ошибка соединения с сервером');
+    button.disabled = false;
+    buttonText.textContent = 'Войти / Зарегистрироваться';
+  }
+});
+</script>
 {% endblock %}

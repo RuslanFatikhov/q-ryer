@@ -195,9 +195,6 @@ function restoreState() {
   const restored = gameState.restore();
   if (restored) {
     console.log("Состояние восстановлено");
-    
-    // НЕ обновляем UI здесь - пусть handleShiftButtonClick сам разберётся
-    // при первом клике на кнопку
   }
 }
 

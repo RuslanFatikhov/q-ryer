@@ -198,28 +198,17 @@ def get_reports():
         # Параметры запроса
         page = int(request.args.get('page', 1))
         per_page = min(int(request.args.get('per_page', 20)), 100)
-        status = request.args.get('status')  # pending, in_review, resolved, dismissed
-        priority = request.args.get('priority')  # low, medium, high, critical
-        report_type = request.args.get('type')
+        status = request.args.get('status')  # pending, resolved, rejected
         
         # Базовый запрос
         query = Report.query
         
-        # Фильтры
+        # Фильтр по статусу
         if status:
             query = query.filter_by(status=status)
         
-        if priority:
-            query = query.filter_by(priority=priority)
-        
-        if report_type:
-            query = query.filter_by(report_type=report_type)
-        
-        # Сортировка: сначала по приоритету, затем по дате
-        query = query.order_by(
-            desc(Report.priority),
-            desc(Report.created_at)
-        )
+        # Сортировка по дате создания
+        query = query.order_by(desc(Report.created_at))
         
         # Пагинация
         paginated = query.paginate(
@@ -245,6 +234,7 @@ def get_reports():
     except Exception as e:
         logger.error(f"Error getting reports: {str(e)}")
         return jsonify({'error': 'Failed to get reports'}), 500
+
 
 @admin_bp.route('/reports/<int:report_id>/status', methods=['POST'])
 def update_report_status(report_id):
@@ -509,3 +499,38 @@ def get_system_status():
             'status': 'error',
             'error': str(e)
         }), 500
+@admin_bp.route('/users/<int:user_id>', methods=['POST'])
+def update_user(user_id):
+    """
+    Обновление данных пользователя администратором.
+    """
+    try:
+        data = request.get_json()
+        
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        
+        # Обновляем баланс если указан
+        if 'balance' in data:
+            user.balance = float(data['balance'])
+        
+        # Обновляем статус активности если указан
+        if 'is_active' in data:
+            user.is_active = bool(data['is_active'])
+        
+        user.updated_at = db.func.now()
+        db.session.commit()
+        
+        logger.info(f"Admin updated user {user_id}")
+        
+        return jsonify({
+            'success': True,
+            'message': 'User updated successfully',
+            'user': user.to_dict()
+        })
+        
+    except Exception as e:
+        logger.error(f"Error updating user: {str(e)}")
+        db.session.rollback()
+        return jsonify({'error': 'Failed to update user'}), 500

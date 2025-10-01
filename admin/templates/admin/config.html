@@ -1,0 +1,154 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Настройки{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Настройки системы</h1>
+</div>
+
+<div class="config-container">
+    <form id="configForm">
+        <!-- Экономика -->
+        <div class="config-section">
+            <h3>Экономика</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="base_payment">Базовая оплата ($)</label>
+                    <input 
+                        type="number" 
+                        id="base_payment" 
+                        name="base_payment"
+                        step="0.01" 
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="pickup_fee">Забор заказа ($)</label>
+                    <input 
+                        type="number" 
+                        id="pickup_fee" 
+                        name="pickup_fee"
+                        step="0.01" 
+                        required
+                    >
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="dropoff_fee">Доставка ($)</label>
+                    <input 
+                        type="number" 
+                        id="dropoff_fee" 
+                        name="dropoff_fee"
+                        step="0.01" 
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="distance_rate">$ за км</label>
+                    <input 
+                        type="number" 
+                        id="distance_rate" 
+                        name="distance_rate"
+                        step="0.01" 
+                        required
+                    >
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="on_time_bonus">Бонус за своевременность ($)</label>
+                    <input 
+                        type="number" 
+                        id="on_time_bonus" 
+                        name="on_time_bonus"
+                        step="0.01" 
+                        required
+                    >
+                </div>
+            </div>
+        </div>
+        
+        <!-- Геймплей -->
+        <div class="config-section">
+            <h3>Геймплей</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="pickup_radius">Радиус забора (м)</label>
+                    <input 
+                        type="number" 
+                        id="pickup_radius" 
+                        name="pickup_radius"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="dropoff_radius">Радиус доставки (м)</label>
+                    <input 
+                        type="number" 
+                        id="dropoff_radius" 
+                        name="dropoff_radius"
+                        required
+                    >
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="delivery_speed_kmh">Скорость доставки (км/ч)</label>
+                    <input 
+                        type="number" 
+                        id="delivery_speed_kmh" 
+                        name="delivery_speed_kmh"
+                        step="0.1"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="delivery_base_time">Базовое время (сек)</label>
+                    <input 
+                        type="number" 
+                        id="delivery_base_time" 
+                        name="delivery_base_time"
+                        required
+                    >
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="max_gps_accuracy">Макс. точность GPS (м)</label>
+                    <input 
+                        type="number" 
+                        id="max_gps_accuracy" 
+                        name="max_gps_accuracy"
+                        required
+                    >
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">
+            Сохранить изменения
+        </button>
+    </form>
+</div>
+
+<!-- Уведомление об успешном сохранении -->
+<div id="saveNotification" class="notification">
+    Настройки успешно сохранены!
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('admin_pages.static', filename='config.js') }}"></script>
+{% endblock %}

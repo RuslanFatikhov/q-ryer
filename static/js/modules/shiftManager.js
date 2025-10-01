@@ -5,6 +5,7 @@ class ShiftManager {
   constructor(gameState, socketManager) {
     this.gameState = gameState;
     this.socketManager = socketManager;
+    this.lastButtonState = null; // Последнее состояние кнопки для предотвращения спама
     this.zoneCheckInterval = null; // Интервал проверки зон
     this.SHIFT_STATES = {
       REQUESTING_GPS: 'requesting_gps',
@@ -403,7 +404,11 @@ class ShiftManager {
     
     if (!button || !buttonText) return;
     
-    console.log("Обновление кнопки →", state);
+    // Логируем только если состояние изменилось
+    if (this.lastButtonState !== state) {
+      console.log("Обновление кнопки →", state);
+      this.lastButtonState = state;
+    }
     
     switch (state) {
       case this.SHIFT_STATES.REQUESTING_GPS:

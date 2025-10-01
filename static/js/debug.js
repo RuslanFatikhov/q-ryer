@@ -14,21 +14,7 @@ class DebugPanel {
     this.panel = document.createElement('div');
     this.panel.id = 'debugPanel';
     this.panel.innerHTML = `
-      <div style="
-        position: fixed;
-        bottom: 120px;
-        right: 12px;
-        background: rgba(0,0,0,0.9);
-        color: white;
-        padding: 16px;
-        border-radius: 12px;
-        z-index: 1000;
-        font-family: monospace;
-        font-size: 12px;
-        min-width: 300px;
-        display: block;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      ">
+      <div>
         <h4 style="margin: 0 0 12px 0; color: #ff6600;">🛠️ DEBUG PANEL</h4>
         
         <div style="margin-bottom: 12px;">

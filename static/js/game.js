@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeUI();
   
   // Восстанавливаем состояние
-  restoreState();
+  restoreState().catch(err => console.error("Ошибка восстановления:", err));
   
   console.log("Инициализация завершена");
 });
@@ -191,10 +191,28 @@ function initializeModals() {
 /**
  * Восстановление состояния
  */
-function restoreState() {
-  const restored = gameState.restore();
+async function restoreState() {
+  // Создаем StateManager
+  const stateManager = new StateManager(gameState);
+  window.stateManager = stateManager;
+  
+  // Пытаемся восстановить состояние с сервера
+  const restored = await stateManager.restoreFromServer();
+  
   if (restored) {
-    console.log("Состояние восстановлено");
+    console.log("✅ Состояние восстановлено с сервера");
+    
+    // Если есть активный заказ, запускаем GPS tracking
+    if (gameState.currentOrder && window.geoManager) {
+      await window.geoManager.requestPermission();
+      window.geoManager.startTracking((position) => {
+        if (window.shiftManager) {
+          window.shiftManager.sendPositionUpdate(position);
+        }
+      });
+    }
+  } else {
+    console.log("Нет активного состояния для восстановления");
   }
 }
 

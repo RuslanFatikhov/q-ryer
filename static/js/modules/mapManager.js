@@ -6,7 +6,6 @@ class MapManager {
     this.map = null;
     this.userMarker = null;
     this.orderMarkers = [];
-    this.zoneCircles = []; // Круги для визуализации зон
   }
 
   // Инициализация карты
@@ -23,72 +22,29 @@ class MapManager {
     
     this.map.on('load', () => {
       console.log("Карта загружена");
-      
-      // Добавляем источники для кругов зон
-      this.map.addSource('pickup-zone', {
-        type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: []
-        }
-      });
-      
-      this.map.addSource('dropoff-zone', {
-        type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: []
-        }
-      });
-      
-      // Добавляем слои для отображения зон
-      this.map.addLayer({
-        id: 'pickup-zone-fill',
-        type: 'fill',
-        source: 'pickup-zone',
-        paint: {
-          'fill-color': '#00aa44',
-          'fill-opacity': 0.15
-        }
-      });
-      
-      this.map.addLayer({
-        id: 'pickup-zone-outline',
-        type: 'line',
-        source: 'pickup-zone',
-        paint: {
-          'line-color': '#00aa44',
-          'line-width': 2,
-          'line-dasharray': [2, 2]
-        }
-      });
-      
-      this.map.addLayer({
-        id: 'dropoff-zone-fill',
-        type: 'fill',
-        source: 'dropoff-zone',
-        paint: {
-          'fill-color': '#ff4444',
-          'fill-opacity': 0.15
-        }
-      });
-      
-      this.map.addLayer({
-        id: 'dropoff-zone-outline',
-        type: 'line',
-        source: 'dropoff-zone',
-        paint: {
-          'line-color': '#ff4444',
-          'line-width': 2,
-          'line-dasharray': [2, 2]
-        }
-      });
     });
 
     return this.map;
   }
 
-  // Добавление маркера пользователя
+  // Создание кастомного HTML элемента для маркера
+  createCustomMarkerElement(iconPath, color, size = 40) {
+    const el = document.createElement('div');
+    el.style.width = `${size}px`;
+    el.style.height = `${size}px`;
+    el.style.backgroundImage = `url(${iconPath})`;
+    el.style.backgroundSize = 'contain';
+    el.style.backgroundRepeat = 'no-repeat';
+    el.style.backgroundPosition = 'center';
+    el.style.cursor = 'pointer';
+    
+    // Добавляем тень для лучшей видимости
+    el.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))';
+    
+    return el;
+  }
+
+  // Добавление маркера пользователя с кастомной иконкой
   addUserMarker(coords) {
     if (!this.map) return;
     
@@ -96,12 +52,29 @@ class MapManager {
       this.userMarker.remove();
     }
     
-    this.userMarker = new mapboxgl.Marker({
-      color: '#007cbf',
-      scale: 0.8
-    })
-    .setLngLat([coords.longitude, coords.latitude])
-    .addTo(this.map);
+    // Создаем кастомный элемент для игрока (синий круг с иконкой пользователя)
+    const el = document.createElement('div');
+    el.style.width = '30px';
+    el.style.height = '30px';
+    el.style.borderRadius = '50%';
+    el.style.backgroundColor = '#007cbf';
+    el.style.border = '3px solid white';
+    el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+    el.style.display = 'flex';
+    el.style.alignItems = 'center';
+    el.style.justifyContent = 'center';
+    
+    // Добавляем маленькую иконку внутри
+    const icon = document.createElement('div');
+    icon.style.width = '16px';
+    icon.style.height = '16px';
+    icon.style.backgroundColor = 'white';
+    icon.style.borderRadius = '50%';
+    el.appendChild(icon);
+    
+    this.userMarker = new mapboxgl.Marker({element: el})
+      .setLngLat([coords.longitude, coords.latitude])
+      .addTo(this.map);
   }
 
   // Обновление позиции пользователя
@@ -123,36 +96,37 @@ class MapManager {
     });
   }
 
-  // Показ заказа на карте с зонами
+  // Показ заказа на карте с кастомными маркерами
   showOrder(order) {
     if (!this.map) return;
     
     this.clearOrderMarkers();
     
-    // Маркер ресторана
-    const pickupMarker = new mapboxgl.Marker({
-      color: '#00aa44',
-      scale: 1.2
-    })
-    .setLngLat([order.pickup.lng, order.pickup.lat])
-    .setPopup(new mapboxgl.Popup({ offset: 25 })
-      .setHTML(`<h3>Забрать</h3><p>${order.pickup.name}</p>`))
-    .addTo(this.map);
+    // Кастомный маркер для ресторана (зеленая сумка)
+    const pickupEl = this.createCustomMarkerElement('/static/img/icon/bag_white.svg', '#00aa44', 50);
+    pickupEl.style.backgroundColor = '#00aa44';
+    pickupEl.style.borderRadius = '50%';
+    pickupEl.style.padding = '10px';
     
-    // Маркер здания
-    const dropoffMarker = new mapboxgl.Marker({
-      color: '#ff4444',
-      scale: 1.2
-    })
-    .setLngLat([order.dropoff.lng, order.dropoff.lat])
-    .setPopup(new mapboxgl.Popup({ offset: 25 })
-      .setHTML(`<h3>Доставить</h3><p>${order.dropoff.address}</p>`))
-    .addTo(this.map);
+    const pickupMarker = new mapboxgl.Marker({element: pickupEl})
+      .setLngLat([order.pickup.lng, order.pickup.lat])
+      .setPopup(new mapboxgl.Popup({ offset: 25 })
+        .setHTML(`<h3>Забрать</h3><p>${order.pickup.name}</p>`))
+      .addTo(this.map);
+    
+    // Кастомный маркер для здания (красный дом)
+    const dropoffEl = this.createCustomMarkerElement('/static/img/icon/home_white.svg', '#ff4444', 50);
+    dropoffEl.style.backgroundColor = '#ff4444';
+    dropoffEl.style.borderRadius = '50%';
+    dropoffEl.style.padding = '10px';
+    
+    const dropoffMarker = new mapboxgl.Marker({element: dropoffEl})
+      .setLngLat([order.dropoff.lng, order.dropoff.lat])
+      .setPopup(new mapboxgl.Popup({ offset: 25 })
+        .setHTML(`<h3>Доставить</h3><p>${order.dropoff.address}</p>`))
+      .addTo(this.map);
     
     this.orderMarkers = [pickupMarker, dropoffMarker];
-    
-    // Показываем зоны
-    this.showZones(order);
     
     // Центрируем карту на маршруте
     const bounds = new mapboxgl.LngLatBounds();
@@ -167,86 +141,10 @@ class MapManager {
     this.map.fitBounds(bounds, { padding: 80 });
   }
 
-  // Отображение зон pickup и dropoff
-  showZones(order) {
-    if (!this.map || !this.map.isStyleLoaded()) return;
-    
-    const radiusMeters = 30; // Радиус зоны в метрах
-    const radiusDegrees = radiusMeters / 111000; // Примерное преобразование в градусы
-    
-    // Создаем круг для pickup зоны
-    const pickupCircle = this.createCircle(
-      [order.pickup.lng, order.pickup.lat],
-      radiusDegrees,
-      64
-    );
-    
-    // Создаем круг для dropoff зоны
-    const dropoffCircle = this.createCircle(
-      [order.dropoff.lng, order.dropoff.lat],
-      radiusDegrees,
-      64
-    );
-    
-    // Обновляем источники данных
-    this.map.getSource('pickup-zone').setData({
-      type: 'FeatureCollection',
-      features: [pickupCircle]
-    });
-    
-    this.map.getSource('dropoff-zone').setData({
-      type: 'FeatureCollection',
-      features: [dropoffCircle]
-    });
-  }
-
-  // Создание геометрии круга
-  createCircle(center, radiusDegrees, points) {
-    const coordinates = [];
-    
-    for (let i = 0; i < points; i++) {
-      const angle = (i / points) * 2 * Math.PI;
-      const dx = radiusDegrees * Math.cos(angle);
-      const dy = radiusDegrees * Math.sin(angle);
-      
-      coordinates.push([
-        center[0] + dx / Math.cos(center[1] * Math.PI / 180),
-        center[1] + dy
-      ]);
-    }
-    
-    // Замыкаем круг
-    coordinates.push(coordinates[0]);
-    
-    return {
-      type: 'Feature',
-      geometry: {
-        type: 'Polygon',
-        coordinates: [coordinates]
-      }
-    };
-  }
-
-  // Очистка зон
-  clearZones() {
-    if (!this.map || !this.map.isStyleLoaded()) return;
-    
-    this.map.getSource('pickup-zone')?.setData({
-      type: 'FeatureCollection',
-      features: []
-    });
-    
-    this.map.getSource('dropoff-zone')?.setData({
-      type: 'FeatureCollection',
-      features: []
-    });
-  }
-
   // Очистка маркеров заказов
   clearOrderMarkers() {
     this.orderMarkers.forEach(marker => marker.remove());
     this.orderMarkers = [];
-    this.clearZones();
   }
 
   // Установка центра и зума

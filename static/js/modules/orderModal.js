@@ -133,6 +133,11 @@ class OrderModal {
       window.mapManager.showOrder(result.order);
     }
     
+    // Запускаем проверку зон для нового заказа
+    if (window.shiftManager) {
+      window.shiftManager.startZoneChecking();
+    }
+    
     // Обновляем кнопку
     const button = document.getElementById("startGame");
     const buttonText = button?.querySelector("h3");

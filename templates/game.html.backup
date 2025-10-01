@@ -126,7 +126,7 @@
         <!--Modal header-->
         <span class="modal_header">
           <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-            <h1 class="black100">$1000000</h1>
+            <h1 id="orderPayout" class="black100">$1000000</h1>
           </div>
           
           <!--Close-->
@@ -253,6 +253,8 @@
 
   <!-- Главный файл -->
   <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+  <!-- Debug утилиты (только для development) -->
+  <script src="{{ url_for('static', filename='js/debug.js') }}"></script>
 
   <!-- Дополнительные обработчики -->
   <script>

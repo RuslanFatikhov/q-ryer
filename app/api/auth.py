@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 API endpoints для авторизации в симуляторе курьера.
-Google OAuth и гостевой вход.
+Регистрация, вход по email/username + пароль, Google OAuth.
 """
 
 from flask import Blueprint, request, jsonify, current_app
 from app import db
 from app.models import User
 import logging
-import uuid
+import re
 import requests
 
 # Создаем blueprint
@@ -17,36 +17,149 @@ auth_bp = Blueprint('auth', __name__)
 # Настройка логирования
 logger = logging.getLogger(__name__)
 
-@auth_bp.route('/guest_login', methods=['POST'])
-def guest_login():
+def validate_email(email):
+    """Проверка корректности email"""
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
+
+def validate_password(password):
     """
-    Гостевой вход без регистрации.
-    Создает временного пользователя.
+    Проверка надёжности пароля.
+    Минимум 6 символов.
+    """
+    if len(password) < 6:
+        return False, "Пароль должен содержать минимум 6 символов"
+    return True, "OK"
+
+@auth_bp.route('/register', methods=['POST'])
+def register():
+    """
+    Регистрация нового пользователя.
+    
+    Ожидаемые данные:
+    {
+        "username": "nickname",
+        "email": "user@example.com",
+        "password": "password123"
+    }
     """
     try:
-        data = request.get_json() or {}
-        username = data.get('username', f'Guest_{uuid.uuid4().hex[:8]}')
+        data = request.get_json()
         
-        # Проверяем, что имя пользователя не занято
-        existing_user = User.query.filter_by(username=username).first()
-        if existing_user:
-            username = f'{username}_{uuid.uuid4().hex[:4]}'
+        # Проверка наличия всех полей
+        if not data:
+            return jsonify({'error': 'Данные не предоставлены'}), 400
         
-        # Создаем гостевого пользователя
-        user = User.create_user(username=username)
+        username = data.get('username', '').strip()
+        email = data.get('email', '').strip().lower()
+        password = data.get('password', '')
         
-        logger.info(f"Created guest user: {user.username} (ID: {user.id})")
+        # Валидация полей
+        if not username:
+            return jsonify({'error': 'Никнейм обязателен'}), 400
+        
+        if not email:
+            return jsonify({'error': 'Email обязателен'}), 400
+        
+        if not password:
+            return jsonify({'error': 'Пароль обязателен'}), 400
+        
+        # Проверка формата email
+        if not validate_email(email):
+            return jsonify({'error': 'Некорректный email'}), 400
+        
+        # Проверка надёжности пароля
+        is_valid, message = validate_password(password)
+        if not is_valid:
+            return jsonify({'error': message}), 400
+        
+        # Проверка уникальности username
+        if User.query.filter_by(username=username).first():
+            return jsonify({'error': 'Никнейм уже занят'}), 400
+        
+        # Проверка уникальности email
+        if User.query.filter_by(email=email).first():
+            return jsonify({'error': 'Email уже зарегистрирован'}), 400
+        
+        # Создаём пользователя
+        user = User.create_user(username=username, email=email, password=password)
+        
+        logger.info(f"Зарегистрирован новый пользователь: {user.username} (ID: {user.id})")
         
         return jsonify({
             'success': True,
-            'message': 'Guest login successful',
-            'user': user.to_dict(),
-            'session_type': 'guest'
+            'message': 'Регистрация успешна',
+            'user': user.to_dict()
+        }), 201
+        
+    except Exception as e:
+        logger.error(f"Ошибка при регистрации: {str(e)}")
+        db.session.rollback()
+        return jsonify({'error': 'Ошибка при регистрации'}), 500
+
+@auth_bp.route('/login', methods=['POST'])
+def login():
+    """
+    Вход пользователя по username/email + пароль.
+    
+    Ожидаемые данные:
+    {
+        "login": "username или email",
+        "password": "password123"
+    }
+    """
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({'error': 'Данные не предоставлены'}), 400
+        
+        login = data.get('login', '').strip()
+        password = data.get('password', '')
+        
+        # Валидация полей
+        if not login:
+            return jsonify({'error': 'Логин или email обязателен'}), 400
+        
+        if not password:
+            return jsonify({'error': 'Пароль обязателен'}), 400
+        
+        # Ищем пользователя по username или email
+        user = None
+        if validate_email(login):
+            # Если это email
+            user = User.query.filter_by(email=login.lower()).first()
+        else:
+            # Если это username
+            user = User.query.filter_by(username=login).first()
+        
+        # Проверяем существование пользователя
+        if not user:
+            return jsonify({'error': 'Неверный логин или пароль'}), 401
+        
+        # Проверяем, что у пользователя есть пароль (не Google OAuth)
+        if not user.password_hash:
+            return jsonify({'error': 'Этот аккаунт связан с Google. Войдите через Google'}), 401
+        
+        # Проверяем пароль
+        if not user.check_password(password):
+            return jsonify({'error': 'Неверный логин или пароль'}), 401
+        
+        # Проверяем активность аккаунта
+        if not user.is_active:
+            return jsonify({'error': 'Аккаунт заблокирован'}), 403
+        
+        logger.info(f"Пользователь вошёл: {user.username} (ID: {user.id})")
+        
+        return jsonify({
+            'success': True,
+            'message': 'Вход выполнен успешно',
+            'user': user.to_dict()
         })
         
     except Exception as e:
-        logger.error(f"Error in guest login: {str(e)}")
-        return jsonify({'error': 'Failed to create guest user'}), 500
+        logger.error(f"Ошибка при входе: {str(e)}")
+        return jsonify({'error': 'Ошибка при входе'}), 500
 
 @auth_bp.route('/google_login', methods=['POST'])
 def google_login():
@@ -70,7 +183,7 @@ def google_login():
         email = google_user.get('email')
         name = google_user.get('name', email.split('@')[0] if email else 'User')
         
-        # Ищем существующего пользователя
+        # Ищем существующего пользователя по google_id
         user = User.query.filter_by(google_id=google_id).first()
         
         if user:
@@ -89,7 +202,11 @@ def google_login():
             logger.info(f"Google user logged in: {user.username} (ID: {user.id})")
             
         else:
-            # Создаем нового пользователя
+            # Проверяем, не занят ли email
+            existing_email = User.query.filter_by(email=email).first()
+            if existing_email:
+                return jsonify({'error': 'Email уже зарегистрирован. Войдите через форму входа'}), 409
+            
             # Проверяем уникальность имени пользователя
             base_username = name
             counter = 1
@@ -97,7 +214,8 @@ def google_login():
                 name = f"{base_username}_{counter}"
                 counter += 1
             
-            user = User.create_user(
+            # Создаём Google пользователя БЕЗ пароля
+            user = User.create_google_user(
                 username=name,
                 email=email,
                 google_id=google_id
@@ -114,6 +232,7 @@ def google_login():
         
     except Exception as e:
         logger.error(f"Error in Google login: {str(e)}")
+        db.session.rollback()
         return jsonify({'error': 'Failed to authenticate with Google'}), 500
 
 @auth_bp.route('/verify_session', methods=['POST'])
@@ -190,14 +309,15 @@ def logout():
         return jsonify({'error': 'Failed to logout'}), 500
 
 @auth_bp.route('/delete_account', methods=['POST'])
-def delete_guest_account():
+def delete_account():
     """
-    Удаление гостевого аккаунта.
-    Только для гостевых пользователей без Google ID.
+    Удаление аккаунта пользователя.
+    Только для пользователей без активных заказов.
     """
     try:
         data = request.get_json()
         user_id = data.get('user_id')
+        password = data.get('password')
         confirm = data.get('confirm', False)
         
         if not user_id:
@@ -210,9 +330,12 @@ def delete_guest_account():
         if not user:
             return jsonify({'error': 'User not found'}), 404
         
-        # Проверяем, что это гостевой пользователь
-        if user.google_id:
-            return jsonify({'error': 'Cannot delete Google-linked account'}), 403
+        # Если у пользователя есть пароль - проверяем его
+        if user.password_hash:
+            if not password:
+                return jsonify({'error': 'Password required for account deletion'}), 400
+            if not user.check_password(password):
+                return jsonify({'error': 'Incorrect password'}), 401
         
         # Проверяем, нет ли активного заказа
         active_order = user.get_active_order()
@@ -228,7 +351,7 @@ def delete_guest_account():
         db.session.delete(user)
         db.session.commit()
         
-        logger.info(f"Deleted guest account: {username} (ID: {user_id})")
+        logger.info(f"Deleted account: {username} (ID: {user_id})")
         
         return jsonify({
             'success': True,
@@ -237,6 +360,7 @@ def delete_guest_account():
         
     except Exception as e:
         logger.error(f"Error deleting account: {str(e)}")
+        db.session.rollback()
         return jsonify({'error': 'Failed to delete account'}), 500
 
 def verify_google_token(id_token: str) -> dict:
@@ -349,4 +473,5 @@ def update_profile():
         
     except Exception as e:
         logger.error(f"Error updating profile: {str(e)}")
+        db.session.rollback()
         return jsonify({'error': 'Failed to update profile'}), 500

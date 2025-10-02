@@ -15,8 +15,11 @@ class User(db.Model):
     # Основные поля
     id = db.Column(db.Integer, primary_key=True)
     google_id = db.Column(db.String(50), unique=True, nullable=True, index=True)
-    username = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=True, index=True)
+    username = db.Column(db.String(100), unique=True, nullable=False, index=True)
+    email = db.Column(db.String(120), unique=True, nullable=False, index=True)
+    
+    # Пароль (хэшированный)
+    password_hash = db.Column(db.String(255), nullable=True)
     
     # Игровая информация
     balance = db.Column(db.Float, default=0.0, nullable=False)
@@ -42,6 +45,32 @@ class User(db.Model):
     # Связи с другими моделями (без backref, так как они определены в других моделях)
     orders = db.relationship('Order', back_populates='user', lazy='dynamic', cascade='all, delete-orphan')
     reports = db.relationship('Report', back_populates='user', lazy='dynamic', cascade='all, delete-orphan')
+    
+
+    def set_password(self, password):
+        """
+        Устанавливает хэшированный пароль.
+        
+        Args:
+            password (str): Пароль в открытом виде
+        """
+        from werkzeug.security import generate_password_hash
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        """
+        Проверяет пароль пользователя.
+        
+        Args:
+            password (str): Пароль для проверки
+            
+        Returns:
+            bool: True если пароль правильный, иначе False
+        """
+        from werkzeug.security import check_password_hash
+        if not self.password_hash:
+            return False
+        return check_password_hash(self.password_hash, password)
     
     def __repr__(self):
         return f'<User {self.username}(id={self.id})>'
@@ -127,8 +156,37 @@ class User(db.Model):
         }
     
     @classmethod
-    def create_user(cls, username, email=None, google_id=None):
-        """Создание нового пользователя"""
+    def create_user(cls, username, email, password):
+        """
+        Создание нового пользователя с паролем.
+        
+        Args:
+            username (str): Уникальный никнейм
+            email (str): Уникальная почта
+            password (str): Пароль в открытом виде
+            
+        Returns:
+            User: Созданный пользователь
+        """
+        user = cls(username=username, email=email)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        return user
+    
+    @classmethod
+    def create_google_user(cls, username, email, google_id):
+        """
+        Создание пользователя через Google OAuth (без пароля).
+        
+        Args:
+            username (str): Уникальный никнейм
+            email (str): Уникальная почта
+            google_id (str): Google ID пользователя
+            
+        Returns:
+            User: Созданный пользователь
+        """
         user = cls(username=username, email=email, google_id=google_id)
         db.session.add(user)
         db.session.commit()

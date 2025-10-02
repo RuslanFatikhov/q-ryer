@@ -1,24 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}Вход — Courier Sim{% endblock %}
+{% block title %}Регистрация — Courier Sim{% endblock %}
 
 {% block content %}
 <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--black100); padding: 20px;">
   <div style="background: var(--white100); padding: 40px; border-radius: 16px; max-width: 400px; width: 100%;">
     <h1 style="text-align: center; margin-bottom: 8px;">Courier Sim</h1>
-    <p style="text-align: center; color: #666; margin-bottom: 32px;">Войдите чтобы начать игру</p>
+    <p style="text-align: center; color: #666; margin-bottom: 32px;">Создайте аккаунт</p>
     
-    <!-- Форма входа -->
-    <form id="loginForm" style="margin-bottom: 24px;">
+    <!-- Форма регистрации -->
+    <form id="registerForm" style="margin-bottom: 24px;">
       <div style="margin-bottom: 16px;">
-        <label for="login" style="display: block; margin-bottom: 8px; font-weight: 500;">
-          Никнейм или Email
+        <label for="username" style="display: block; margin-bottom: 8px; font-weight: 500;">
+          Никнейм
         </label>
         <input 
           type="text" 
-          id="login" 
-          name="login"
-          placeholder="Введите никнейм или email"
+          id="username" 
+          name="username"
+          placeholder="Придумайте никнейм"
+          required
+          style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px;"
+        >
+      </div>
+      
+      <div style="margin-bottom: 16px;">
+        <label for="email" style="display: block; margin-bottom: 8px; font-weight: 500;">
+          Email
+        </label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email"
+          placeholder="your@email.com"
           required
           style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px;"
         >
@@ -32,7 +46,7 @@
           type="password" 
           id="password" 
           name="password"
-          placeholder="Введите пароль"
+          placeholder="Минимум 6 символов"
           required
           style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px;"
         >
@@ -43,43 +57,50 @@
         class="action_button"
         style="width: 100%; margin-top: 8px;"
       >
-        <h3 class="white100">Войти</h3>
+        <h3 class="white100">Зарегистрироваться</h3>
       </button>
     </form>
     
     <p style="text-align: center; color: #999; font-size: 13px;">
-      Нет аккаунта? <a href="/register" style="color: var(--primary); text-decoration: none;">Зарегистрироваться</a>
+      Уже есть аккаунт? <a href="/login" style="color: var(--primary); text-decoration: none;">Войти</a>
     </p>
   </div>
 </div>
 
 <script>
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   
-  const login = document.getElementById('login').value.trim();
+  const username = document.getElementById('username').value.trim();
+  const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
   const button = e.target.querySelector('button');
   const buttonText = button.querySelector('h3');
   
   // Валидация
-  if (!login || !password) {
+  if (!username || !email || !password) {
     alert('Заполните все поля');
+    return;
+  }
+  
+  if (password.length < 6) {
+    alert('Пароль должен содержать минимум 6 символов');
     return;
   }
   
   // Блокируем кнопку
   button.disabled = true;
-  buttonText.textContent = 'Вход...';
+  buttonText.textContent = 'Регистрация...';
   
   try {
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch('/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ 
-        login: login,
+        username: username,
+        email: email,
         password: password
       })
     });
@@ -97,15 +118,15 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
       // Редирект на игру
       window.location.href = '/game';
     } else {
-      alert('Ошибка входа: ' + (data.error || 'Неизвестная ошибка'));
+      alert('Ошибка регистрации: ' + (data.error || 'Неизвестная ошибка'));
       button.disabled = false;
-      buttonText.textContent = 'Войти';
+      buttonText.textContent = 'Зарегистрироваться';
     }
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('Registration error:', error);
     alert('Ошибка соединения с сервером');
     button.disabled = false;
-    buttonText.textContent = 'Войти';
+    buttonText.textContent = 'Зарегистрироваться';
   }
 });
 </script>

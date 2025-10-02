@@ -87,12 +87,12 @@
         <div style="padding: 16px; flex: 1;">
           <div style="margin-bottom: 24px;">
             <h4 class="black100" style="margin-bottom: 12px;">Радиус поиска заказов</h4>
-            <input type="range" id="searchRadius" min="3" max="25" value="5" 
+            <input type="range" id="searchRadius" min="1" max="10" value="5" 
                    style="width: 100%; margin-bottom: 8px;">
             <div style="display: flex; justify-content: space-between; color: #666; font-size: 14px;">
-              <span>3 км</span>
+              <span>1 км</span>
               <span id="radiusValue">5 км</span>
-              <span>25 км</span>
+              <span>10 км</span>
             </div>
           </div>
           
@@ -291,35 +291,9 @@
       const radiusSlider = document.getElementById('searchRadius');
       const radiusValue = document.getElementById('radiusValue');
       
-        if (radiusSlider && radiusValue) {
-        // Загружаем сохраненное значение
-        const savedRadius = localStorage.getItem('search_radius_km') || '5';
-        radiusSlider.value = savedRadius;
-        radiusValue.textContent = savedRadius + ' км';
-        
-        // Обновление в реальном времени
+      if (radiusSlider && radiusValue) {
         radiusSlider.addEventListener('input', (e) => {
           radiusValue.textContent = e.target.value + ' км';
-        });
-        
-        // Сохранение на сервер
-        radiusSlider.addEventListener('change', async (e) => {
-          const newRadius = parseInt(e.target.value);
-          const userId = window.gameState?.userId;
-          if (!userId) return;
-          
-          try {
-            const res = await fetch('/api/search_radius', {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({user_id: userId, radius_km: newRadius})
-            });
-            const result = await res.json();
-            if (result.success) {
-              localStorage.setItem('search_radius_km', newRadius);
-              console.log(`✅ Радиус: ${newRadius} км`);
-            }
-          } catch (e) { console.error('❌ Ошибка радиуса', e); }
         });
       }
       

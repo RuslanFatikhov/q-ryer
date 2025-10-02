@@ -65,6 +65,13 @@ class SocketManager {
   // Обработчики событий
   onSearchStarted(data) {
     console.log("Поиск заказов начался");
+    
+    // Игнорируем если уже есть активный заказ
+    if (this.gameState.currentOrder) {
+      console.log("Игнорируем search_started - уже есть активный заказ");
+      return;
+    }
+    
     if (window.shiftManager) {
       window.shiftManager.updateShiftButton('searching');
     }

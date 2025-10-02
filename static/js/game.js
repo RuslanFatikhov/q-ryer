@@ -15,21 +15,14 @@ let socketManager = null;
  */
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Инициализация курьерского симулятора");
-  
-  // Проверяем зависимости
-  if (!checkDependencies()) {
-    return;
-  }
-  
-  // Создаем экземпляры модулей
+
+  if (!checkDependencies()) return;
+
   initializeModules();
-  
-  // Настраиваем UI
   initializeUI();
-  
-  // Восстанавливаем состояние
+
   restoreState().catch(err => console.error("Ошибка восстановления:", err));
-  
+
   console.log("Инициализация завершена");
 });
 
@@ -41,12 +34,14 @@ function checkDependencies() {
     console.error("Mapbox GL не загружен");
     return false;
   }
-
   if (typeof GeolocationManager === "undefined") {
     console.error("GeolocationManager не загружен");
     return false;
   }
-
+  if (typeof ShiftManager === "undefined") {
+    console.error("ShiftManager не загружен (проверь порядок <script>)");
+    return false;
+  }
   return true;
 }
 
@@ -57,35 +52,29 @@ function initializeModules() {
   // Состояние игры
   gameState = new GameState();
   window.gameState = gameState;
-  
+
   // Менеджер карты
   mapManager = new MapManager();
   window.mapManager = mapManager;
   mapManager.initialize();
-  
-  // Модальные окна заказов (создается после shiftManager)
-  orderModal = null;
-  
-  // Менеджер смен (создается после socketManager)
-  shiftManager = null;
-  
-  // Менеджер WebSocket
+
+  // WebSocket
   socketManager = new SocketManager(gameState, null, mapManager);
   window.socketManager = socketManager;
   socketManager.initialize();
-  
-  // Теперь создаем shiftManager с socketManager
+
+  // Менеджер смен
   shiftManager = new ShiftManager(gameState, socketManager);
   window.shiftManager = shiftManager;
-  
-  // И orderModal с shiftManager
+
+  // Модалка заказов
   orderModal = new OrderModal(gameState, shiftManager);
   window.orderModal = orderModal;
-  
-  // Обновляем ссылку в socketManager
+
+  // Связь сокета с модалкой
   socketManager.orderModal = orderModal;
-  
-  // Инициализируем геолокацию
+
+  // Геолокация
   initializeGeolocation();
 }
 
@@ -95,18 +84,19 @@ function initializeModules() {
 function initializeGeolocation() {
   const geoManager = new GeolocationManager();
   window.geoManager = geoManager;
-  
+
   if (!geoManager.isSupported()) {
     shiftManager.updateShiftButton('UNSUPPORTED');
     return;
   }
 
-  // Настраиваем callbacks
+  // Коллбэки
   geoManager.onPermissionGranted = (pos) => shiftManager.onGPSPermissionGranted(pos);
   geoManager.onPermissionDenied = (err) => shiftManager.onGPSPermissionDenied(err);
-  geoManager.onPositionUpdate = (pos) => shiftManager.onPositionUpdate(pos);
+  geoManager.onPositionUpdate  = (pos) => shiftManager.onPositionUpdate(pos);
 
-  shiftManager.updateShiftButton('requesting_gps');
+  // ВАЖНО: используем константу состояния, а не строку
+  shiftManager.updateShiftButton(shiftManager.SHIFT_STATES.REQUESTING_GPS);
 }
 
 /**
@@ -121,7 +111,7 @@ function initializeUI() {
     });
   }
 
-  // Кнопка центрирования
+  // Кнопка "мое местоположение"
   const myLocationButton = document.querySelector(".myloc");
   if (myLocationButton) {
     myLocationButton.addEventListener("click", () => {
@@ -136,29 +126,26 @@ function initializeUI() {
   const endShiftBtn = document.getElementById("endShiftBtn");
   if (endShiftBtn) {
     endShiftBtn.addEventListener("click", async () => {
-      if (!confirm("Завершить смену? Активные заказы будут отменены.")) {
-        return;
-      }
-      
+      if (!confirm("Завершить смену? Активные заказы будут отменены.")) return;
+
       try {
         const response = await fetch('/api/stop_shift', {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({user_id: gameState.userId})
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: gameState.userId })
         });
-        
+
         if (response.ok) {
           window.location.reload();
         } else {
-          const error = await response.json();
-          alert("Ошибка: " + error.error);
+          const error = await response.json().catch(() => ({}));
+          alert("Ошибка: " + (error.error || 'Неизвестная ошибка'));
         }
       } catch (e) {
         alert("Ошибка: " + e.message);
       }
     });
   }
-
 }
 
 /**
@@ -175,9 +162,7 @@ function initializeModals() {
   document.querySelectorAll(".close").forEach(el => {
     el.addEventListener("click", () => {
       const modalId = el.dataset.close;
-      if (modalId) {
-        closeModal(modalId);
-      }
+      if (modalId) closeModal(modalId);
     });
   });
 
@@ -192,23 +177,18 @@ function initializeModals() {
  * Восстановление состояния
  */
 async function restoreState() {
-  // Создаем StateManager
   const stateManager = new StateManager(gameState);
   window.stateManager = stateManager;
-  
-  // Пытаемся восстановить состояние с сервера
+
   const restored = await stateManager.restoreFromServer();
-  
+
   if (restored) {
     console.log("✅ Состояние восстановлено с сервера");
-    
-    // Если есть активный заказ, запускаем GPS tracking
+
     if (gameState.currentOrder && window.geoManager) {
       await window.geoManager.requestPermission();
       window.geoManager.startTracking((position) => {
-        if (window.shiftManager) {
-          window.shiftManager.sendPositionUpdate(position);
-        }
+        window.shiftManager?.sendPositionUpdate(position);
       });
     }
   } else {
@@ -217,22 +197,18 @@ async function restoreState() {
 }
 
 /**
- * Вспомогательные функции для модалок
+ * Утилиты модалок
  */
 function openModal(id) {
   const modal = document.getElementById(id);
-  if (modal) {
-    modal.style.display = "flex";
-  }
+  if (modal) modal.style.display = "flex";
 }
 
 function closeModal(id) {
   const modal = document.getElementById(id);
-  if (modal) {
-    modal.style.display = "none";
-  }
+  if (modal) modal.style.display = "none";
 }
 
-// Экспорт в глобальную область
+// Экспорт
 window.openModal = openModal;
 window.closeModal = closeModal;

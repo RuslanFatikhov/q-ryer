@@ -399,3 +399,46 @@ def get_game_config():
     except Exception as e:
         logger.error(f"Error getting config: {str(e)}")
         return jsonify({'error': 'Failed to get config'}), 500
+
+@player_bp.route('/search_radius', methods=['POST'])
+def update_search_radius():
+    """
+    Обновить радиус поиска заказов для игрока.
+    Принимает значение от 3 до 25 км.
+    """
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id')
+        radius_km = data.get('radius_km')
+        
+        # Валидация входных данных
+        if not user_id:
+            return jsonify({'error': 'user_id is required'}), 400
+        
+        if radius_km is None:
+            return jsonify({'error': 'radius_km is required'}), 400
+        
+        # Проверяем существование пользователя
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        
+        # Обновляем радиус через метод модели (с валидацией)
+        try:
+            new_radius = user.update_search_radius(radius_km)
+            
+            logger.info(f"User {user_id} updated search radius to {new_radius} km")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Search radius updated successfully',
+                'search_radius_km': new_radius
+            })
+            
+        except ValueError as ve:
+            # Ошибка валидации радиуса
+            return jsonify({'error': str(ve)}), 400
+        
+    except Exception as e:
+        logger.error(f"Error updating search radius: {str(e)}")
+        return jsonify({'error': 'Failed to update search radius'}), 500

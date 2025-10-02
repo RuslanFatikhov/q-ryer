@@ -125,14 +125,14 @@ def handle_start_order_search(data):
         join_room(search_room)
         user_data['rooms'].append(search_room)
         
-        # Запускаем симуляцию поиска (синхронная версия с socketio.sleep)
-        simulate_order_search_sync(user_id, radius_km)
-        
-        # Подтверждаем начало поиска
+        # Подтверждаем начало поиска ПЕРЕД симуляцией
         emit('search_started', {
             'status': 'searching', 
             'radius_km': radius_km
         })
+        
+        # Запускаем симуляцию поиска (синхронная версия с socketio.sleep)
+        simulate_order_search_sync(user_id, radius_km)
         
     except Exception as e:
         logger.error(f"Error in start order search: {str(e)}", exc_info=True)

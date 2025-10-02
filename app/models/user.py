@@ -22,6 +22,10 @@ class User(db.Model):
     balance = db.Column(db.Float, default=0.0, nullable=False)
     total_deliveries = db.Column(db.Integer, default=0, nullable=False)
     
+    # Настройки поиска заказов
+    # Радиус поиска в километрах (диапазон: 3-25 км, по умолчанию 5 км)
+    search_radius_km = db.Column(db.Integer, default=5, nullable=False)
+    
     # Статус пользователя
     is_active = db.Column(db.Boolean, default=True, nullable=False)
     is_online = db.Column(db.Boolean, default=False, nullable=False)
@@ -50,6 +54,7 @@ class User(db.Model):
             'email': self.email,
             'balance': round(self.balance, 2),
             'total_deliveries': self.total_deliveries,
+            'search_radius_km': self.search_radius_km,
             'is_online': self.is_online,
             'last_activity': self.last_activity.isoformat() if self.last_activity else None,
             'created_at': self.created_at.isoformat()
@@ -77,6 +82,20 @@ class User(db.Model):
             self.last_activity = datetime.utcnow()
         self.updated_at = datetime.utcnow()
         db.session.commit()
+    
+    def update_search_radius(self, radius_km):
+        """Обновление радиуса поиска заказов (3-25 км)"""
+        # Валидация радиуса
+        if not isinstance(radius_km, (int, float)):
+            raise ValueError("Радиус должен быть числом")
+        
+        if radius_km < 3 or radius_km > 25:
+            raise ValueError("Радиус должен быть от 3 до 25 км")
+        
+        self.search_radius_km = int(radius_km)
+        self.updated_at = datetime.utcnow()
+        db.session.commit()
+        return self.search_radius_km
     
     def increment_deliveries(self):
         """Увеличение счетчика доставок на 1"""

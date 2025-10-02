@@ -58,16 +58,35 @@ class OrderModal {
   }
 
   // Закрытие модалки
-  close(orderAccepted = false) {
+  async close(orderAccepted = false) {
     console.log("Закрываем модалку заказа, принят:", orderAccepted);
     
     if (this.modal) {
       this.modal.style.display = "none";
     }
     
-    // Если заказ НЕ был принят - очищаем состояние
+    // Если заказ НЕ был принят - отменяем на бэкенде
     if (!orderAccepted) {
-      console.log("Заказ отклонён, очищаем состояние");
+      console.log("Заказ отклонён, отменяем на бэкенде");
+      
+      // Отменяем заказ через API
+      if (this.gameState.currentOrder) {
+        try {
+          await fetch('/api/order/cancel', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              user_id: this.gameState.userId,
+              reason: 'user_declined'
+            })
+          });
+          console.log("Заказ отменён на бэкенде");
+        } catch (error) {
+          console.error("Ошибка отмены заказа:", error);
+        }
+      }
+      
+      // Очищаем состояние
       this.gameState.setCurrentOrder(null);
       
       if (window.mapManager) {

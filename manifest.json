@@ -1,0 +1,19 @@
+{
+  "name": "Q-RYER | Courier Simulator",
+  "short_name": "Q-RYER",
+  "version": "0.1.0",
+  "build": "202501",
+  "description": "Симулятор курьерской доставки",
+  "author": "Ruslan Fatikhov",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/q-ryer"
+  },
+  "release_date": "2025-01-15",
+  "changelog": {
+    "0.1.0": [
+      "Открытый бета-релиз"
+    ]
+  }
+}

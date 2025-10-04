@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Courier Sim{% endblock %}
+{% block title %}Q-RYER{% endblock %}
 
 {% block head %}
   <!-- Mapbox GL CSS -->
@@ -8,6 +8,11 @@
 {% endblock %}
 
 {% block content %}
+
+  <!-- Overlay-->
+   <div class="overlay">
+      <h1 class="black100">Это оверелей чтобы скрыть игру на деске</h1>
+   </div>
 
   <!-- Временная отладочная панель -->
   <div id="debugPanel" class="debug-panel" style="display: none;">
@@ -26,34 +31,121 @@
   <!--Map Controls-->
   <div class="map_button">
 
+    <!-- Modal Profile Settings -->
+    <div id="profileSettingsModal" class="modal">
+      <div class="modal-content">
+        
+        <!--Modal header-->
+        <span class="modal_header" style="gap: 8px; justify-content: flex-start;">
+
+
+          <!-- Back -->
+          <span class="icon_button graybg" onclick="closeModal('profileSettingsModal'); openModal('profileModal');">
+            <img src="{{ url_for('static', filename='img/icon/arrow_left.svg') }}" alt="Back" class="icon">
+          </span>
+
+          <h1 class="black100">Настройки</h1>
+          
+
+        </span>
+        
+        <!--Modal body-->
+        <div style="padding: 24px 16px 24px 16px; flex: 1;">
+          
+          <span style="display: flex; flex-direction: column; gap: 0px;">
+            
+            <!-- Секция: Аккаунт -->
+            <div style="margin-bottom: 24px;">
+              
+              <!-- При клике на кнопку открывается модальное окно измнение логина -->
+              <button class="cell">
+                <img src="{{ url_for('static', filename='img/icon/user.svg') }}" alt="Профиль" class="icon_24">
+                <h4 class="black100">Вставить сюда login</h4>
+                <img src="{{ url_for('static', filename='img/icon/arrow_right.svg') }}" alt=">" class="icon_24 cell_chevron">
+              </button>
+
+              <!-- При клике на кнопку открывается модальное окно измнение пароля -->
+              <button class="cell">
+                <img src="{{ url_for('static', filename='img/icon/user.svg') }}" alt="Профиль" class="icon_24">
+                <h4 class="black100">Изменить пароль</h4>
+                <img src="{{ url_for('static', filename='img/icon/arrow_right.svg') }}" alt=">" class="icon_24 cell_chevron">
+              </button>
+
+                          <!-- Секция: Приложение -->
+            <div>
+              
+            <button class="cell">
+                <img src="{{ url_for('static', filename='img/icon/info.svg') }}" alt="О приложении" class="icon_24">
+                <h4 class="black100">О приложении</h4>
+                <p class="black60" style="margin-left: auto; margin-right: 8px;">v1.0.0</p>
+            </button>
+
+              
+
+            </div>
+            
+          <!-- Logout -->
+              <button id="logoutBtn" class="cell" style="border-top: 1px solid var(--white20);">
+                <img src="{{ url_for('static', filename='img/icon/door.svg') }}" alt="Support" class="icon_24">
+                <h4 class="red100">Выйти из аккаунта</h4>
+          </button>
+           
+          </div>
+
+            
+          </span>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal Profile -->
     <div id="profileModal" class="modal">
       <div class="modal-content">
+
+        <!--Modal header-->
         <span class="modal_header">
-          <h3 class="black100">Профиль</h3>
+          <h1 class="black100">Профиль</h1>
           <span class="icon_button graybg close" data-close="profileModal">
             <img src="{{ url_for('static', filename='img/icon/cross.svg') }}" alt="Close" class="icon">
           </span>
         </span>
         
-        <div style="padding: 16px; flex: 1;">
-          <div style="text-align: center; margin-bottom: 20px;">
-            <div style="width: 80px; height: 80px; background: #f0f0f0; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
-              <img src="{{ url_for('static', filename='img/icon/user.svg') }}" alt="User" style="width: 40px; height: 40px;">
-            </div>
-            <h3 class="black100" id="profileUsername">Игрок</h3>
-          </div>
+        <!--Modal body-->
+        <div style="padding: 24px 16px 24px 16px; flex: 1;">
+
+          <span style="display: flex; flex-direction: column; gap: 0px;">
+
+            <button class="cell" onclick="closeModal('profileModal'); openModal('profileSettingsModal');">
+              <img src="{{ url_for('static', filename='img/icon/settings.svg') }}" alt="Настройки" class="icon_24">
+              <h4 class="black100">Настройки профиля</h4>
+              <img src="{{ url_for('static', filename='img/icon/arrow_right.svg') }}" alt=">" class="icon_24 cell_chevron">
+            </button>
+
+            <a href="/faq" class="cell">
+              <img src="{{ url_for('static', filename='img/icon/faq.svg') }}" alt="FAQ" class="icon_24">
+              <h4 class="black100">Вопросы и ответы</h4>
+
+              <img src="{{ url_for('static', filename='img/icon/arrow_right.svg') }}" alt=">" class="icon_24 cell_chevron">
+            </a>
+
+            <a href="/support" class="cell">
+              <img src="{{ url_for('static', filename='img/icon/support.svg') }}" alt="Support" class="icon_24">
+              <h4 class="black100">Поддержка</h4>
+
+              <img src="{{ url_for('static', filename='img/icon/arrow_right.svg') }}" alt=">" class="icon_24 cell_chevron">
+            </a>
+
+            
           
           
           
-          <!-- Кнопка выхода из аккаунта -->
-          <button id="logoutBtn" class="action_button bg-black100" style="margin-top: 12px;">
-            <h3 class="white100">Выйти из аккаунта</h3>
-          </button>
+          
           <!-- Кнопка завершения смены -->
           <button id="endShiftBtn" class="action_button" style="background-color: #ff4444; display: none; margin-top: 12px;">
             <h3 class="white100">Завершить смену</h3>
           </button>
+
+
         </div>
       </div>
     </div>
@@ -62,7 +154,7 @@
     <div id="settingsModal" class="modal">
       <div class="modal-content">
         <span class="modal_header">
-          <h3 class="black100">Настройки</h3>
+          <h1 class="black100">Настройки</h1>
           <span class="icon_button graybg close" data-close="settingsModal">
             <img src="{{ url_for('static', filename='img/icon/cross.svg') }}" alt="Close" class="icon">
           </span>
@@ -80,7 +172,8 @@
             </div>
           </div>
           
-          <div style="margin-bottom: 24px;">
+          <!--Settings-->
+          <!--div style="margin-bottom: 24px;">
             <h4 class="black100" style="margin-bottom: 12px;">Уведомления</h4>
             <label style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0;">
               <span>Звук при новом заказе</span>
@@ -92,13 +185,16 @@
             </label>
           </div>
           
-          <div style="background: #f8f9fa; border-radius: 12px; padding: 16px;">
+
+          <!--Info-->
+          <!--div style="background: #f8f9fa; border-radius: 12px; padding: 16px;">
             <h4 class="black100" style="margin-bottom: 8px;">Информация о GPS</h4>
             <div style="color: #666; font-size: 14px;">
               <div>Точность: <span id="settingsGpsAccuracy">—</span></div>
               <div>Качество: <span id="settingsGpsQuality">—</span></div>
             </div>
-          </div>
+          </div-->
+
         </div>
       </div>
     </div>
@@ -204,6 +300,22 @@
       <img src="{{ url_for('static', filename='img/icon/target.svg') }}" alt="My Location Icon" class="icon">
     </button>
 
+  </div>
+
+
+  
+
+  <!--Order Status Block-->
+  <div id="orderStatusBlock" class="order-status-block" style="display: none;">
+    <div class="order-status-content">
+      <div class="order-status-header">
+        <span class="order-status-icon bg-black100">
+          <img src="{{ url_for('static', filename='img/icon/bag_white.svg') }}" alt="Bag" class="icon_20">
+        </span>
+        <h2 class="black100">Заберите заказ</h2>
+      </div>
+      <p class="black100 order-status-text">Направляйтесь в зону получения</p>
+    </div>
   </div>
 
   <!--Mapbox Map Container-->
@@ -344,5 +456,22 @@
         }
       }, 2000);
     });
+
+    // Загрузка версии приложения из API
+fetch('/api/app_info')
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Обновляем версию в модалке
+      const versionElements = document.querySelectorAll('#profileSettingsModal p.black60');
+      versionElements.forEach(el => {
+        if (el.textContent.includes('v')) {
+          el.textContent = 'v' + data.data.version;
+        }
+      });
+      console.log('✅ Версия приложения загружена:', data.data.version);
+    }
+  })
+  .catch(error => console.error('❌ Ошибка загрузки версии:', error));
   </script>
 {% endblock %}

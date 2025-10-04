@@ -40,12 +40,14 @@ def create_app(config_name=None):
     from app.api.auth import auth_bp
     from app.api.player import player_bp
     from app.api.admin import admin_bp
+    from app.api.app_info import app_info_bp  # <- Добавь эту строку
     from app.routes import pages_bp
     from admin.routes import admin_pages_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(player_bp, url_prefix="/api")
     app.register_blueprint(admin_bp, url_prefix="/api/admin")
+    app.register_blueprint(app_info_bp, url_prefix="/api")  # <- Добавь эту строку
     app.register_blueprint(pages_bp)
     app.register_blueprint(admin_pages_bp, url_prefix="/admin")
 

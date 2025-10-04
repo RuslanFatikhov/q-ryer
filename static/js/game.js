@@ -185,6 +185,15 @@ async function restoreState() {
   if (restored) {
     console.log("✅ Состояние восстановлено с сервера");
 
+    // Показываем блок статуса если есть активный заказ без pickup_time
+    if (gameState.currentOrder && !gameState.currentOrder.pickup_time) {
+      const orderStatusBlock = document.getElementById("orderStatusBlock");
+      if (orderStatusBlock) {
+        orderStatusBlock.style.display = "block";
+        console.log("✅ Блок статуса заказа восстановлен");
+      }
+    }
+
     if (gameState.currentOrder && window.geoManager) {
       await window.geoManager.requestPermission();
       window.geoManager.startTracking((position) => {
@@ -195,6 +204,26 @@ async function restoreState() {
     console.log("Нет активного состояния для восстановления");
   }
 }
+
+/**
+ * Обработчик кнопки центрирования карты на местоположении пользователя
+ * При клике центрирует карту на текущей позиции игрока
+ */
+document.getElementById('centerLocationButton').addEventListener('click', () => {
+  // Проверяем, что менеджер карты инициализирован
+  if (window.mapManager) {
+    // Вызываем метод центрирования карты
+    window.mapManager.centerOnUser();
+    console.log("🎯 Карта центрирована на пользователе");
+  } else {
+    console.error("❌ MapManager не инициализирован");
+  }
+  
+  // Проверяем доступность геолокации
+  if (!window.geoManager?.currentPosition) {
+    alert("⚠️ Геолокация недоступна. Включите GPS.");
+  }
+});
 
 /**
  * Утилиты модалок

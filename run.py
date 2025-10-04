@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# run.py
 """
 Точка входа для симулятора курьера.
 Запуск Flask приложения с SocketIO поддержкой.

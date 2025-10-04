@@ -157,6 +157,15 @@ class OrderModal {
       window.shiftManager.startZoneChecking();
     }
     
+
+        // Показываем блок статуса заказа после принятия
+        const orderStatusBlock = document.getElementById("orderStatusBlock");
+        if (orderStatusBlock) {
+          // Небольшая задержка для плавности после закрытия модалки
+          setTimeout(() => {
+            orderStatusBlock.style.display = "block";
+          }, 300);
+        }
     // Обновляем кнопку
     const button = document.getElementById("startGame");
     const buttonText = button?.querySelector("h3");

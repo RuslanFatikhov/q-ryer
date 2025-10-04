@@ -1,51 +1,65 @@
-# Byte-compiled / cache
+# Python кэш и временные файлы
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
+*$py.class
+*.so
+.Python
 
-# Virtual environment
-.env
-.venv
+# Виртуальное окружение
 venv/
+env/
 ENV/
 
-# IDE/Editor
+# База данных
+*.db
+*.sqlite
+*.sqlite3
+instance/
+
+# Логи
+*.log
+logs/
+
+# Переменные окружения
+.env
+.env.local
+
+# IDE файлы
 .vscode/
 .idea/
 *.swp
+*.swo
+*~
 
-# OS
+# Временные файлы
 .DS_Store
 Thumbs.db
 
-# Python tooling
-*.egg
-*.egg-info/
-dist/
-build/
-.eggs/
-
-# Logs
-logs/
-*.log
-
-# Database files (локальные, SQLite)
-*.db
-
-# Flask-Migrate / Alembic cache
-migrations/versions/*.pyc
-
-# Data files (если не хочешь хранить реальные geojson в гите)
-courier-sim/data/*.geojson
-
-# Docker / Compose artifacts
-*.pid
-*.seed
+# Бэкапы
 *.bak
+*.backup
+*.backup2
+*.backup3
 
-# Coverage / Testing
-htmlcov/
-.tox/
-.coverage
+# Тестовые файлы
 .pytest_cache/
+.coverage
+htmlcov/
+test_*.py
+fix_*.py
+*_test.py
+
+# Временные заметки
+instructions.txt
+to-do-list.md
+*.todo
+
+# Старые файлы
+*_old.py
+config_old.py
+
+# Миграции (опционально - если не хочешь их в продакшене)
+# migrations/
+
+# Docker
+*.log

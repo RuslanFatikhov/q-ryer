@@ -1,8 +1,10 @@
 :root{
-
+    --accent010: rgba(71,74,255,0.1);
+    --accent100: #4F46E5;
     --black100: #121212;
     --black020:rgba(18,18,18,0.2);
     --black010:rgba(18,18,18,0.1);
+    --black005:rgba(18,18,18,0.05);
 
     --white100:#fefefe;
     --white30:#CCCCCC;
@@ -31,6 +33,14 @@
 
 .bg-black100{
     background-color: var(--black100);
+}
+
+.bg-black005{
+    background-color: var(--black005);
+}
+
+.bg-black010{
+    background-color: var(--black010);
 }
 
 .bg-white100{

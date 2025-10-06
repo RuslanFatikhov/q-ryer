@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-SocketIO обработчики игровых событий для симулятора курьера.
-Обрабатывает real-time коммуникацию между сервером и клиентом.
+Обработчики WebSocket событий для игрового процесса.
+Управление real-time взаимодействием с клиентами через Socket.IO.
 """
 
-from flask_socketio import emit, disconnect, join_room, leave_room
-from flask import request
-import logging
 import random
+import logging
+from flask import request
+from flask_socketio import emit, join_room, leave_room
+
 from app import socketio, db
-from app.models import User, Order
+from app.models.user import User
+from app.models.order import Order
+from app.utils.game_helper import get_order_for_user
 
 # Настройка логирования для отслеживания событий WebSocket
 logger = logging.getLogger(__name__)
@@ -23,19 +26,10 @@ active_users = {}
 def handle_connect():
     """
     Обработчик подключения клиента к WebSocket.
-    Вызывается автоматически при установке соединения.
+    Логирует подключение для отладки.
     """
-    try:
-        session_id = request.sid
-        logger.info(f"🔌 Client connected: {session_id}")
-        
-        # Отправляем подтверждение подключения клиенту
-        emit('connection_established', {
-            'status': 'connected', 
-            'session_id': session_id
-        })
-    except Exception as e:
-        logger.error(f"Error in connect handler: {str(e)}", exc_info=True)
+    session_id = request.sid
+    logger.info(f"🔌 Client connected: {session_id}")
 
 
 @socketio.on('disconnect')
@@ -54,7 +48,7 @@ def handle_disconnect():
             logger.info(f"Removed user {user_data.get('user_id')} from active users")
             del active_users[session_id]
     except Exception as e:
-        logger.error(f"Error in disconnect handler: {str(e)}", exc_info=True)
+        logger.error(f"Error in disconnect handler: {str(e)}")
 
 
 @socketio.on('user_login')
@@ -81,7 +75,8 @@ def handle_user_login(data):
         active_users[session_id] = {
             'user_id': user_id,
             'username': f'User_{user_id}',
-            'rooms': [f'user_{user_id}']
+            'rooms': [f'user_{user_id}'],
+            'is_searching': False  # Флаг активного поиска заказов
         }
         
         # Добавляем пользователя в персональную комнату для таргетированных сообщений
@@ -116,30 +111,107 @@ def handle_start_order_search(data):
         
         user_data = active_users[session_id]
         user_id = user_data['user_id']
-        radius_km = data.get('radius_km', 5)  # По умолчанию 5 км радиус поиска
+        
+        # ЗАЩИТА ОТ ДУБЛИРОВАНИЯ: проверяем, не идет ли уже поиск
+        if user_data.get('is_searching', False):
+            logger.warning(f"⚠️ User {user_id} tried to start search while already searching")
+            emit('error', {'message': 'Search already in progress'})
+            return
+        
+        radius_km = data.get('radius_km', 5)
         
         logger.info(f"🔍 User {user_id} started order search (radius: {radius_km}km)")
         
-        # Создаем комнату для поиска заказов для отправки прогресса
+        # Устанавливаем флаг активного поиска
+        user_data['is_searching'] = True
+        
+        # Создаем комнату для поиска заказов
         search_room = f'order_search_{user_id}'
         join_room(search_room)
-        user_data['rooms'].append(search_room)
+        if search_room not in user_data['rooms']:
+            user_data['rooms'].append(search_room)
         
-        # Подтверждаем начало поиска ПЕРЕД симуляцией
+        # Подтверждаем начало поиска
         emit('search_started', {
             'status': 'searching', 
             'radius_km': radius_km
         })
         
-        # Запускаем симуляцию поиска (синхронная версия с socketio.sleep)
-        simulate_order_search_sync(user_id, radius_km)
+        # Запускаем симуляцию поиска
+        simulate_order_search_sync(user_id, radius_km, session_id)
         
     except Exception as e:
         logger.error(f"Error in start order search: {str(e)}", exc_info=True)
+        # Сбрасываем флаг поиска при ошибке
+        if session_id in active_users:
+            active_users[session_id]['is_searching'] = False
         emit('error', {'message': 'Failed to start order search'})
 
 
-def simulate_order_search_sync(user_id: int, radius_km: float):
+@socketio.on('stop_order_search')
+def handle_stop_order_search():
+    """
+    Обработчик остановки поиска заказов.
+    Останавливает текущий процесс поиска.
+    """
+    try:
+        session_id = request.sid
+        
+        if session_id not in active_users:
+            return
+        
+        user_data = active_users[session_id]
+        user_id = user_data['user_id']
+        
+        logger.info(f"🛑 User {user_id} stopped order search")
+        
+        # Сбрасываем флаг поиска
+        user_data['is_searching'] = False
+        
+        # Покидаем комнату поиска
+        search_room = f'order_search_{user_id}'
+        leave_room(search_room)
+        if search_room in user_data['rooms']:
+            user_data['rooms'].remove(search_room)
+        
+        emit('search_stopped', {'status': 'stopped'})
+        
+    except Exception as e:
+        logger.error(f"Error stopping order search: {str(e)}", exc_info=True)
+
+
+@socketio.on('update_position')
+def handle_update_position(data):
+    """
+    Обработчик обновления позиции игрока.
+    Сохраняет текущие координаты в БД.
+    
+    Args:
+        data (dict): Координаты (lat, lng, accuracy)
+    """
+    try:
+        session_id = request.sid
+        
+        if session_id not in active_users:
+            return
+        
+        user_id = active_users[session_id]['user_id']
+        lat = data.get('lat')
+        lng = data.get('lng')
+        
+        if lat is None or lng is None:
+            return
+        
+        # Обновляем позицию в БД
+        user = User.query.get(user_id)
+        if user:
+            user.update_position(lat, lng)
+        
+    except Exception as e:
+        logger.error(f"Error updating position: {str(e)}", exc_info=True)
+
+
+def simulate_order_search_sync(user_id: int, radius_km: float, session_id: str):
     """
     Синхронная симуляция поиска заказов с прогресс-баром.
     Использует socketio.sleep для совместимости с eventlet/gevent.
@@ -147,16 +219,27 @@ def simulate_order_search_sync(user_id: int, radius_km: float):
     Args:
         user_id (int): ID пользователя
         radius_km (float): Радиус поиска заказов
+        session_id (str): ID сессии для сброса флага
     """
     try:
-        # Случайное время поиска от 5 до 15 секунд (имитация реального поиска)
+        # Проверяем, не был ли поиск остановлен
+        if session_id not in active_users or not active_users[session_id].get('is_searching'):
+            logger.info(f"Search cancelled for user {user_id}")
+            return
+        
+        # Случайное время поиска от 5 до 15 секунд
         search_time = random.randint(5, 15)
         
         # Отправляем прогресс поиска каждую секунду
         for i in range(search_time):
-            socketio.sleep(1)  # Используем socketio.sleep вместо time.sleep
+            # Проверяем, не был ли поиск остановлен
+            if session_id not in active_users or not active_users[session_id].get('is_searching'):
+                logger.info(f"Search cancelled for user {user_id} at {i+1}/{search_time}s")
+                return
             
-            # Отправляем обновление прогресса в комнату пользователя
+            socketio.sleep(1)
+            
+            # Отправляем обновление прогресса
             socketio.emit('search_progress', {
                 'elapsed': i + 1,
                 'total': search_time,
@@ -170,136 +253,52 @@ def simulate_order_search_sync(user_id: int, radius_km: float):
         logger.error(f"Error in sync order search for user {user_id}: {str(e)}", exc_info=True)
         socketio.emit('error', {
             'message': 'Order search failed'
-        }, room=f'order_search_{user_id}')
+        }, room=f'user_{user_id}')
+    finally:
+        # ВАЖНО: Всегда сбрасываем флаг поиска после завершения
+        if session_id in active_users:
+            active_users[session_id]['is_searching'] = False
+            logger.info(f"✅ Search flag reset for user {user_id}")
 
 
 def generate_order_for_user(user_id: int):
     """
-    Генерация и отправка заказа пользователю через WebSocket.
-    Вызывается после завершения симуляции поиска.
+    Генерация и отправка заказа пользователю.
     
     Args:
         user_id (int): ID пользователя для генерации заказа
     """
     try:
-        from app.utils.game_helper import get_order_for_user
+        # Получаем пользователя из БД
+        user = User.query.get(user_id)
+        if not user:
+            logger.error(f"User {user_id} not found")
+            socketio.emit('no_orders_found', {
+                'message': 'User not found'
+            }, room=f'user_{user_id}')
+            return
         
-        logger.info(f"📦 Generating order for user {user_id}")
+        # Генерируем заказ используя helper
+        order_data = get_order_for_user(user_id)
         
-        # Генерируем новый заказ через игровую логику
-        order = get_order_for_user(user_id)
-        
-        if order:
-            logger.info(f"✅ Order {order.get('id')} created for user {user_id}")
-            logger.debug(f"Order details: {order.get('pickup_name')} → {order.get('dropoff_address')}")
+        if order_data:
+            logger.info(f"✅ Order generated for user {user_id}: {order_data['id']}")
             
-            # Отправляем заказ в комнату пользователя
-            socketio.emit("order_found", {
-                "success": True,
-                "order": order
-            }, room=f"order_search_{user_id}")
-            
-            logger.info(f"📤 Order sent to frontend for user {user_id}")
+            # Отправляем заказ клиенту
+            socketio.emit('order_found', {
+                'order': order_data,
+                'message': 'Order found!'
+            }, room=f'user_{user_id}')
         else:
-            # Если не удалось сгенерировать заказ (нет доступных ресторанов/зданий)
-            logger.warning(f"❌ No order generated for user {user_id}")
-            socketio.emit("no_orders_found", {
-                "message": "No orders available in your area. Try again later."
-            }, room=f"order_search_{user_id}")
+            logger.warning(f"No orders available for user {user_id}")
+            
+            # Сообщаем что заказов не найдено
+            socketio.emit('no_orders_found', {
+                'message': 'No orders available in your area. Try again later.'
+            }, room=f'user_{user_id}')
             
     except Exception as e:
         logger.error(f"Error generating order for user {user_id}: {str(e)}", exc_info=True)
-        socketio.emit("error", {
-            "message": "Failed to generate order"
-        }, room=f"order_search_{user_id}")
-
-
-@socketio.on('stop_order_search')
-def handle_stop_order_search():
-    """
-    Обработчик остановки поиска заказов пользователем.
-    Позволяет пользователю отменить поиск до его завершения.
-    """
-    try:
-        session_id = request.sid
-        
-        # Проверяем аутентификацию
-        if session_id not in active_users:
-            emit('error', {'message': 'User not authenticated'})
-            return
-        
-        user_data = active_users[session_id]
-        user_id = user_data['user_id']
-        
-        logger.info(f"🛑 User {user_id} stopped order search")
-        
-        # Выходим из комнаты поиска
-        search_room = f'order_search_{user_id}'
-        leave_room(search_room)
-        
-        # Удаляем комнату из списка комнат пользователя
-        if search_room in user_data['rooms']:
-            user_data['rooms'].remove(search_room)
-        
-        # Подтверждаем остановку поиска
-        emit('search_stopped', {
-            'status': 'stopped',
-            'message': 'Order search cancelled'
-        })
-        
-    except Exception as e:
-        logger.error(f"Error stopping order search: {str(e)}", exc_info=True)
-        emit('error', {'message': 'Failed to stop order search'})
-
-
-@socketio.on('update_position')
-def handle_position_update(data):
-    """
-    Обработчик обновления позиции игрока в реальном времени.
-    Принимает GPS координаты и обновляет состояние на сервере.
-    
-    Args:
-        data (dict): Координаты игрока (lat, lng, accuracy, timestamp)
-    """
-    try:
-        session_id = request.sid
-        
-        # Проверяем аутентификацию
-        if session_id not in active_users:
-            emit('error', {'message': 'User not authenticated'})
-            return
-        
-        user_data = active_users[session_id]
-        user_id = user_data['user_id']
-        
-        # Извлекаем данные позиции
-        lat = data.get('lat')
-        lng = data.get('lng')
-        accuracy = data.get('accuracy', 999)
-        
-        # Валидация координат
-        if lat is None or lng is None:
-            emit('error', {'message': 'Invalid position data'})
-            return
-        
-        # Обновляем позицию пользователя в базе данных
-        user = User.query.get(user_id)
-        if user:
-            user.update_position(lat, lng)
-        
-        # Проверяем зоны заказа (pickup/dropoff) если есть активный заказ
-        from app.utils.game_helper import check_player_zones
-        zones_status = check_player_zones(user_id, lat, lng)
-        
-        # Отправляем обратно статус зон для UI
-        emit('position_updated', {
-            'success': True,
-            'zones': zones_status,
-            'accuracy': accuracy
-        })
-        
-        logger.debug(f"📍 Position updated for user {user_id}: ({lat:.6f}, {lng:.6f})")
-        
-    except Exception as e:
-        logger.error(f"Error updating position: {str(e)}", exc_info=True)
-        emit('error', {'message': 'Failed to update position'})
+        socketio.emit('error', {
+            'message': 'Failed to generate order'
+        }, room=f'user_{user_id}')

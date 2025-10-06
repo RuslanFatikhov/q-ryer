@@ -9,6 +9,7 @@ let mapManager = null;
 let orderModal = null;
 let shiftManager = null;
 let socketManager = null;
+let orderStatusBanner = null; // Новый модуль для баннера
 
 /**
  * Инициализация приложения
@@ -74,6 +75,11 @@ function initializeModules() {
   // Связь сокета с модалкой
   socketManager.orderModal = orderModal;
 
+  // Баннер статуса заказа
+  orderStatusBanner = new OrderStatusBanner();
+  window.orderStatusBanner = orderStatusBanner;
+  orderStatusBanner.initialize();
+
   // Геолокация
   initializeGeolocation();
 }
@@ -81,7 +87,7 @@ function initializeModules() {
 /**
  * Инициализация геолокации
  */
-function initializeGeolocation() {
+async function initializeGeolocation() {
   const geoManager = new GeolocationManager();
   window.geoManager = geoManager;
 
@@ -95,8 +101,34 @@ function initializeGeolocation() {
   geoManager.onPermissionDenied = (err) => shiftManager.onGPSPermissionDenied(err);
   geoManager.onPositionUpdate  = (pos) => shiftManager.onPositionUpdate(pos);
 
-  // ВАЖНО: используем константу состояния, а не строку
-  shiftManager.updateShiftButton(shiftManager.SHIFT_STATES.REQUESTING_GPS);
+  // Проверяем, было ли ранее дано разрешение на GPS
+  if (geoManager.hasStoredPermission()) {
+    console.log("✅ GPS разрешение уже было дано, получаем позицию...");
+    try {
+      // Получаем позицию без повторного диалога
+      await geoManager.requestPermission(true);
+      // Обновляем кнопку в зависимости от состояния смены
+      if (gameState.isOnShift) {
+        if (gameState.currentOrder) {
+          shiftManager.updateShiftButton(shiftManager.SHIFT_STATES.END_SHIFT);
+        } else if (gameState.isSearching) {
+          shiftManager.updateShiftButton(shiftManager.SHIFT_STATES.SEARCHING);
+        } else {
+          shiftManager.updateShiftButton(shiftManager.SHIFT_STATES.START_SEARCH);
+        }
+      } else {
+        shiftManager.updateShiftButton(shiftManager.SHIFT_STATES.START_SHIFT);
+      }
+    } catch (error) {
+      console.error("❌ Ошибка получения GPS:", error);
+      // Если не удалось получить позицию, показываем кнопку запроса
+      shiftManager.updateShiftButton(shiftManager.SHIFT_STATES.REQUESTING_GPS);
+    }
+  } else {
+    // Разрешение не было дано - показываем кнопку запроса GPS
+    console.log("⚠️ GPS разрешение не дано, показываем кнопку запроса");
+    shiftManager.updateShiftButton(shiftManager.SHIFT_STATES.REQUESTING_GPS);
+  }
 }
 
 /**
@@ -146,6 +178,14 @@ function initializeUI() {
       }
     });
   }
+
+  // Кнопка Report
+  const reportButton = document.getElementById("reportButton");
+  if (reportButton) {
+    reportButton.addEventListener("click", () => {
+      window.open('https://tally.so/r/3Ey0pN', '_blank');
+    });
+  }
 }
 
 /**
@@ -185,17 +225,15 @@ async function restoreState() {
   if (restored) {
     console.log("✅ Состояние восстановлено с сервера");
 
-    // Показываем блок статуса если есть активный заказ без pickup_time
-    if (gameState.currentOrder && !gameState.currentOrder.pickup_time) {
-      const orderStatusBlock = document.getElementById("orderStatusBlock");
-      if (orderStatusBlock) {
-        orderStatusBlock.style.display = "block";
-        console.log("✅ Блок статуса заказа восстановлен");
-      }
+    // Обновляем баннер статуса заказа
+    if (window.orderStatusBanner && gameState.currentOrder) {
+      orderStatusBanner.update(gameState.currentOrder);
     }
 
+    // Если есть активный заказ и разрешение GPS, запускаем отслеживание
     if (gameState.currentOrder && window.geoManager) {
-      await window.geoManager.requestPermission();
+      // Используем skipIfGranted = true, чтобы не показывать диалог повторно
+      await window.geoManager.requestPermission(true);
       window.geoManager.startTracking((position) => {
         window.shiftManager?.sendPositionUpdate(position);
       });

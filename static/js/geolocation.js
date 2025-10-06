@@ -13,6 +13,9 @@ class GeolocationManager {
     this.onPositionUpdate = null;
     this.onPermissionGranted = null;
     this.onPermissionDenied = null;
+    
+    // Ключ для хранения статуса разрешения GPS в localStorage
+    this.GPS_PERMISSION_KEY = 'gps_permission_granted';
   }
 
   /**
@@ -24,20 +27,90 @@ class GeolocationManager {
   }
 
   /**
+   * Проверка, было ли ранее дано разрешение на GPS
+   * @returns {boolean} Было ли дано разрешение
+   */
+  hasStoredPermission() {
+    const stored = localStorage.getItem(this.GPS_PERMISSION_KEY);
+    return stored === 'true';
+  }
+
+  /**
+   * Сохранение статуса разрешения GPS
+   * @param {boolean} granted Дано ли разрешение
+   */
+  savePermissionStatus(granted) {
+    localStorage.setItem(this.GPS_PERMISSION_KEY, granted.toString());
+    console.log(`💾 GPS разрешение сохранено: ${granted}`);
+  }
+
+  /**
+   * Очистка сохраненного разрешения (для отладки или сброса)
+   */
+  clearPermissionStatus() {
+    localStorage.removeItem(this.GPS_PERMISSION_KEY);
+    console.log('🗑️ GPS разрешение удалено из хранилища');
+  }
+
+  /**
    * Запрос разрешения на геолокацию
+   * @param {boolean} skipIfGranted Пропустить запрос если разрешение уже было дано
    * @returns {Promise<Position>} Промис с позицией пользователя
    */
-  async requestPermission() {
+  async requestPermission(skipIfGranted = true) {
     if (!this.isSupported()) {
       throw new Error('Геолокация не поддерживается браузером');
     }
 
+    // Если разрешение уже было дано и установлен флаг skipIfGranted,
+    // просто получаем текущую позицию без повторного запроса диалога
+    if (skipIfGranted && this.hasStoredPermission()) {
+      console.log('✅ GPS разрешение уже было дано ранее');
+      
+      return new Promise((resolve, reject) => {
+        const options = {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 60000
+        };
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            this.currentPosition = position;
+            console.log('📍 GPS позиция получена (из сохраненного разрешения)');
+            
+            if (this.onPermissionGranted) {
+              this.onPermissionGranted(position);
+            }
+            
+            resolve(position);
+          },
+          (error) => {
+            // Если произошла ошибка, возможно пользователь отозвал разрешение
+            console.error('❌ GPS ошибка при получении позиции:', error);
+            
+            // Очищаем сохраненное разрешение если доступ запрещен
+            if (error.code === error.PERMISSION_DENIED) {
+              this.savePermissionStatus(false);
+            }
+            
+            if (this.onPermissionDenied) {
+              this.onPermissionDenied(error);
+            }
+            
+            reject(error);
+          },
+          options
+        );
+      });
+    }
+
+    // Запрашиваем разрешение впервые
     return new Promise((resolve, reject) => {
-      // Опции для высокой точности GPS
       const options = {
         enableHighAccuracy: true,
-        timeout: 10000, // 10 секунд на получение позиции
-        maximumAge: 60000 // Кэш позиции на 1 минуту
+        timeout: 10000,
+        maximumAge: 60000
       };
 
       navigator.geolocation.getCurrentPosition(
@@ -45,7 +118,9 @@ class GeolocationManager {
           console.log('✅ GPS разрешение получено:', position);
           this.currentPosition = position;
           
-          // Вызываем callback если установлен
+          // Сохраняем, что пользователь дал разрешение
+          this.savePermissionStatus(true);
+          
           if (this.onPermissionGranted) {
             this.onPermissionGranted(position);
           }
@@ -55,7 +130,11 @@ class GeolocationManager {
         (error) => {
           console.error('❌ GPS ошибка:', error);
           
-          // Вызываем callback если установлен
+          // Сохраняем отказ
+          if (error.code === error.PERMISSION_DENIED) {
+            this.savePermissionStatus(false);
+          }
+          
           if (this.onPermissionDenied) {
             this.onPermissionDenied(error);
           }
@@ -85,7 +164,7 @@ class GeolocationManager {
     const options = {
       enableHighAccuracy: true,
       timeout: 30000,
-      maximumAge: 5000 // Обновлять позицию каждые 5 секунд
+      maximumAge: 5000
     };
 
     this.watchId = navigator.geolocation.watchPosition(
@@ -99,18 +178,22 @@ class GeolocationManager {
           console.warn('⚠️ Низкая точность GPS:', accuracy, 'метров');
         }
 
-        // Вызываем callback
         if (callback) {
           callback(position);
         }
 
-        // Вызываем общий callback если установлен
         if (this.onPositionUpdate) {
           this.onPositionUpdate(position);
         }
       },
       (error) => {
         console.error('❌ Ошибка отслеживания GPS:', error);
+        
+        // Если доступ запрещен, обновляем сохраненный статус
+        if (error.code === error.PERMISSION_DENIED) {
+          this.savePermissionStatus(false);
+        }
+        
         this.handleGeolocationError(error);
       },
       options
@@ -185,7 +268,6 @@ class GeolocationManager {
     
     console.error('GPS Error:', message, error);
     
-    // Можно добавить показ уведомления пользователю
     this.showGPSError(message);
   }
 
@@ -194,7 +276,6 @@ class GeolocationManager {
    * @param {string} message Сообщение об ошибке
    */
   showGPSError(message) {
-    // Создаем временное уведомление
     const notification = document.createElement('div');
     notification.style.cssText = `
       position: fixed;
@@ -212,7 +293,6 @@ class GeolocationManager {
     
     document.body.appendChild(notification);
     
-    // Убираем уведомление через 5 секунд
     setTimeout(() => {
       if (notification.parentNode) {
         notification.parentNode.removeChild(notification);

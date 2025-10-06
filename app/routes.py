@@ -27,3 +27,19 @@ def game():
     """Страница игры"""
     mapbox_token = current_app.config.get("MAPBOX_ACCESS_TOKEN")
     return render_template("game.html", mapbox_token=mapbox_token)
+
+@pages_bp.route("/terms")
+def terms():
+    """Страница пользовательского соглашения"""
+    return render_template("terms.html")
+
+
+@pages_bp.route("/privacy")
+def privacy():
+    """Политика обработки персональных данных"""
+    return render_template("privacy.html")
+
+@pages_bp.route("/faq")
+def faq():
+    """Часто задаваемые вопросы"""
+    return render_template("faq.html")

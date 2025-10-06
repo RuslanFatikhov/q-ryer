@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{# Заголовок страницы #}
+{% block title %}FAQ - Q-RYER{% endblock %}
+
+{# Дополнительные стили для FAQ #}
+{% block head %}
+{% endblock %}
+
+{# Основной контент #}
+{% block content %}
+<div>
+    <!--Modal header-->
+    <span class="modal_header" style="gap: 8px; justify-content: flex-start;">
+
+    <!-- Back -->
+        <span class="icon_button graybg" onclick="closeModal('profileSettingsModal'); openModal('profileModal');">
+            <img src="{{ url_for('static', filename='img/icon/arrow_left.svg') }}" alt="Back" class="icon">
+        </span>
+
+        <h2 class="black100">Ответы на вопросы</h2>
+          
+
+    </span>
+    
+
+    
+
+    <!-- Категория: Начало работы -->
+    <div class="faq-category">
+        <h3 class="category-title">Начало работы</h3>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <h4>Как начать играть в Симулятор Курьера?</h4>
+                <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
+            </div>
+            <div class="faq-answer black100">
+                <p>Для начала игры:</p>
+                <ul>
+                    <li>Откройте игру в браузере на мобильном устройстве</li>
+                    <li>Войдите в свой аккаунт или зарегистрируйтесь</li>
+                    <li>Разрешите доступ к геолокации</li>
+                    <li>Нажмите кнопку "Начать смену"</li>
+                    <li>Дождитесь получения первого заказа (5-30 секунд)</li>
+                </ul>
+                <p>Игра работает только в реальном времени с использованием вашего GPS-положения.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <h4>В каких городах доступна игра?</h4>
+                <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
+            </div>
+            <div class="faq-answer black100">
+                <p>Сейчас игра доступна только в Алматы. Точки pickup и delivery генерируются на основе реальных ресторанов и зданий города. Если хотите другие города, напишите мне в телеграм. <a href="https://t.me/fuzlan" target="_blank">https://t.me/fuzlan</a></p>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+{% endblock %}
+
+{# JavaScript для аккордеона #}
+{% block scripts %}
+<script>
+    /**
+     * Инициализация FAQ аккордеона
+     * При клике на вопрос - открывается/закрывается ответ
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+        // Получаем все FAQ элементы
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        // Добавляем обработчик клика для каждого элемента
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            
+            question.addEventListener('click', () => {
+                // Переключаем класс active для текущего элемента
+                const isActive = item.classList.contains('active');
+                
+                // Закрываем все остальные элементы (опционально)
+                // Раскомментируйте следующие строки, если хотите чтобы открывался только один FAQ
+                // faqItems.forEach(otherItem => {
+                //     if (otherItem !== item) {
+                //         otherItem.classList.remove('active');
+                //     }
+                // });
+                
+                // Переключаем активность текущего элемента
+                item.classList.toggle('active');
+            });
+        });
+
+        console.log('FAQ аккордеон инициализирован');
+    });
+</script>
+{% endblock %}

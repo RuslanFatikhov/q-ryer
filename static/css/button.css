@@ -84,8 +84,36 @@ a{
 
 .cell_chevron{
     position: absolute;
-    right: 16px;
+    right: 8px;
     top: 16px;
+}
+
+#selectedMapServiceName{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+}
+
+.cell_icon{
+    width: 48px;
+    height: 48px;
+}
+
+input[type="radio" i]{
+    position: absolute;
+    right: 16px;
+
+    width: 24px;
+    height: 24px;
+    background-color: var(--accent010);
+    border: none;
+}
+
+#reportButton{
+    position: absolute;
+    right: 12px;
+    bottom: 180px;
 }
 
 .gps-excellent { background: rgba(0,170,68,0.9); }

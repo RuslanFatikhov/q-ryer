@@ -9,6 +9,15 @@
 
 {% block content %}
 
+  <!-- Loader -->
+  <div id="pageLoader" class="page-loader">
+    <div class="loader-content">
+      <div class="spinner"></div>
+      <h2 class="white100">Q-RYER</h2>
+      <p class="white60">Загрузка...</p>
+    </div>
+  </div>
+
   <!-- Overlay-->
    <div class="overlay">
       <h1 class="black100">Это оверелей чтобы скрыть игру на деске</h1>
@@ -30,6 +39,11 @@
 
   <!--Map Controls-->
   <div class="map_button">
+
+    <!--Report Button (показывается только при активном заказе)-->
+    <button id="reportButton" class="icon_button" style="display: none;">
+      <img src="{{ url_for('static', filename='img/icon/report.svg') }}" alt="Report" class="icon">
+    </button>
 
     <!-- Modal Profile Settings -->
     <div id="profileSettingsModal" class="modal">
@@ -115,20 +129,20 @@
 
           <span style="display: flex; flex-direction: column; gap: 0px;">
 
-            <button class="cell" onclick="closeModal('profileModal'); openModal('profileSettingsModal');">
+            <!--button class="cell" onclick="closeModal('profileModal'); openModal('profileSettingsModal');">
               <img src="{{ url_for('static', filename='img/icon/settings.svg') }}" alt="Настройки" class="icon_24">
               <h4 class="black100">Настройки профиля</h4>
               <img src="{{ url_for('static', filename='img/icon/arrow_right.svg') }}" alt=">" class="icon_24 cell_chevron">
-            </button>
+            </button-->
 
-            <a href="/faq" class="cell">
+            <a href="https://fatikhov.notion.site/FAQ-Q-RYER-284456a5700880e19e6ee2c92096bc30?source=copy_link" target="_blank" class="cell">
               <img src="{{ url_for('static', filename='img/icon/faq.svg') }}" alt="FAQ" class="icon_24">
               <h4 class="black100">Вопросы и ответы</h4>
 
               <img src="{{ url_for('static', filename='img/icon/arrow_right.svg') }}" alt=">" class="icon_24 cell_chevron">
             </a>
 
-            <a href="/support" class="cell">
+            <a href="https://t.me/fuzlan" target="_blank" class="cell">
               <img src="{{ url_for('static', filename='img/icon/support.svg') }}" alt="Support" class="icon_24">
               <h4 class="black100">Поддержка</h4>
 
@@ -146,6 +160,8 @@
           </button>
 
 
+          
+
         </div>
       </div>
     </div>
@@ -153,13 +169,17 @@
     <!-- Modal Game Settings -->
     <div id="settingsModal" class="modal">
       <div class="modal-content">
+
+        <!--Modal header-->
         <span class="modal_header">
-          <h1 class="black100">Настройки</h1>
+          <h1 class="black100">Параметры</h1>
           <span class="icon_button graybg close" data-close="settingsModal">
             <img src="{{ url_for('static', filename='img/icon/cross.svg') }}" alt="Close" class="icon">
           </span>
         </span>
         
+
+        <!--Radius-->
         <div style="padding: 16px; flex: 1;">
           <div style="margin-bottom: 24px;">
             <h4 class="black100" style="margin-bottom: 12px;">Радиус поиска заказов</h4>
@@ -171,8 +191,26 @@
               <span>25 км</span>
             </div>
           </div>
+
+
+          <h4 class="black100" style="margin-bottom: 12px;">Навигатор по умолчанию</h4>
+          <!-- Выбор картографического сервиса -->
+          <div style="margin-bottom: 24px;">
+
+            <!--Map selector-->
+            <button 
+              onclick="window.mapServiceSelector?.openModal()" class="cell">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span id="selectedMapServiceName">2GIS</span>
+                
+                <img src="{{ url_for('static', filename='img/icon/arrow_right.svg') }}" alt=">" class="icon_24 cell_chevron">
+              </div>
+
+                
+            </button>
+          </div>
           
-          <!--Settings-->
+          <!--Other-->
           <!--div style="margin-bottom: 24px;">
             <h4 class="black100" style="margin-bottom: 12px;">Уведомления</h4>
             <label style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0;">
@@ -302,9 +340,6 @@
 
   </div>
 
-
-  
-
   <!--Order Status Block-->
   <div id="orderStatusBlock" class="order-status-block" style="display: none;">
     <div class="order-status-content">
@@ -315,6 +350,70 @@
         <h2 class="black100">Заберите заказ</h2>
       </div>
       <p class="black100 order-status-text">Направляйтесь в зону получения</p>
+    </div>
+  </div>
+
+  <!-- Модальное окно выбора картографического сервиса -->
+  <div id="mapServiceModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal_header" style="justify-content: flex-start; gap: 8px;">
+
+        <!-- Back -->
+        <span class="icon_button graybg" onclick="closeModal('mapServiceModal'); openModal('settingsModal');">
+          <img src="{{ url_for('static', filename='img/icon/arrow_left.svg') }}" alt="Back" class="icon">
+        </span>
+
+        <h2>Карты</h2>
+
+      </div>
+      
+      <div style="padding: 16px; flex: 1;">
+        <h4 class="black100">Выберите сервис для навигации:</h4>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+
+          <!--2gis-->
+          <div class="cell" data-service="2gis">
+            
+            <label for="service-2gis" style="display: flex; align-items: center; gap: 8px;">
+              <img src="{{ url_for('static', filename='img/map_icons/2gis.png') }}" alt="2GIS" class="cell_icon">
+              <h4 class="black100">2GIS</h4>
+            </label>
+
+            <input type="radio" id="service-2gis" name="mapService" value="2gis" class="cell_radio">
+          </div>
+          
+          <!--Yandex Maps-->
+          <div class="cell" data-service="yandex">
+            
+            <label for="service-yandex" style="display: flex; align-items: center; gap: 8px;">
+              <img src="{{ url_for('static', filename='img/map_icons/yandex.png') }}" alt="Яндекс" class="cell_icon">
+
+              <h4 class="black100">Яндекс Карты</h4>
+            </label>
+
+            <input type="radio" id="service-yandex" name="mapService" value="yandex" class="cell_radio">
+          </div>
+          
+          <!--Organic Maps-->
+          <div class="cell" data-service="organic">
+            
+            <label for="service-organic" style="display: flex; align-items: center; gap: 8px;">
+              <img src="{{ url_for('static', filename='img/map_icons/organic.png') }}" alt="Organic Maps" class="cell_icon">
+              
+              <h4 class="black100">Organic Maps</h4>
+            </label>
+
+            <input type="radio" id="service-organic" name="mapService" value="organic" class="cell_radio">
+          </div>
+        </div>
+      </div>
+      
+      <div style="width: 100%; display: flex; justify-content: center; align-items: center; padding: 16px;">
+        <button class="action_button" onclick="window.mapServiceSelector?.saveSelection()">
+          <h3 class="white100">Сохранить</h3>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -341,12 +440,15 @@
   <script src="{{ url_for('static', filename='js/geolocation.js') }}"></script>
 
   <!-- Подключаем модули -->
+  <script src="{{ url_for('static', filename='js/loader.js') }}"></script>
   <script src="{{ url_for('static', filename='js/modules/gameState.js') }}"></script>
   <script src="{{ url_for('static', filename='js/modules/stateManager.js') }}"></script>
   <script src="{{ url_for('static', filename='js/modules/mapManager.js') }}"></script>
   <script src="{{ url_for('static', filename='js/modules/orderModal.js') }}"></script>
   <script src="{{ url_for('static', filename='js/modules/shiftManager.js') }}"></script>
   <script src="{{ url_for('static', filename='js/modules/socketManager.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/modules/mapServiceSelector.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/modules/orderStatusBanner.js') }}"></script>
 
   <!-- Главный файл -->
   <script src="{{ url_for('static', filename='js/game.js') }}"></script>

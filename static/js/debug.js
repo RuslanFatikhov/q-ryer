@@ -264,3 +264,66 @@ if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
   
   console.log('🛠️ Debug панель доступна. Нажмите Ctrl+Shift+D для открытия');
 }
+
+/**
+ * Установить фейковую GPS позицию в центр выбранного города
+ */
+
+/**
+ * Установить фейковую GPS позицию в центр выбранного города
+ */
+async function setFakeLocationToCity() {
+    const cityId = localStorage.getItem('selectedCity') || 'almaty';
+    console.log('🔍 Устанавливаем GPS для города:', cityId);
+    
+    try {
+        // Получаем координаты города
+        const response = await fetch(`/api/cities/${cityId}`);
+        const data = await response.json();
+        console.log('📍 Данные города:', data);
+        
+        if (data.success) {
+            const city = data.city;
+            const fakeLat = city.center.lat;
+            const fakeLng = city.center.lng;
+            
+            console.log('📍 Координаты:', { lat: fakeLat, lng: fakeLng });
+            
+            // Устанавливаем фейковую позицию
+            if (window.geoManager) {
+                window.geoManager.currentPosition = {
+                    coords: {
+                        latitude: fakeLat,
+                        longitude: fakeLng,
+                        accuracy: 10
+                    },
+                    timestamp: Date.now()
+                };
+                
+                console.log('✅ geoManager обновлен:', window.geoManager.currentPosition);
+                
+                // Обновляем маркер на карте через updateUserMarker
+                if (window.mapManager) {
+                    console.log('📍 Обновляем маркер игрока');
+                    window.mapManager.updateUserMarker({
+                        latitude: fakeLat,
+                        longitude: fakeLng
+                    });
+                    window.mapManager.map.flyTo({ center: [fakeLng, fakeLat], zoom: 14 });
+                }
+                
+                console.log(`✅ Фейковая GPS установлена на ${city.name}: [${fakeLat}, ${fakeLng}]`);
+                alert(`GPS установлен на ${city.name}`);
+            } else {
+                console.error('❌ geoManager не найден');
+            }
+        }
+    } catch (error) {
+        console.error('❌ Ошибка установки фейковой GPS:', error);
+    }
+}
+
+// Делаем функцию глобально доступной
+window.setFakeLocationToCity = setFakeLocationToCity;
+
+console.log('🛠️ Debug: Используйте setFakeLocationToCity() для установки GPS в центр выбранного города');

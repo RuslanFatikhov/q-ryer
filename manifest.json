@@ -1,19 +1,25 @@
 {
   "name": "Q-RYER | Courier Simulator",
   "short_name": "Q-RYER",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "build": "202501",
   "description": "Симулятор курьерской доставки",
   "author": "Ruslan Fatikhov",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/q-ryer"
+    "url": "https://github.com/ruslanfatikhov/q-ryer"
   },
   "release_date": "2025-01-15",
   "changelog": {
     "0.1.0": [
       "Открытый бета-релиз"
+    ],
+    "0.1.1": [
+      "Исправлены ошибки",
+      "Доработан радус выдачи и доставки заказов",
+      "Добавлены 3 новых города",
+      "Радиус работает от 1 до 25 км"
     ]
   }
 }

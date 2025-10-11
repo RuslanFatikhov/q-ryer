@@ -1,0 +1,59 @@
+{
+  "cities": [
+    {
+      "id": "almaty",
+      "name": "Алматы",
+      "name_en": "Almaty",
+      "center": {
+        "lat": 43.2380,
+        "lng": 76.9452
+      },
+      "zoom": 12,
+      "active": true
+    },
+    {
+      "id": "moscow",
+      "name": "Москва",
+      "name_en": "Moscow",
+      "center": {
+        "lat": 55.7558,
+        "lng": 37.6173
+      },
+      "zoom": 12,
+      "active": true
+    },
+    {
+      "id": "paris",
+      "name": "Париж",
+      "name_en": "Paris",
+      "center": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "zoom": 12,
+      "active": true
+    },
+    {
+      "id": "malmo",
+      "name": "Мальмо",
+      "name_en": "Malmö",
+      "center": {
+        "lat": 13.000658204023154,
+        "lng": 55.6051546478935
+      },
+      "zoom": 12,
+      "active": true
+    },
+    {
+      "id": "alingsas",
+      "name": "Алингсос",
+      "name_en": "Alingsås",
+      "center": {
+        "lat": 12.536772865471164,
+        "lng": 57.93004269637348
+      },
+      "zoom": 12,
+      "active": true
+    }
+  ]
+}

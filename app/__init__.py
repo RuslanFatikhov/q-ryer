@@ -41,6 +41,7 @@ def create_app(config_name=None):
     from app.api.player import player_bp
     from app.api.admin import admin_bp
     from app.api.app_info import app_info_bp  # <- Добавь эту строку
+    from app.api.cities import cities_bp
     from app.routes import pages_bp
     from admin.routes import admin_pages_bp
 
@@ -50,6 +51,7 @@ def create_app(config_name=None):
     app.register_blueprint(app_info_bp, url_prefix="/api")  # <- Добавь эту строку
     app.register_blueprint(pages_bp)
     app.register_blueprint(admin_pages_bp, url_prefix="/admin")
+    app.register_blueprint(cities_bp)
 
     # Регистрируем DEBUG blueprint только в development режиме
     if config_name == "development":
@@ -76,3 +78,5 @@ def create_app(config_name=None):
             return {"status": "unhealthy", "error": str(e)}, 500
 
     return app
+
+# Регистрация Blueprint для работы с городами

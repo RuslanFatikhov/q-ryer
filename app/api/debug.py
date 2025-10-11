@@ -166,3 +166,46 @@ def teleport_to_dropoff():
     except Exception as e:
         logger.error(f"Error teleporting: {str(e)}")
         return jsonify({'error': str(e)}), 500
+
+@debug_bp.route('/generate_city_order', methods=['POST'])
+def generate_city_order():
+    """
+    Генерация заказа в конкретном городе (для тестирования).
+    """
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id')
+        city_id = data.get('city_id', 'almaty')
+        
+        from app.utils.restaurant_helper import get_random_restaurant
+        from app.utils.building_helper import get_random_building
+        from app.utils.gps_helper import calculate_distance
+        
+        # Получаем случайный ресторан из города
+        restaurant = get_random_restaurant(city_id)
+        if not restaurant:
+            return jsonify({'success': False, 'error': f'No restaurants in {city_id}'}), 404
+        
+        # Получаем случайное здание из города
+        building = get_random_building(city_id)
+        if not building:
+            return jsonify({'success': False, 'error': f'No buildings in {city_id}'}), 404
+        
+        # Рассчитываем расстояние
+        distance = calculate_distance(
+            restaurant['lat'], restaurant['lng'],
+            building['lat'], building['lng']
+        )
+        
+        return jsonify({
+            'success': True,
+            'city': city_id,
+            'restaurant': restaurant['name'],
+            'building': building['address'],
+            'distance_km': round(distance, 2),
+            'restaurant_coords': {'lat': restaurant['lat'], 'lng': restaurant['lng']},
+            'building_coords': {'lat': building['lat'], 'lng': building['lng']}
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500

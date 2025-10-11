@@ -113,13 +113,13 @@ class User(db.Model):
         db.session.commit()
     
     def update_search_radius(self, radius_km):
-        """Обновление радиуса поиска заказов (3-25 км)"""
+        """Обновление радиуса поиска заказов (1-25 км)"""
         # Валидация радиуса
         if not isinstance(radius_km, (int, float)):
             raise ValueError("Радиус должен быть числом")
         
-        if radius_km < 3 or radius_km > 25:
-            raise ValueError("Радиус должен быть от 3 до 25 км")
+        if radius_km < 1 or radius_km > 25:
+            raise ValueError("Радиус должен быть от 1 до 25 км")
         
         self.search_radius_km = int(radius_km)
         self.updated_at = datetime.utcnow()

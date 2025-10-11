@@ -1,3 +1,4 @@
+from app.utils.city_helper import detect_city_by_location
 # -*- coding: utf-8 -*-
 """
 Игровая логика для симулятора курьера.
@@ -11,18 +12,25 @@ from app import db
 from app.models.user import User
 from app.utils.economy import calculate_payout, calculate_timer
 from app.utils.gps_helper import calculate_distance
-from app.utils.restaurant_helper import get_restaurants_near_location, load_restaurants_data
-from app.utils.building_helper import get_random_building_for_delivery, load_buildings_data
+from app.utils.restaurant_helper import get_restaurants_near_location
+from app.utils.building_helper import get_random_building_for_delivery, load_buildings_data, get_random_building_within_game_radius
 
 logger = logging.getLogger(__name__)
 
 
-def generate_random_order(user_lat: float, user_lng: float, radius_km: int = 5) -> Optional[Dict]:
+def generate_random_order(user_lat: float, user_lng: float, radius_km: int = 5, city_id: Optional[str] = None) -> Optional[Dict]:
+    from app.utils.city_helper import detect_city_by_location
+    if city_id is None:
+        city_id = detect_city_by_location(user_lat, user_lng) or 'almaty'
     """
     Генерация случайного заказа на основе местоположения игрока.
     Выбирает ресторан и здание для доставки в указанном радиусе.
     
     Args:
+        user_lat (float): Широта игрока
+        user_lng (float): Долгота игрока
+        radius_km (int): Радиус поиска в км
+        city_id (str): ID города для генерации заказа
         user_lat (float): Широта игрока
         user_lng (float): Долгота игрока
         radius_km (int): Радиус поиска в км
@@ -32,7 +40,7 @@ def generate_random_order(user_lat: float, user_lng: float, radius_km: int = 5) 
     """
     try:
         # Получаем рестораны рядом с игроком
-        nearby_restaurants = get_restaurants_near_location(user_lat, user_lng, radius_km)
+        nearby_restaurants = get_restaurants_near_location(user_lat, user_lng, radius_km, city_id=city_id)
         
         if not nearby_restaurants:
             logger.warning(f"No restaurants found within {radius_km} km radius")
@@ -41,34 +49,29 @@ def generate_random_order(user_lat: float, user_lng: float, radius_km: int = 5) 
         # Берем ближайший ресторан
         pickup_restaurant = nearby_restaurants[0]
         
-        # Получаем случайное здание для доставки (0.5-5 км от ресторана)
-        dropoff_building = get_random_building_for_delivery(
-            pickup_restaurant['lat'],
-            pickup_restaurant['lng'],
-            min_distance_km=0.5,
-            max_distance_km=5.0
+        # Получаем случайное здание для доставки с проверкой радиуса от игрока И от ресторана
+        dropoff_building = get_random_building_within_game_radius(
+            player_lat=user_lat, 
+            player_lng=user_lng,
+            pickup_lat=pickup_restaurant["lat"], 
+            pickup_lng=pickup_restaurant["lng"],
+            player_radius_km=radius_km,
+            min_distance_from_pickup_km=0.5,
+            max_distance_from_pickup_km=5.0,
+            city_id=city_id
         )
         
+        
         if not dropoff_building:
-            # Если нет подходящих, берем любое случайное здание
-            buildings = load_buildings_data()
-            if not buildings:
-                logger.warning("No buildings available for delivery")
-                return None
-            
-            import random
-            dropoff_building = random.choice(buildings)
-            # Рассчитываем расстояние
-            delivery_distance = calculate_distance(
-                pickup_restaurant['lat'], pickup_restaurant['lng'],
-                dropoff_building['lat'], dropoff_building['lng']
-            )
-        else:
-            delivery_distance = dropoff_building.get('delivery_distance_km', 
-                calculate_distance(
-                    pickup_restaurant['lat'], pickup_restaurant['lng'],
-                    dropoff_building['lat'], dropoff_building['lng']
-                ))
+            logger.warning("No suitable building found within player radius")
+            return None
+        
+        # Получаем расстояние доставки
+        delivery_distance = dropoff_building.get("delivery_distance_km",
+            calculate_distance(
+                pickup_restaurant["lat"], pickup_restaurant["lng"],
+                dropoff_building["lat"], dropoff_building["lng"]
+            ))
         
         # Расчет параметров заказа
         payout = calculate_payout(delivery_distance)
@@ -251,66 +254,70 @@ def cancel_order(user_id: int, reason: str = 'user_cancelled') -> Dict:
 def get_order_for_user(user_id: int) -> Optional[Dict]:
     """
     Генерация и создание нового заказа для пользователя.
-    Единая точка входа для получения заказа - сначала генерирует, потом создает в БД.
-    
-    Args:
-        user_id (int): ID пользователя
-    
-    Returns:
-        Optional[Dict]: Данные созданного заказа или None
+    Единая точка входа: проверяем активный заказ, определяем город по координатам,
+    генерируем заказ и сохраняем в БД.
     """
-    # Импортируем Order здесь, чтобы избежать циклического импорта
     from app.models.order import Order
-    
+
     try:
         user = User.query.get(user_id)
         if not user:
             logger.error(f"User {user_id} not found")
             return None
-        
-        # Проверяем, нет ли уже активного заказа
+
+        # Если активный заказ уже есть — просто вернуть его
         existing_order = user.get_active_order()
         if existing_order:
             logger.warning(f"User {user_id} already has an active order")
             return existing_order.to_dict()
-        
-        # Генерируем новый заказ
-        order_data = generate_random_order(
-            user.last_position_lat,
-            user.last_position_lng,
-            radius_km=5  # TODO: брать из настроек пользователя
-        )
-        
-        if not order_data:
-            return None
-        
-        # Создаем заказ в БД
-        new_order = Order(
-            user_id=user_id,
-            pickup_lat=order_data['pickup']['lat'],
-            pickup_lng=order_data['pickup']['lng'],
-            pickup_name=order_data['pickup']['name'],
-            dropoff_lat=order_data['dropoff']['lat'],
-            dropoff_lng=order_data['dropoff']['lng'],
-            dropoff_address=order_data['dropoff']['address'],
-            distance_km=order_data['distance_km'],
-            amount=order_data['amount'],
-            timer_seconds=order_data['timer_seconds'],
-            status='pending'
-        )
-        
-        db.session.add(new_order)
-        db.session.commit()
-        
-        logger.info(f"Created order {new_order.id} for user {user_id}")
-        
-        return new_order.to_dict()
-        
     except Exception as e:
-        logger.error(f"Error creating order for user {user_id}: {str(e)}", exc_info=True)
-        db.session.rollback()
+        logger.error(f"Error retrieving user {user_id}: {str(e)}", exc_info=True)
         return None
 
+    # Координаты игрока (последние известные или поля пользователя)
+    _ulat = (
+        getattr(user, 'last_position_lat', None)
+        or getattr(user, 'lat', None)
+        or getattr(user, 'latitude', None)
+    )
+    _ulng = (
+        getattr(user, 'last_position_lng', None)
+        or getattr(user, 'lng', None)
+        or getattr(user, 'longitude', None)
+    )
+
+    # Определяем city_id по координатам, fallback — город из БД, затем 'almaty'
+    city_id = (detect_city_by_location(_ulat, _ulng) if (_ulat is not None and _ulng is not None) else None)               or getattr(user, 'city_id', None)               or 'almaty'
+    logger.info(f"User {user_id} city_id resolved: {city_id}")
+
+    # Генерируем заказ в найденном городе (важно: прокидываем city_id)
+    order_data = generate_random_order(
+        _ulat, _ulng,
+        radius_km=user.search_radius_km,
+        city_id=city_id
+    )
+    if not order_data:
+        logger.warning(f"No orders available for user {user_id}")
+        return None
+
+    # Создаём заказ в БД
+    new_order = Order(
+        user_id=user_id,
+        pickup_lat=order_data['pickup']['lat'],
+        pickup_lng=order_data['pickup']['lng'],
+        pickup_name=order_data['pickup']['name'],
+        dropoff_lat=order_data['dropoff']['lat'],
+        dropoff_lng=order_data['dropoff']['lng'],
+        dropoff_address=order_data['dropoff']['address'],
+        distance_km=order_data['distance_km'],
+        amount=order_data['amount'],
+        timer_seconds=order_data['timer_seconds'],
+        status='pending'
+    )
+    db.session.add(new_order)
+    db.session.commit()
+    logger.info(f"Created order {new_order.id} for user {user_id} in city {city_id}")
+    return new_order.to_dict()
 
 def check_player_zones(user_id: int, lat: float, lng: float) -> Dict:
     """

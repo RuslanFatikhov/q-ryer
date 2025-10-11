@@ -2,6 +2,7 @@
 """
 Утилиты для работы с ресторанами из GeoJSON файла.
 Функции для поиска и выбора ресторанов для заказов.
+Поддержка нескольких городов.
 """
 
 import json
@@ -9,27 +10,31 @@ import random
 import logging
 from typing import Dict, List, Optional
 from app.utils.gps_helper import calculate_distance, is_within_radius
+from app.utils.city_helper import get_city_data_path
 
-# Настройка логирования
 logger = logging.getLogger(__name__)
 
-# Кэш данных ресторанов
-_restaurants_cache = None
+# Кэш данных ресторанов для разных городов
+_restaurants_cache = {}
 
-def load_restaurants_data(filename: str = 'data/restaurants.geojson') -> List[Dict]:
+def load_restaurants_data(city_id: str = 'almaty') -> List[Dict]:
     """
-    Загрузка данных ресторанов из GeoJSON файла.
+    Загрузка данных ресторанов из GeoJSON файла для указанного города.
     
     Args:
-        filename (str): Путь к файлу с данными ресторанов
+        city_id (str): ID города (almaty, astana и т.д.)
     
     Returns:
         list: Список ресторанов
     """
     global _restaurants_cache
     
-    if _restaurants_cache is not None:
-        return _restaurants_cache
+    # Проверяем кэш для этого города
+    if city_id in _restaurants_cache:
+        return _restaurants_cache[city_id]
+    
+    # Получаем путь к файлу для города
+    filename = get_city_data_path(city_id, 'restaurants')
     
     try:
         with open(filename, 'r', encoding='utf-8') as file:
@@ -58,54 +63,59 @@ def load_restaurants_data(filename: str = 'data/restaurants.geojson') -> List[Di
                 'name': name,
                 'lat': lat,
                 'lng': lng,
-                'properties': properties  # Сохраняем все свойства
+                'city_id': city_id,  # Добавляем ID города
+                'properties': properties
             }
             restaurants.append(restaurant)
         
-        _restaurants_cache = restaurants
-        logger.info(f"Loaded {len(restaurants)} restaurants from {filename}")
+        # Кэшируем результат для этого города
+        _restaurants_cache[city_id] = restaurants
+        logger.info(f"Loaded {len(restaurants)} restaurants for {city_id}")
         return restaurants
         
     except FileNotFoundError:
         logger.error(f"Restaurants file not found: {filename}")
         return []
     except Exception as e:
-        logger.error(f"Error loading restaurants: {str(e)}")
+        logger.error(f"Error loading restaurants for {city_id}: {str(e)}")
         return []
 
-def get_random_restaurant() -> Optional[Dict]:
+def get_random_restaurant(city_id: str = 'almaty') -> Optional[Dict]:
     """
-    Получение случайного ресторана для заказа.
+    Получение случайного ресторана для заказа в указанном городе.
+    
+    Args:
+        city_id (str): ID города
     
     Returns:
         dict: Случайный ресторан или None
     """
-    restaurants = load_restaurants_data()
+    restaurants = load_restaurants_data(city_id)
     
     if not restaurants:
         return None
     
     return random.choice(restaurants)
 
-def get_restaurants_near_location(lat: float, lng: float, radius_km: float = 5.0) -> List[Dict]:
+def get_restaurants_near_location(lat: float, lng: float, radius_km: float = 5.0, city_id: str = 'almaty') -> List[Dict]:
     """
-    Получение ресторанов рядом с указанной позицией.
+    Получение ресторанов рядом с указанной позицией в городе.
     
     Args:
         lat (float): Широта
         lng (float): Долгота  
         radius_km (float): Радиус поиска в километрах
+        city_id (str): ID города
     
     Returns:
         list: Список ресторанов в радиусе
     """
-    restaurants = load_restaurants_data()
+    restaurants = load_restaurants_data(city_id)
     nearby_restaurants = []
     
     for restaurant in restaurants:
         distance = calculate_distance(lat, lng, restaurant['lat'], restaurant['lng'])
         if distance <= radius_km:
-            # Добавляем расстояние к данным ресторана
             restaurant_with_distance = restaurant.copy()
             restaurant_with_distance['distance_km'] = round(distance, 2)
             nearby_restaurants.append(restaurant_with_distance)
@@ -113,30 +123,6 @@ def get_restaurants_near_location(lat: float, lng: float, radius_km: float = 5.0
     # Сортируем по расстоянию
     nearby_restaurants.sort(key=lambda x: x['distance_km'])
     return nearby_restaurants
-
-def find_restaurant_by_name(name: str) -> Optional[Dict]:
-    """
-    Поиск ресторана по названию.
-    
-    Args:
-        name (str): Название для поиска
-    
-    Returns:
-        dict: Найденный ресторан или None
-    """
-    restaurants = load_restaurants_data()
-    
-    # Точное совпадение
-    for restaurant in restaurants:
-        if restaurant['name'].lower() == name.lower():
-            return restaurant
-    
-    # Частичное совпадение
-    for restaurant in restaurants:
-        if name.lower() in restaurant['name'].lower():
-            return restaurant
-    
-    return None
 
 def is_player_at_restaurant(player_lat: float, player_lng: float, 
                            restaurant_lat: float, restaurant_lng: float, 
@@ -156,49 +142,43 @@ def is_player_at_restaurant(player_lat: float, player_lng: float,
     """
     return is_within_radius(restaurant_lat, restaurant_lng, player_lat, player_lng, radius_meters)
 
-def get_restaurants_by_type(amenity_type: str) -> List[Dict]:
-    """
-    Получение ресторанов по типу заведения.
-    
-    Args:
-        amenity_type (str): Тип заведения (cafe, restaurant, fast_food)
-    
-    Returns:
-        list: Список ресторанов определенного типа
-    """
-    restaurants = load_restaurants_data()
-    filtered_restaurants = []
-    
-    for restaurant in restaurants:
-        properties = restaurant.get('properties', {})
-        if properties.get('amenity') == amenity_type:
-            filtered_restaurants.append(restaurant)
-    
-    return filtered_restaurants
-
-def reload_restaurants_cache():
+def reload_restaurants_cache(city_id: Optional[str] = None):
     """
     Принудительная перезагрузка кэша ресторанов.
-    Используется при обновлении данных.
+    
+    Args:
+        city_id (str): ID города для перезагрузки, если None - перезагрузить все
     """
     global _restaurants_cache
-    _restaurants_cache = None
-    logger.info("Restaurants cache reloaded")
+    
+    if city_id:
+        # Перезагрузить только один город
+        if city_id in _restaurants_cache:
+            del _restaurants_cache[city_id]
+        logger.info(f"Restaurants cache reloaded for {city_id}")
+    else:
+        # Перезагрузить все города
+        _restaurants_cache = {}
+        logger.info("Restaurants cache reloaded for all cities")
 
-def get_restaurants_stats() -> Dict:
+def get_restaurants_stats(city_id: str = 'almaty') -> Dict:
     """
-    Получение статистики по ресторанам.
+    Получение статистики по ресторанам для города.
+    
+    Args:
+        city_id (str): ID города
     
     Returns:
         dict: Статистика ресторанов
     """
-    restaurants = load_restaurants_data()
+    restaurants = load_restaurants_data(city_id)
     
     if not restaurants:
         return {
             'total_restaurants': 0,
             'by_type': {},
-            'coverage_area': None
+            'coverage_area': None,
+            'city_id': city_id
         }
     
     # Статистика по типам
@@ -219,5 +199,6 @@ def get_restaurants_stats() -> Dict:
             'max_lat': max(latitudes),
             'min_lng': min(longitudes),
             'max_lng': max(longitudes)
-        }
+        },
+        'city_id': city_id
     }

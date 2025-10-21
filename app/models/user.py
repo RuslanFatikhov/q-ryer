@@ -15,8 +15,14 @@ class User(db.Model):
     # Основные поля
     id = db.Column(db.Integer, primary_key=True)
     google_id = db.Column(db.String(50), unique=True, nullable=True, index=True)
+    telegram_id = db.Column(db.BigInteger, unique=True, nullable=True, index=True)  # Telegram User ID
+    telegram_username = db.Column(db.String(100), nullable=True)  # Telegram @username
+    
     username = db.Column(db.String(100), unique=True, nullable=False, index=True)
-    email = db.Column(db.String(120), unique=True, nullable=False, index=True)
+    email = db.Column(db.String(120), unique=True, nullable=True, index=True)  # Теперь nullable для Telegram-пользователей
+    
+    # Подтверждение email
+    email_verified = db.Column(db.Boolean, default=False, nullable=False)
     
     # Пароль (хэшированный)
     password_hash = db.Column(db.String(255), nullable=True)
@@ -42,11 +48,10 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     
-    # Связи с другими моделями (без backref, так как они определены в других моделях)
+    # Связи с другими моделями
     orders = db.relationship('Order', back_populates='user', lazy='dynamic', cascade='all, delete-orphan')
     reports = db.relationship('Report', back_populates='user', lazy='dynamic', cascade='all, delete-orphan')
     
-
     def set_password(self, password):
         """
         Устанавливает хэшированный пароль.
@@ -81,13 +86,24 @@ class User(db.Model):
             'id': self.id,
             'username': self.username,
             'email': self.email,
+            'email_verified': self.email_verified,
             'balance': round(self.balance, 2),
             'total_deliveries': self.total_deliveries,
             'search_radius_km': self.search_radius_km,
             'is_online': self.is_online,
             'last_activity': self.last_activity.isoformat() if self.last_activity else None,
-            'created_at': self.created_at.isoformat()
+            'created_at': self.created_at.isoformat(),
+            'auth_method': self.get_auth_method()
         }
+    
+    def get_auth_method(self):
+        """Определяет метод авторизации пользователя"""
+        if self.telegram_id:
+            return 'telegram'
+        elif self.google_id:
+            return 'google'
+        else:
+            return 'email'
     
     def update_balance(self, amount):
         """Обновление баланса пользователя"""
@@ -156,7 +172,7 @@ class User(db.Model):
         }
     
     @classmethod
-    def create_user(cls, username, email, password):
+    def create_user(cls, username, email, password, email_verified=False):
         """
         Создание нового пользователя с паролем.
         
@@ -164,11 +180,12 @@ class User(db.Model):
             username (str): Уникальный никнейм
             email (str): Уникальная почта
             password (str): Пароль в открытом виде
+            email_verified (bool): Подтверждён ли email (по умолчанию False)
             
         Returns:
             User: Созданный пользователь
         """
-        user = cls(username=username, email=email)
+        user = cls(username=username, email=email, email_verified=email_verified)
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
@@ -178,6 +195,7 @@ class User(db.Model):
     def create_google_user(cls, username, email, google_id):
         """
         Создание пользователя через Google OAuth (без пароля).
+        Email автоматически считается подтверждённым.
         
         Args:
             username (str): Уникальный никнейм
@@ -187,7 +205,32 @@ class User(db.Model):
         Returns:
             User: Созданный пользователь
         """
-        user = cls(username=username, email=email, google_id=google_id)
+        user = cls(username=username, email=email, google_id=google_id, email_verified=True)
+        db.session.add(user)
+        db.session.commit()
+        return user
+    
+    @classmethod
+    def create_telegram_user(cls, telegram_id, username, telegram_username=None, email=None):
+        """
+        Создание пользователя через Telegram (без пароля).
+        
+        Args:
+            telegram_id (int): Telegram User ID
+            username (str): Уникальный никнейм
+            telegram_username (str): Telegram @username (опционально)
+            email (str): Email (опционально)
+            
+        Returns:
+            User: Созданный пользователь
+        """
+        user = cls(
+            telegram_id=telegram_id,
+            username=username,
+            telegram_username=telegram_username,
+            email=email,
+            email_verified=bool(email)  # Если email указан, считаем подтверждённым
+        )
         db.session.add(user)
         db.session.commit()
         return user

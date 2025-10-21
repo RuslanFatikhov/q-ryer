@@ -2,15 +2,14 @@
 """
 Маршруты страниц для симулятора курьера.
 """
-
 from flask import Blueprint, render_template, current_app
 
 pages_bp = Blueprint("pages", __name__)
 
 @pages_bp.route("/")
 def index():
-    """Главная страница - перенаправление на вход"""
-    return render_template("login.html")
+    """Главная страница - лендинг с модалкой логина"""
+    return render_template("landing.html")
 
 @pages_bp.route("/register")
 def register():
@@ -19,8 +18,13 @@ def register():
 
 @pages_bp.route("/login")
 def login():
-    """Страница входа"""
+    """Страница входа (отдельная страница для прямых ссылок)"""
     return render_template("login.html")
+
+@pages_bp.route("/password-reset")
+def password_reset():
+    """Страница восстановления пароля"""
+    return render_template("password_reset.html")
 
 @pages_bp.route("/game")
 def game():
@@ -32,7 +36,6 @@ def game():
 def terms():
     """Страница пользовательского соглашения"""
     return render_template("terms.html")
-
 
 @pages_bp.route("/privacy")
 def privacy():

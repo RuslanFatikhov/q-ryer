@@ -2,6 +2,7 @@
     --accent010: rgba(71,74,255,0.1);
     --accent100: #4F46E5;
     --black100: #121212;
+    --black050: rgba(18,18,18,0.5);
     --black020:rgba(18,18,18,0.2);
     --black010:rgba(18,18,18,0.1);
     --black005:rgba(18,18,18,0.05);
@@ -10,25 +11,46 @@
     --white30:#CCCCCC;
     --white20:#E6E6E6;
 
-
-
+    
+    --bg1: #FFFFFF;
+    --bg2: #F5F5F5;
+    --bg3: linear-gradient(180deg, #fefefe 0%, #e2e2e2 100%);
 
     --red100: #ff0000;
     --red005:rgba(255,0,0,0.05);
 
+    --green100:#0FBB1E;
+    --green005:rgba(15,187,30,0.05);
+
     --shadow: filter: drop-shadow(0px 4px 16px rgba(18,18,18,0.25));
+
+
+    --gr4: linear-gradient(180deg, #5D23CE 0%, #8E4EF6 100%);
+
 }
 
 .black100{
     color: var(--black100);
 }
 
+.black050{
+    color: var(--black050);
+}
+
 .white100{
     color: var(--white100);
 }
 
+.accent100{
+    color: var(--accent100);
+}
+
 .red100{
     color: var(--red100);
+}
+
+.bg-gr4{
+    background: var(--gr4);
 }
 
 .bg-black100{
@@ -50,4 +72,14 @@
 .bg-red005{
     background-color: var(--red005);
 }
+
+.positive100{
+    color: var(--green100) !important;
+}
+
+.bg-positive005{
+    background-color: var(--green005);
+}
+
+
 

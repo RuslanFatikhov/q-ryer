@@ -1,0 +1,449 @@
+{% extends "base.html" %}
+{% block title %}Q-RYER — Симулятор курьера{% endblock %}
+
+
+
+{% block content %}
+<!-- Лендинг контент (здесь вы будете верстать свой лендинг) -->
+<div class="landing-wrapper">
+
+  <!--Hero-->
+  <div class="landing-hero" style="position: relative;">
+    
+    <h5 class="white100" style="margin-bottom: 8px;">Повод пройтись и узнать свой город</h5>
+
+    <span class="hstack gap10" style="margin-bottom: 16px;">
+      <img src="{{ url_for('static', filename='img/icon/qryer_icon.png') }}" alt="Q-RYER Icon" class="icon" style="width: 54px; height: 54px;">
+      <h1 class="white100">Q-RYER</h1>
+    </span>
+
+
+    <span class="vstack aic">
+      <p class="white100">Берёте заказ, доходите до точки</p>
+
+      <span class="hstack" style="margin-top: 4px;">
+        <p class="white100">получаете</p><img  src="{{ url_for('static', filename='img/icon/qoin.png') }}" alt="Coin Icon" class="icon" style="width: 20px; height: 20px; margin-left: 4px;">
+      </span>
+    </span>
+
+    <img src="{{ url_for('static', filename='img/landing/landing-hero.png') }}" alt="hero" style="position: absolute; height: 380px; width: auto; bottom: 0px;">
+
+  </div>
+
+
+  <!--How to-->
+  <div style="padding-top: 48px; padding-bottom: 48px; background: linear-gradient(180deg, #85B842 0%, #E0E6C1 100%);" class="vstack aic gap32">
+
+    <h2 class="white100 tac">Как это работает?</h2>
+
+    <div class="vstack gap8 w100" style="padding-left: 16px; padding-right: 16px;">
+
+      <!--VStack-->
+      <div class="hstack gap8 w100">
+
+
+        <!--Card1-->
+        <div class="landing-card vstack aic gap4" style="background: linear-gradient(65deg, rgba(136, 160, 94, 0.30) 0%, rgba(136, 160, 94, 0.10) 100%);">
+          <img src="{{ url_for('static', filename='img/landing/map-pin.png') }}" alt="Step 1" style="width: 80px; height: 80px; margin-top: -30px;">
+          <p class="white100 fw700 tac">Получаете заказ</p>
+          <h5 class="white100 tac">точка на карте<br>с радиусом</h5>
+        </div>
+
+        <!--Card2-->
+        <div class="landing-card vstack aic gap4" style="background: linear-gradient(120deg, rgba(136, 160, 94, 0.10) 4.71%, rgba(136, 160, 94, 0.30) 91.62%);">
+          <img src="{{ url_for('static', filename='img/landing/landing-runner.png') }}" alt="Step 1" style="width: 80px; height: 80px; margin-top: -30px;">
+          <p class="white100 fw700 tac">Идёте, бежите<br>или едете</p>
+          <h5 class="white100 tac">как вам удобно</h5>
+        </div>
+
+      </div>
+
+      <!--Wide-Card-->
+      <div class="landing-card hstack aic gap4" style="background: linear-gradient(31deg, rgba(136, 160, 94, 0.35) 15.24%, rgba(136, 160, 94, 0.10) 81.38%);">
+          <span class="vstack gap4 w100" style="align-items: flex-start; padding-left: 12px;">
+            <p class="white100 fw700 tac">Прибываете к месту</p>
+            <h5 class="white100 tac">и зарабатывайте койны</h5>
+          </span>
+          
+          <img src="{{ url_for('static', filename='img/landing/landing-coins.png') }}" alt="Step 1" style="width: 120px; height: 120px;">
+      </div>
+    </div>
+  </div>
+
+
+  <!--Easy start-->
+  <div class="vstack gap24" style="padding-top: 48px; padding-bottom: 48px; background: linear-gradient(180deg, #E0E6C1 0%, #E5DFB2 50%, #E9A3A3 100%);">
+    <h2 class="tac" style="color: #474741;">Простой старт</h2>
+
+    <span class="vstack gap12" style="margin-top: 24px; padding-left: 16px; padding-right:16px;">
+
+
+      <!--Cell-->
+      <div class="hstack gap16 aic" style="height: 80px;">
+        <img src="{{ url_for('static', filename='img/landing/landing_target.svg') }}" alt="GPS" class="icon" style="width: 50px; height: 50px;">
+
+        <span class="vstack gap4">
+           <h3 style="color: #353429;">GPS</h3>
+           <p style="color: #353429;">Подтверждаем прибытие<br>по геолокации</p>
+        </span>
+      </div>
+
+      <!--Cell-->
+      <div class="hstack gap16 aic" style="height: 80px;" >
+        <img src="{{ url_for('static', filename='img/landing/landing_password.svg') }}" alt="GPS" class="icon" style="width: 50px; height: 50px;">
+
+        <span class="vstack gap4">
+           <h3 style="color: #353429;">Регистрация</h3>
+           <p style="color: #353429;">Сохраняем монетки<br>и историю заказов</p>
+        </span>
+      </div>
+
+      <!--Cell-->
+      <div class="hstack gap16 aic" style="height: 80px;">
+        <img src="{{ url_for('static', filename='img/landing/landing_finish.svg') }}" alt="GPS" class="icon" style="width: 50px; height: 50px;">
+
+        <span class="vstack gap4">
+           <h3 style="color: #353429;">Можно начинать</h3>
+           <p style="color: #353429;">Одно задание — одно путешествие</p>
+        </span>
+      </div>
+      
+    </span>
+  </div>
+
+  <!--FAQ-->
+  <div class="vstack gap24" style="padding-top: 48px; padding-bottom: 48px; background: linear-gradient(180deg, #E9A3A3 0%, #C82B2B 100%);">
+    <h2 class="tac white100" >Ответы на вопросы</h2>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <div class="accordion-title">Нужен ли интернет?</div>
+                <div class="accordion-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-text">
+                    Да, для полноценной работы приложения необходимо подключение к интернету. Интернет нужен для загрузки карт, синхронизации данных и получения актуальной информации о маршрутах.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <div class="accordion-title">Можно идти как угодно?</div>
+                <div class="accordion-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-text">
+                    Вы свободны в выборе маршрута! Вы можете двигаться любым удобным для вас способом и любым маршрутом. Главное — достичь конечной точки.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <div class="accordion-title">Зачем регистрация?</div>
+                <div class="accordion-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-text">
+                    Регистрация позволяет сохранять ваш прогресс и историю заказов. Это также даёт возможность участвовать в рейтингах и получать достижения.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <div class="accordion-title">Почему нужен GPS?</div>
+                <div class="accordion-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-text">
+                    GPS необходим для определения вашего местоположения на карте, отслеживания до точек назначения.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <div class="accordion-header">
+                <div class="accordion-title">Есть таймер и штрафы?</div>
+                <div class="accordion-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="accordion-content">
+                <div class="accordion-text">
+                    Да, есть скрытые таймеры для отслеживания времени выполнения заказа. Штрафов нет.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+  </div>
+
+
+  <!--Footer-->
+  <div class="vstack gap16 aic" style="padding: 48px 16px; background: linear-gradient(180deg, #C82B2B 0%, #840000 100%);"">
+     <p class="white100">2025 · Q-RYER</p>
+
+     <a href="https://t.me/q-ryer" class="w100">
+        <img src="{{ url_for('static', filename='img/landing/telegram_banner.jpg') }}" alt="Telegram" class="w100" style="border-radius: 16px;">
+     </a>
+
+
+     <a href="/privacy">
+        <p class="white100">Политика обработки персональных данных </p>
+     </a>
+  </div>
+</div>
+
+<!-- Кнопка "Начать играть" -->
+<div style="position: fixed; bottom: 0px; left:0px; width: 100%; padding: 8px; background-color: var(--white100); border-radius: 16px 16px 0px 0px;">
+  <button id="startGameBtn" class="action_button">
+        <h3 class="white100">Начать играть</h3>
+  </button>
+</div>
+
+<!-- Модальное окно логина -->
+<div id="loginModal" class="login-modal">
+  <div class="login-modal-content">
+
+    <span class="modal_header" style="gap: 8px; justify-content: space-between; padding: 0px !important;">
+
+      <h2 class="black100">Вход</h2>
+      <!-- Кнопка закрытия -->
+      <button class="icon_button graybg" id="closeLoginModal">
+        <img src="{{ url_for('static', filename='img/icon/cross.svg') }}" alt="Close" style="width: 24px; height: 24px;">
+      </button>
+
+    </span>
+
+    
+
+    
+    
+    <!-- Вход через Telegram -->
+    <div style="margin-bottom: 24px;">
+      <div id="telegram-login-container" style="display: flex; justify-content: center; margin-bottom: 16px;">
+        <!-- Telegram Login Widget будет вставлен сюда через JavaScript -->
+      </div>
+      
+      <div style="display: flex; align-items: center; margin: 24px 0;">
+        <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+        <span style="padding: 0 16px; color: #999; font-size: 13px;">или</span>
+        <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+      </div>
+    </div>
+    
+    <!-- Форма входа -->
+    <form id="loginForm" class="vstack gap8">
+      <div>
+
+        <input 
+          type="text" 
+          id="login" 
+          name="login"
+          placeholder="Никнейм или e-mail"
+          required
+        >
+      </div>
+      
+      <div>
+        <input 
+          type="password" 
+          id="password" 
+          name="password"
+          placeholder="Пароль"
+          required
+        >
+      </div>
+      
+
+      <a href="/password-reset" style="margin-bottom: 24px;">
+        <h5 class="accent100">Забыли пароль?</h5>
+      </a>
+
+  
+      <button 
+        type="submit" 
+        class="action_button"
+        style="width: 100%; margin-top: 8px;"
+      >
+        <h3 class="white100">Войти</h3>
+      </button>
+    </form>
+    
+    <a href="/register" class="secondary_button" style="margin-top: 8px;">Создать аккаунт</a>
+  </div>
+</div>
+
+<!-- Telegram Login Widget Script -->
+<script async src="https://telegram.org/js/telegram-widget.js?22"
+        data-telegram-login="qryer_bot"
+        data-size="large"
+        data-onauth="onTelegramAuth(user)"
+        data-request-access="write">
+</script>
+
+
+<script>
+        const headers = document.querySelectorAll('.accordion-header');
+
+        headers.forEach(header => {
+            header.addEventListener('click', () => {
+                const currentItem = header.parentElement;
+                const currentContent = currentItem.querySelector('.accordion-content');
+                const isActive = header.classList.contains('active');
+
+                // Закрыть все остальные элементы
+                headers.forEach(h => {
+                    if (h !== header) {
+                        h.classList.remove('active');
+                        h.parentElement.querySelector('.accordion-content').classList.remove('active');
+                    }
+                });
+
+                // Переключить текущий элемент
+                if (isActive) {
+                    header.classList.remove('active');
+                    currentContent.classList.remove('active');
+                } else {
+                    header.classList.add('active');
+                    currentContent.classList.add('active');
+                }
+            });
+        });
+</script>
+
+
+<script>
+// Открытие модального окна при клике на "Начать играть"
+document.getElementById('startGameBtn').addEventListener('click', function() {
+  document.getElementById('loginModal').classList.add('active');
+  document.body.style.overflow = 'hidden'; // Блокируем прокрутку страницы
+});
+
+// Закрытие модального окна при клике на крестик
+document.getElementById('closeLoginModal').addEventListener('click', function() {
+  document.getElementById('loginModal').classList.remove('active');
+  document.body.style.overflow = 'auto'; // Разблокируем прокрутку страницы
+});
+
+// Закрытие модального окна при клике вне контента
+document.getElementById('loginModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    this.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+});
+
+// Обработка авторизации через Telegram
+function onTelegramAuth(user) {
+  console.log('Telegram auth data:', user);
+  
+  // Отправляем данные на сервер
+  fetch('/api/auth/telegram_login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(user)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Сохраняем userId в localStorage
+      localStorage.setItem('courier_user_id', data.user.id);
+      localStorage.setItem('courier_username', data.user.username);
+      
+      // Очищаем старое состояние игры
+      localStorage.removeItem('courierGameState');
+      
+      // Редирект на игру
+      window.location.href = '/game';
+    } else {
+      alert('Ошибка входа через Telegram: ' + (data.error || 'Неизвестная ошибка'));
+    }
+  })
+  .catch(error => {
+    console.error('Telegram login error:', error);
+    alert('Ошибка соединения с сервером');
+  });
+}
+
+// Обработка формы обычного входа
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const login = document.getElementById('login').value.trim();
+  const password = document.getElementById('password').value;
+  const button = e.target.querySelector('button');
+  const buttonText = button.querySelector('h3');
+  
+  // Валидация
+  if (!login || !password) {
+    alert('Заполните все поля');
+    return;
+  }
+  
+  // Блокируем кнопку
+  button.disabled = true;
+  buttonText.textContent = 'Вход...';
+  
+  try {
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ 
+        login: login,
+        password: password
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok && data.success) {
+      // Сохраняем userId в localStorage
+      localStorage.setItem('courier_user_id', data.user.id);
+      localStorage.setItem('courier_username', data.user.username);
+      
+      // Очищаем старое состояние игры
+      localStorage.removeItem('courierGameState');
+      
+      // Редирект на игру
+      window.location.href = '/game';
+    } else {
+      alert('Ошибка входа: ' + (data.error || 'Неизвестная ошибка'));
+      button.disabled = false;
+      buttonText.textContent = 'Войти';
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    alert('Ошибка соединения с сервером');
+    button.disabled = false;
+    buttonText.textContent = 'Войти';
+  }
+});
+</script>
+{% endblock %}

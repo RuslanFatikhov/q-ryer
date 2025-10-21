@@ -1,42 +1,61 @@
 {% extends "base.html" %}
-
 {% block title %}Вход — Courier Sim{% endblock %}
-
 {% block content %}
-<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--black100); padding: 20px;">
-  <div style="background: var(--white100); padding: 40px; border-radius: 16px; max-width: 400px; width: 100%;">
-    <h1 style="text-align: center; margin-bottom: 8px;">Courier Sim</h1>
-    <p style="text-align: center; color: #666; margin-bottom: 32px;">Войдите чтобы начать игру</p>
+<div class="bg-gr4" style="width: 100%; height: 100vh; display: flex; align-items: flex-end; justify-content:center; padding-bottom: 24px; overflow-y: hidden; padding-left: 16px; padding-right: 16px;">
+
+  
+
+  <div class="login-modal-content" style="z-index: 1;">
+    
+    <span class="modal_header" style="gap: 8px; justify-content: space-between; padding: 0px !important;">
+
+      <h2 class="black100">Вход</h2>
+      <!-- Кнопка закрытия -->
+      <a href="/" class="icon_button graybg">
+        <img src="{{ url_for('static', filename='img/icon/cross.svg') }}" alt="Close" style="width: 24px; height: 24px;">
+      </a>
+
+    </span>
+    
+    <!-- Вход через Telegram -->
+    <div style="margin-bottom: 24px;">
+      <div id="telegram-login-container" style="display: flex; justify-content: center; margin-bottom: 16px;">
+        <!-- Telegram Login Widget будет вставлен сюда через JavaScript -->
+      </div>
+      
+      <div style="display: flex; align-items: center; margin: 24px 0;">
+        <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+        <span style="padding: 0 16px; color: #999; font-size: 13px;">или</span>
+        <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+      </div>
+    </div>
     
     <!-- Форма входа -->
-    <form id="loginForm" style="margin-bottom: 24px;">
-      <div style="margin-bottom: 16px;">
-        <label for="login" style="display: block; margin-bottom: 8px; font-weight: 500;">
-          Никнейм или Email
-        </label>
+    <form id="loginForm" class="vstack gap8">
+      <div>
         <input 
           type="text" 
           id="login" 
           name="login"
-          placeholder="Введите никнейм или email"
+          placeholder="Никнейм или email"
           required
-          style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px;"
         >
       </div>
       
-      <div style="margin-bottom: 16px;">
-        <label for="password" style="display: block; margin-bottom: 8px; font-weight: 500;">
-          Пароль
-        </label>
+      <div>
+
         <input 
           type="password" 
           id="password" 
           name="password"
-          placeholder="Введите пароль"
+          placeholder="Пароль"
           required
-          style="width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px;"
         >
       </div>
+      
+      <a href="/password-reset" style="margin-bottom: 24px;">
+        <h5 class="accent100">Забыли пароль?</h5>
+      </a>
       
       <button 
         type="submit" 
@@ -47,13 +66,56 @@
       </button>
     </form>
     
-    <p style="text-align: center; color: #999; font-size: 13px;">
-      Нет аккаунта? <a href="/register" style="color: var(--primary); text-decoration: none;">Зарегистрироваться</a>
-    </p>
+    <a href="/register" class="secondary_button" style="margin-top: 8px;">Создать аккаунт</a>
   </div>
+
+  <img src="/static/img/landing/landing-hero.png" alt="hero" style="position: fixed; width: 100%; margin-bottom: 400px;">
 </div>
 
+<!-- Telegram Login Widget Script -->
+<script async src="https://telegram.org/js/telegram-widget.js?22"
+        data-telegram-login="qryer_bot"
+        data-size="large"
+        data-onauth="onTelegramAuth(user)"
+        data-request-access="write">
+</script>
+
 <script>
+// Обработка авторизации через Telegram
+function onTelegramAuth(user) {
+  console.log('Telegram auth data:', user);
+  
+  // Отправляем данные на сервер
+  fetch('/api/auth/telegram_login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(user)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Сохраняем userId в localStorage
+      localStorage.setItem('courier_user_id', data.user.id);
+      localStorage.setItem('courier_username', data.user.username);
+      
+      // Очищаем старое состояние игры
+      localStorage.removeItem('courierGameState');
+      
+      // Редирект на игру
+      window.location.href = '/game';
+    } else {
+      alert('Ошибка входа через Telegram: ' + (data.error || 'Неизвестная ошибка'));
+    }
+  })
+  .catch(error => {
+    console.error('Telegram login error:', error);
+    alert('Ошибка соединения с сервером');
+  });
+}
+
+// Обработка формы обычного входа
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   

@@ -10,17 +10,18 @@
 
 {% block content %}
 
-  <!-- Loader -->
-  <div id="pageLoader" class="page-loader">
+<!-- Loader -->
+<div id="pageLoader" class="page-loader">
     <div class="loader-content">
-      <div class="spinner"></div>
-      <h2 class="white100">Q-RYER</h2>
-      <p class="white60">Загрузка...</p>
+      
+      <img src="{{ url_for('static', filename='img/icon/qryer_icon.png') }}" alt="Q-RYER icon" class="loader-logo">
+
+
     </div>
-  </div>
+</div>
 
 
-  <!-- Модальное окно выбора города -->
+<!-- Модальное окно выбора города -->
 <div id="citySelectorModal" class="modal-overlay" style="display: none;">
     <div class="modal-content city-selector">
         <div class="modal-header">
@@ -255,7 +256,7 @@
       </div>
     </div>
 
-    <!-- Modal Order Found - добавить после settingsModal -->
+    <!-- Modal Order Found -->
     <div id="orderModal" class="modal">
       <div class="modal-content">
 
@@ -440,6 +441,8 @@
 
 {% endblock %}
 
+
+<!--Sripts-->
 {% block scripts %}
   <!-- Подключаем библиотеку Mapbox (версия v3.0.0) -->
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>

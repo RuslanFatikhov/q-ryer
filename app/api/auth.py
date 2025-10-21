@@ -1,12 +1,27 @@
 # -*- coding: utf-8 -*-
 """
 API endpoints для авторизации в симуляторе курьера.
-Регистрация, вход по email/username + пароль, Google OAuth.
+Регистрация с подтверждением email, вход по email/username + пароль, 
+Google OAuth, Telegram Login.
 """
 
 from flask import Blueprint, request, jsonify, current_app
 from app import db
 from app.models import User
+from app.utils.email_service import (
+    generate_verification_code, 
+    store_verification_code,
+    get_verification_code,
+    delete_verification_code,
+    is_code_expired,
+    send_verification_email,
+    send_password_reset_email
+)
+from app.utils.telegram_service import (
+    verify_telegram_auth,
+    extract_user_data,
+    generate_username_from_telegram
+)
 import logging
 import re
 import requests
@@ -31,22 +46,149 @@ def validate_password(password):
         return False, "Пароль должен содержать минимум 6 символов"
     return True, "OK"
 
-@auth_bp.route('/register', methods=['POST'])
-def register():
+@auth_bp.route('/register/send-code', methods=['POST'])
+def send_verification_code():
     """
-    Регистрация нового пользователя.
+    Шаг 1 регистрации: Отправка кода подтверждения на email.
     
     Ожидаемые данные:
     {
-        "username": "nickname",
+        "email": "user@example.com"
+    }
+    """
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({'error': 'Данные не предоставлены'}), 400
+        
+        email = data.get('email', '').strip().lower()
+        
+        # Валидация email
+        if not email:
+            return jsonify({'error': 'Email обязателен'}), 400
+        
+        if not validate_email(email):
+            return jsonify({'error': 'Некорректный email'}), 400
+        
+        # Проверка, не зарегистрирован ли уже email
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            return jsonify({'error': 'Email уже зарегистрирован'}), 400
+        
+        # Генерируем код
+        code = generate_verification_code()
+        
+        # Сохраняем код
+        store_verification_code(email, code)
+        
+        # Отправляем email
+        if send_verification_email(email, code):
+            logger.info(f"Код подтверждения отправлен на {email}")
+            return jsonify({
+                'success': True,
+                'message': 'Код подтверждения отправлен на почту',
+                'email': email
+            }), 200
+        else:
+            return jsonify({'error': 'Ошибка отправки email. Проверьте настройки почты.'}), 500
+        
+    except Exception as e:
+        logger.error(f"Ошибка при отправке кода: {str(e)}")
+        return jsonify({'error': 'Ошибка при отправке кода'}), 500
+
+@auth_bp.route('/register/verify', methods=['POST'])
+def verify_and_register():
+    """
+    Шаг 2 регистрации: Проверка кода и создание аккаунта.
+    
+    Ожидаемые данные:
+    {
         "email": "user@example.com",
+        "code": "123456",
+        "username": "nickname",
         "password": "password123"
     }
     """
     try:
         data = request.get_json()
         
-        # Проверка наличия всех полей
+        if not data:
+            return jsonify({'error': 'Данные не предоставлены'}), 400
+        
+        email = data.get('email', '').strip().lower()
+        code = data.get('code', '').strip()
+        username = data.get('username', '').strip()
+        password = data.get('password', '')
+        
+        # Валидация полей
+        if not all([email, code, username, password]):
+            return jsonify({'error': 'Все поля обязательны'}), 400
+        
+        # Проверка формата email
+        if not validate_email(email):
+            return jsonify({'error': 'Некорректный email'}), 400
+        
+        # Проверка кода
+        stored_code_data = get_verification_code(email)
+        
+        if not stored_code_data:
+            return jsonify({'error': 'Код не найден. Запросите новый код.'}), 400
+        
+        if is_code_expired(email):
+            delete_verification_code(email)
+            return jsonify({'error': 'Код истёк. Запросите новый код.'}), 400
+        
+        if stored_code_data['code'] != code:
+            return jsonify({'error': 'Неверный код'}), 400
+        
+        # Проверка пароля
+        is_valid, message = validate_password(password)
+        if not is_valid:
+            return jsonify({'error': message}), 400
+        
+        # Проверка уникальности username
+        if User.query.filter_by(username=username).first():
+            return jsonify({'error': 'Никнейм уже занят'}), 400
+        
+        # Проверка уникальности email (на всякий случай)
+        if User.query.filter_by(email=email).first():
+            return jsonify({'error': 'Email уже зарегистрирован'}), 400
+        
+        # Удаляем использованный код
+        delete_verification_code(email)
+        
+        # Создаём пользователя с подтверждённым email
+        user = User.create_user(
+            username=username, 
+            email=email, 
+            password=password,
+            email_verified=True
+        )
+        
+        logger.info(f"Зарегистрирован новый пользователь: {user.username} (ID: {user.id})")
+        
+        return jsonify({
+            'success': True,
+            'message': 'Регистрация успешна',
+            'user': user.to_dict()
+        }), 201
+        
+    except Exception as e:
+        logger.error(f"Ошибка при регистрации: {str(e)}")
+        db.session.rollback()
+        return jsonify({'error': 'Ошибка при регистрации'}), 500
+
+@auth_bp.route('/register', methods=['POST'])
+def register():
+    """
+    УСТАРЕВШИЙ МЕТОД: Регистрация без подтверждения email.
+    Оставлен для обратной совместимости.
+    Рекомендуется использовать /register/send-code и /register/verify
+    """
+    try:
+        data = request.get_json()
+        
         if not data:
             return jsonify({'error': 'Данные не предоставлены'}), 400
         
@@ -81,10 +223,10 @@ def register():
         if User.query.filter_by(email=email).first():
             return jsonify({'error': 'Email уже зарегистрирован'}), 400
         
-        # Создаём пользователя
-        user = User.create_user(username=username, email=email, password=password)
+        # Создаём пользователя БЕЗ подтверждения email (старый метод)
+        user = User.create_user(username=username, email=email, password=password, email_verified=False)
         
-        logger.info(f"Зарегистрирован новый пользователь: {user.username} (ID: {user.id})")
+        logger.warning(f"Использован устаревший метод регистрации для: {user.username}")
         
         return jsonify({
             'success': True,
@@ -137,9 +279,15 @@ def login():
         if not user:
             return jsonify({'error': 'Неверный логин или пароль'}), 401
         
-        # Проверяем, что у пользователя есть пароль (не Google OAuth)
+        # Проверяем, что у пользователя есть пароль (не Google/Telegram)
         if not user.password_hash:
-            return jsonify({'error': 'Этот аккаунт связан с Google. Войдите через Google'}), 401
+            auth_method = user.get_auth_method()
+            if auth_method == 'google':
+                return jsonify({'error': 'Этот аккаунт связан с Google. Войдите через Google'}), 401
+            elif auth_method == 'telegram':
+                return jsonify({'error': 'Этот аккаунт связан с Telegram. Войдите через Telegram'}), 401
+            else:
+                return jsonify({'error': 'У этого аккаунта не установлен пароль'}), 401
         
         # Проверяем пароль
         if not user.check_password(password):
@@ -160,6 +308,91 @@ def login():
     except Exception as e:
         logger.error(f"Ошибка при входе: {str(e)}")
         return jsonify({'error': 'Ошибка при входе'}), 500
+
+@auth_bp.route('/telegram_login', methods=['POST'])
+def telegram_login():
+    """
+    Вход/регистрация через Telegram.
+    
+    Ожидаемые данные от Telegram Login Widget:
+    {
+        "id": 123456789,
+        "first_name": "Ivan",
+        "last_name": "Petrov",
+        "username": "ivan_petrov",
+        "photo_url": "https://...",
+        "auth_date": 1234567890,
+        "hash": "abc123..."
+    }
+    """
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({'error': 'Данные не предоставлены'}), 400
+        
+        # Проверяем подлинность данных от Telegram
+        if not verify_telegram_auth(data):
+            return jsonify({'error': 'Неверные данные от Telegram'}), 401
+        
+        # Извлекаем данные пользователя
+        telegram_data = extract_user_data(data)
+        telegram_id = telegram_data['telegram_id']
+        
+        # Ищем существующего пользователя по telegram_id
+        user = User.query.filter_by(telegram_id=telegram_id).first()
+        
+        if user:
+            # Пользователь найден - обновляем данные
+            if telegram_data['username'] and user.telegram_username != telegram_data['username']:
+                user.telegram_username = telegram_data['username']
+            
+            user.updated_at = db.func.now()
+            db.session.commit()
+            
+            logger.info(f"Telegram пользователь вошёл: {user.username} (ID: {user.id})")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Вход через Telegram успешен',
+                'user': user.to_dict()
+            })
+        else:
+            # Новый пользователь - создаём аккаунт
+            # Генерируем username
+            base_username = generate_username_from_telegram(
+                telegram_data['first_name'],
+                telegram_data['last_name'],
+                telegram_data['username']
+            )
+            
+            # Проверяем уникальность username и добавляем суффикс если нужно
+            username = base_username
+            counter = 1
+            while User.query.filter_by(username=username).first():
+                username = f"{base_username}_{counter}"
+                counter += 1
+            
+            # Создаём Telegram пользователя
+            user = User.create_telegram_user(
+                telegram_id=telegram_id,
+                username=username,
+                telegram_username=telegram_data['username']
+            )
+            
+            logger.info(f"Создан новый Telegram пользователь: {user.username} (ID: {user.id})")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Регистрация через Telegram успешна',
+                'user': user.to_dict(),
+                'is_new_user': True
+            }), 201
+        
+    except Exception as e:
+        logger.error(f"Ошибка при Telegram авторизации: {str(e)}")
+        db.session.rollback()
+        return jsonify({'error': 'Ошибка при входе через Telegram'}), 500
 
 @auth_bp.route('/google_login', methods=['POST'])
 def google_login():
@@ -235,11 +468,135 @@ def google_login():
         db.session.rollback()
         return jsonify({'error': 'Failed to authenticate with Google'}), 500
 
+@auth_bp.route('/password-reset/send-code', methods=['POST'])
+def send_password_reset_code():
+    """
+    Отправка кода для восстановления пароля.
+    
+    Ожидаемые данные:
+    {
+        "email": "user@example.com"
+    }
+    """
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({'error': 'Данные не предоставлены'}), 400
+        
+        email = data.get('email', '').strip().lower()
+        
+        if not email:
+            return jsonify({'error': 'Email обязателен'}), 400
+        
+        if not validate_email(email):
+            return jsonify({'error': 'Некорректный email'}), 400
+        
+        # Проверяем существование пользователя
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            # Не раскрываем, существует ли email (безопасность)
+            return jsonify({
+                'success': True,
+                'message': 'Если email зарегистрирован, код отправлен на почту'
+            }), 200
+        
+        # Проверяем, что у пользователя есть пароль (не Google/Telegram)
+        if not user.password_hash:
+            return jsonify({'error': 'Этот аккаунт не использует пароль'}), 400
+        
+        # Генерируем код
+        code = generate_verification_code()
+        
+        # Сохраняем код
+        store_verification_code(email, code)
+        
+        # Отправляем email
+        send_password_reset_email(email, code)
+        
+        logger.info(f"Код восстановления пароля отправлен на {email}")
+        
+        return jsonify({
+            'success': True,
+            'message': 'Код восстановления отправлен на почту'
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Ошибка при отправке кода восстановления: {str(e)}")
+        return jsonify({'error': 'Ошибка при отправке кода'}), 500
+
+@auth_bp.route('/password-reset/verify', methods=['POST'])
+def reset_password():
+    """
+    Сброс пароля с использованием кода.
+    
+    Ожидаемые данные:
+    {
+        "email": "user@example.com",
+        "code": "123456",
+        "new_password": "newpassword123"
+    }
+    """
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({'error': 'Данные не предоставлены'}), 400
+        
+        email = data.get('email', '').strip().lower()
+        code = data.get('code', '').strip()
+        new_password = data.get('new_password', '')
+        
+        if not all([email, code, new_password]):
+            return jsonify({'error': 'Все поля обязательны'}), 400
+        
+        # Проверка кода
+        stored_code_data = get_verification_code(email)
+        
+        if not stored_code_data:
+            return jsonify({'error': 'Код не найден'}), 400
+        
+        if is_code_expired(email):
+            delete_verification_code(email)
+            return jsonify({'error': 'Код истёк'}), 400
+        
+        if stored_code_data['code'] != code:
+            return jsonify({'error': 'Неверный код'}), 400
+        
+        # Проверка нового пароля
+        is_valid, message = validate_password(new_password)
+        if not is_valid:
+            return jsonify({'error': message}), 400
+        
+        # Находим пользователя
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            return jsonify({'error': 'Пользователь не найден'}), 404
+        
+        # Удаляем использованный код
+        delete_verification_code(email)
+        
+        # Обновляем пароль
+        user.set_password(new_password)
+        user.updated_at = db.func.now()
+        db.session.commit()
+        
+        logger.info(f"Пароль успешно сброшен для {email}")
+        
+        return jsonify({
+            'success': True,
+            'message': 'Пароль успешно изменён'
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"Ошибка при сбросе пароля: {str(e)}")
+        db.session.rollback()
+        return jsonify({'error': 'Ошибка при сбросе пароля'}), 500
+
 @auth_bp.route('/verify_session', methods=['POST'])
 def verify_session():
     """
     Проверка активной сессии пользователя.
-    Используется для восстановления сессии при перезагрузке приложения.
     """
     try:
         data = request.get_json()
@@ -252,7 +609,6 @@ def verify_session():
         if not user:
             return jsonify({'error': 'User not found'}), 404
         
-        # Проверяем, что пользователь активен
         if not user.is_active:
             return jsonify({'error': 'User account is disabled'}), 403
         
@@ -272,7 +628,6 @@ def verify_session():
 def logout():
     """
     Выход пользователя из системы.
-    Устанавливает статус офлайн.
     """
     try:
         data = request.get_json()
@@ -285,7 +640,6 @@ def logout():
         if not user:
             return jsonify({'error': 'User not found'}), 404
         
-        # Проверяем, нет ли активного заказа
         active_order = user.get_active_order()
         if active_order:
             logger.warning(f"User {user.username} tried to logout with active order {active_order.id}")
@@ -294,7 +648,6 @@ def logout():
                 'active_order': active_order.to_dict()
             }), 400
         
-        # Устанавливаем статус офлайн
         user.set_online_status(False)
         
         logger.info(f"User logged out: {user.username} (ID: {user.id})")
@@ -312,7 +665,6 @@ def logout():
 def delete_account():
     """
     Удаление аккаунта пользователя.
-    Только для пользователей без активных заказов.
     """
     try:
         data = request.get_json()
@@ -337,7 +689,6 @@ def delete_account():
             if not user.check_password(password):
                 return jsonify({'error': 'Incorrect password'}), 401
         
-        # Проверяем, нет ли активного заказа
         active_order = user.get_active_order()
         if active_order:
             return jsonify({
@@ -347,7 +698,6 @@ def delete_account():
         
         username = user.username
         
-        # Удаляем пользователя (каскадное удаление заказов и отчетов)
         db.session.delete(user)
         db.session.commit()
         
@@ -366,29 +716,19 @@ def delete_account():
 def verify_google_token(id_token: str) -> dict:
     """
     Проверка Google ID token.
-    
-    Args:
-        id_token (str): Google ID token
-    
-    Returns:
-        dict: Данные пользователя Google или None
     """
     try:
-        # URL для проверки Google токена
         google_url = f'https://oauth2.googleapis.com/tokeninfo?id_token={id_token}'
-        
         response = requests.get(google_url, timeout=10)
         
         if response.status_code == 200:
             token_info = response.json()
             
-            # Проверяем, что токен для нашего приложения
             client_id = current_app.config.get('GOOGLE_CLIENT_ID')
             if client_id and token_info.get('aud') != client_id:
-                logger.warning(f"Google token audience mismatch: {token_info.get('aud')} != {client_id}")
+                logger.warning(f"Google token audience mismatch")
                 return None
             
-            # Проверяем, что токен не истек
             if 'exp' in token_info:
                 import time
                 if int(token_info['exp']) < time.time():
@@ -400,9 +740,6 @@ def verify_google_token(id_token: str) -> dict:
             logger.error(f"Google token verification failed: {response.status_code}")
             return None
             
-    except requests.RequestException as e:
-        logger.error(f"Network error verifying Google token: {str(e)}")
-        return None
     except Exception as e:
         logger.error(f"Error verifying Google token: {str(e)}")
         return None
@@ -422,7 +759,6 @@ def get_profile():
         if not user:
             return jsonify({'error': 'User not found'}), 404
         
-        # Получаем статистику пользователя
         stats = user.get_statistics()
         
         return jsonify({
@@ -451,9 +787,7 @@ def update_profile():
         if not user:
             return jsonify({'error': 'User not found'}), 404
         
-        # Обновляем имя пользователя если указано
         if username and username != user.username:
-            # Проверяем уникальность
             existing = User.query.filter_by(username=username).first()
             if existing and existing.id != user.id:
                 return jsonify({'error': 'Username already taken'}), 409

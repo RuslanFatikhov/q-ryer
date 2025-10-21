@@ -1,0 +1,65 @@
+/* Модальное окно логина */
+.login-modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+  backdrop-filter: blur(5px); /* Размытие фона */
+  align-items: flex-end;
+  justify-content: center;
+  animation: fadeIn 0.15s ease;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 24px;
+}
+
+/* Когда модалка активна */
+.login-modal.active {
+  display: flex;
+}
+
+/* Контент модального окна */
+.login-modal-content {
+  background: var(--white100);
+  padding: 16px;
+  border-radius: 16px;
+  width: 100%;
+  position: relative;
+  animation: slideUp 0.3s ease;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+
+
+.login-modal-close:hover {
+  color: #333;
+  background: #f0f0f0;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+

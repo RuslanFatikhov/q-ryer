@@ -2,7 +2,6 @@
 """
 Конфигурация для Flask приложения симулятора курьера.
 """
-
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -14,13 +13,34 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     """Базовая конфигурация"""
+    
+    # Flask Secret Key
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key'
+    
+    # База данных
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or f'sqlite:///{os.path.join(basedir, "courier_dev.db")}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
+    
     # Mapbox
     MAPBOX_ACCESS_TOKEN = os.environ.get('MAPBOX_ACCESS_TOKEN')
-
+    
+    # Email Configuration (Flask-Mail)
+    MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+    MAIL_PORT = int(os.environ.get('MAIL_PORT', 587))
+    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'True').lower() == 'true'
+    MAIL_USE_SSL = False
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
+    
+    # Telegram Bot Configuration
+    TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
+    TELEGRAM_BOT_USERNAME = os.environ.get('TELEGRAM_BOT_USERNAME')
+    
+    # Email Verification Settings
+    EMAIL_VERIFICATION_CODE_EXPIRY = 15 * 60  # 15 минут в секундах
+    
+    # Игровая конфигурация
     GAME_CONFIG = {
         'base_payment': 1.50,
         'pickup_fee': 0.50,

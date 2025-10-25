@@ -63,3 +63,5 @@ config_old.py
 
 # Docker
 *.log
+
+/data/

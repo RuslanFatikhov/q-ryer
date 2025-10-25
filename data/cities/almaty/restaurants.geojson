@@ -2,7 +2,7 @@
   "type": "FeatureCollection",
   "generator": "overpass-turbo",
   "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
-  "timestamp": "2025-09-26T04:54:32Z",
+  "timestamp": "2025-10-24T07:17:16Z",
   "features": [
     {
       "type": "Feature",
@@ -188,28 +188,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "way/50459829",
-        "addr:country": "KZ",
-        "addr:housenumber": "216В",
-        "addr:street": "улица Толе Би",
-        "amenity": "pub",
-        "building": "yes",
-        "building:levels": "1",
-        "name": "Честный",
-        "@geometry": "center"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.8878224,
-          43.2505092
-        ]
-      },
-      "id": "way/50459829"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "way/50459835",
         "addr:city": "Алматы",
         "addr:country": "KZ",
@@ -281,7 +259,6 @@
         "name": "Food Solutions",
         "name:en": "Food Solutions",
         "name:ru": "Food Solutions",
-        "note": "кинотеатр Алатау закрылся готовится к сносу место строительства McDonald's",
         "old_name": "McDonald's",
         "opening_hours": "Mo-Su 07:00-24:00",
         "operator": "Food Solutions",
@@ -760,23 +737,6 @@
         ]
       },
       "id": "way/166814190"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "way/171508702",
-        "amenity": "food_court",
-        "building": "yes",
-        "@geometry": "center"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          77.0803222,
-          43.1279545
-        ]
-      },
-      "id": "way/171508702"
     },
     {
       "type": "Feature",
@@ -1877,24 +1837,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "way/265841730",
-        "amenity": "pub",
-        "name": "Pegas",
-        "smoking": "yes",
-        "@geometry": "center"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.8979897,
-          43.2292681
-        ]
-      },
-      "id": "way/265841730"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "way/269803929",
         "addr:city": "Алматы",
         "addr:housenumber": "99",
@@ -2222,26 +2164,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "way/291497468",
-        "addr:housenumber": "86",
-        "addr:street": "улица Акан Серы",
-        "amenity": "cafe",
-        "building": "yes",
-        "name": "Shafran кафе",
-        "@geometry": "center"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9466029,
-          43.3206373
-        ]
-      },
-      "id": "way/291497468"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "way/295351246",
         "addr:housenumber": "8",
         "amenity": "bar",
@@ -2499,28 +2421,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "way/374838583",
-        "addr:city": "Алматы",
-        "addr:country": "KZ",
-        "addr:housenumber": "1А",
-        "addr:street": "улица Берегового",
-        "amenity": "pub",
-        "building": "yes",
-        "name": "Хмельная Пражечка",
-        "@geometry": "center"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.8636274,
-          43.2176302
-        ]
-      },
-      "id": "way/374838583"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "way/389500167",
         "amenity": "cafe",
         "building": "yes",
@@ -2658,28 +2558,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "way/442024448",
-        "addr:housenumber": "14А",
-        "addr:street": "Аксай-3 мкр.",
-        "amenity": "restaurant",
-        "building": "yes",
-        "building:levels": "2",
-        "name": "Инжу",
-        "note": "На вывеске название на казахском Iнжу",
-        "@geometry": "center"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.8303945,
-          43.2358731
-        ]
-      },
-      "id": "way/442024448"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "way/442804079",
         "amenity": "restaurant",
         "building": "yes",
@@ -2735,6 +2613,52 @@
         ]
       },
       "id": "way/445143877"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/445195630",
+        "addr:city": "Алматы",
+        "addr:country": "KZ",
+        "addr:housenumber": "144",
+        "addr:street": "улица Жамакаева",
+        "amenity": "restaurant",
+        "building": "yes",
+        "name": "Tau Uzbechka",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.946657,
+          43.2169808
+        ]
+      },
+      "id": "way/445195630"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/445195654",
+        "addr:city": "Алматы",
+        "addr:housenumber": "109",
+        "addr:postcode": "050044",
+        "addr:street": "улица Жамакаева",
+        "amenity": "restaurant",
+        "building": "yes",
+        "building:levels": "1",
+        "name": "Гранат",
+        "phone": "+77785558155",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9470058,
+          43.2177851
+        ]
+      },
+      "id": "way/445195654"
     },
     {
       "type": "Feature",
@@ -3115,6 +3039,7 @@
         "addr:street": "улица Кабанбай Батыра",
         "amenity": "restaurant",
         "building": "yes",
+        "cuisine": "georgian",
         "name": "Хачапури Хинкалевич",
         "name:en": "Khachapuri",
         "name:ru": "Хачапури Хинкалевич",
@@ -3820,7 +3745,7 @@
         "addr:street": "улица Акан Серы",
         "amenity": "cafe",
         "building": "yes",
-        "name": "Шалохо кафе",
+        "name": "Шалохо",
         "@geometry": "center"
       },
       "geometry": {
@@ -3840,7 +3765,7 @@
         "addr:street": "улица Акан Серы",
         "amenity": "cafe",
         "building": "yes",
-        "name": "Alibaba kebab house кафе",
+        "name": "Alibaba kebab house",
         "@geometry": "center"
       },
       "geometry": {
@@ -3860,7 +3785,7 @@
         "addr:street": "улица Акан Серы",
         "amenity": "cafe",
         "building": "yes",
-        "name": "Симфония банкетный зал",
+        "name": "Симфония",
         "@geometry": "center"
       },
       "geometry": {
@@ -3880,7 +3805,7 @@
         "addr:street": "улица Акан Серы",
         "amenity": "cafe",
         "building": "yes",
-        "name": "Золотой кувшин кафе",
+        "name": "Золотой кувшин",
         "@geometry": "center"
       },
       "geometry": {
@@ -3900,7 +3825,7 @@
         "addr:street": "улица Акан Серы",
         "amenity": "cafe",
         "building": "yes",
-        "name": "Manavi кафе",
+        "name": "Manavi",
         "@geometry": "center"
       },
       "geometry": {
@@ -3920,7 +3845,7 @@
         "addr:street": "улица Акан Серы",
         "amenity": "cafe",
         "building": "yes",
-        "name": "Vilage кафе",
+        "name": "Vilage",
         "@geometry": "center"
       },
       "geometry": {
@@ -3998,9 +3923,9 @@
         "@id": "way/771076755",
         "addr:housenumber": "88",
         "addr:street": "улица Акан Серы",
-        "amenity": "cafe",
+        "amenity": "restaurant",
         "building": "yes",
-        "name": "Алтын ресторан",
+        "name": "Алтын",
         "@geometry": "center"
       },
       "geometry": {
@@ -4020,7 +3945,7 @@
         "addr:street": "улица Акан Серы",
         "amenity": "cafe",
         "building": "yes",
-        "name": "Имерети кафе",
+        "name": "Имерети",
         "@geometry": "center"
       },
       "geometry": {
@@ -4060,7 +3985,7 @@
         "addr:street": "улица Акан Серы",
         "amenity": "cafe",
         "building": "yes",
-        "name": "Прованс кафе",
+        "name": "Прованс",
         "@geometry": "center"
       },
       "geometry": {
@@ -4080,7 +4005,7 @@
         "addr:street": "улица Акан Серы",
         "amenity": "cafe",
         "building": "yes",
-        "name": "Gabali кафе",
+        "name": "Gabali",
         "@geometry": "center"
       },
       "geometry": {
@@ -4195,22 +4120,16 @@
         "addr:housenumber": "8А",
         "addr:place": "Аксай 2-й микрорайон",
         "amenity": "fast_food",
-        "brand": "Food Solutions",
-        "brand:en": "McDonald's",
-        "brand:ru": "Макдоналдс",
-        "brand:wikidata": "Q118149812",
-        "brand:wikipedia": "en:McDonald's",
+        "brand": "I’M",
         "building": "yes",
-        "contact:phone": "+7 727 332 4020;+7 727 333 1974",
-        "contact:website": "https://foodsolutions.kz/",
+        "contact:phone": "+7 (727) 332‒4020;+7‒747‒304‒3403",
+        "contact:website": "im.kz",
         "cuisine": "burger",
-        "internet_access": "wlan",
-        "name": "I'm",
+        "name": "Food Solutions",
         "name:en": "I'm",
         "name:ru": "I'm",
         "opening_hours": "Mo-Su 07:00-24:00",
         "operator": "Food Solutions",
-        "self_service": "partially",
         "takeaway": "yes",
         "@geometry": "center"
       },
@@ -4575,26 +4494,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "way/810456857",
-        "addr:housenumber": "1В",
-        "addr:street": "улица Радлова",
-        "amenity": "restaurant",
-        "building": "yes",
-        "name": "Аллигатор, комплекс",
-        "@geometry": "center"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9754674,
-          43.2444459
-        ]
-      },
-      "id": "way/810456857"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "way/817900310",
         "amenity": "restaurant",
         "building": "yes",
@@ -4711,25 +4610,6 @@
         ]
       },
       "id": "way/836678219"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/864702344",
-        "amenity": "pub",
-        "check_date:opening_hours": "2023-02-24",
-        "name": "Reporter",
-        "opening_hours": "16:00-01:00",
-        "opening_hours:signed": "no"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9032884,
-          43.2423267
-        ]
-      },
-      "id": "node/864702344"
     },
     {
       "type": "Feature",
@@ -5009,7 +4889,7 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.9044062,
+          76.904404,
           43.2401199
         ]
       },
@@ -5125,27 +5005,6 @@
         ]
       },
       "id": "way/1068512672"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/1081177914",
-        "addr:city": "Алматы",
-        "addr:housenumber": "228",
-        "addr:street": "улица Шемякина",
-        "amenity": "cafe",
-        "name": "Ханок, Кафе",
-        "opening_hours": "Mo-Su 10:00-01:00",
-        "phone": "+77073422020"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9665743,
-          43.3068872
-        ]
-      },
-      "id": "node/1081177914"
     },
     {
       "type": "Feature",
@@ -5524,26 +5383,10 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/1190441614",
-        "amenity": "pub"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9543834,
-          43.2293668
-        ]
-      },
-      "id": "node/1190441614"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "way/1190614902",
         "amenity": "fast_food",
         "building": "yes",
         "cuisine": "coffee_shop",
-        "description": "В последнюю пятницу каждого месяца, в 18:30, встречаемся у памятника Хиуаз Доспановой (у подножия Центрального моста на азиатской стороне). В летний сезон (с мая по август) время встречи сдвигается на 19:30.",
         "fast_food": "cafeteria",
         "name": "Велокафе",
         "operator": "ЛабПроТайм",
@@ -5574,24 +5417,6 @@
         ]
       },
       "id": "way/1191275230"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "way/1191648588",
-        "amenity": "ice_cream",
-        "building": "yes",
-        "name": "33 пингвина",
-        "@geometry": "center"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9311643,
-          43.2636221
-        ]
-      },
-      "id": "way/1191648588"
     },
     {
       "type": "Feature",
@@ -5817,24 +5642,6 @@
         ]
       },
       "id": "way/1274348027"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "way/1274348028",
-        "amenity": "food_court",
-        "building": "yes",
-        "operator": "Додо Пицца",
-        "@geometry": "center"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.8438268,
-          43.2181257
-        ]
-      },
-      "id": "way/1274348028"
     },
     {
       "type": "Feature",
@@ -6126,7 +5933,6 @@
         "addr:street": "улица Барибаева",
         "amenity": "restaurant",
         "building": "yes",
-        "name": "As-Qazan",
         "@geometry": "center"
       },
       "geometry": {
@@ -6346,6 +6152,7 @@
         "@id": "way/1426781383",
         "amenity": "restaurant",
         "building": "yes",
+        "name": "Bereke",
         "@geometry": "center"
       },
       "geometry": {
@@ -6383,18 +6190,80 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/1444322857",
-        "amenity": "pub",
-        "name": "Пивница"
+        "@id": "way/1433431649",
+        "amenity": "restaurant",
+        "building": "yes",
+        "contact:instagram": "https://www.instagram.com/mr_huoguo",
+        "cuisine": "chinese",
+        "name": "Mr. Hogo",
+        "@geometry": "center"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.9105432,
-          43.2453575
+          76.8811592,
+          43.2364281
         ]
       },
-      "id": "node/1444322857"
+      "id": "way/1433431649"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1433947188",
+        "amenity": "restaurant",
+        "building": "yes",
+        "check_date": "2025-10-03",
+        "name": "Yakuza Sushi & Wok",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9499982,
+          43.2549098
+        ]
+      },
+      "id": "way/1433947188"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1435893868",
+        "amenity": "cafe",
+        "building": "yes",
+        "name": "Solo Cat Cafe",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9369023,
+          43.2561218
+        ]
+      },
+      "id": "way/1435893868"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1442421797",
+        "amenity": "cafe",
+        "building": "yes",
+        "cuisine": "kebab;turkish;burger",
+        "internet_access": "no",
+        "name": "Aigyr",
+        "outdoor_seating": "yes",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.936253,
+          43.2597771
+        ]
+      },
+      "id": "way/1442421797"
     },
     {
       "type": "Feature",
@@ -6637,25 +6506,6 @@
         ]
       },
       "id": "node/1865214243"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/1870203051",
-        "addr:city": "Алматы",
-        "addr:housenumber": "1",
-        "addr:street": "улица Утеген Батыра",
-        "amenity": "pub",
-        "name": "Марани"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.8684563,
-          43.2328978
-        ]
-      },
-      "id": "node/1870203051"
     },
     {
       "type": "Feature",
@@ -6949,26 +6799,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/2370240244",
-        "addr:housenumber": "501",
-        "amenity": "food_court",
-        "entrance": "yes",
-        "fixme": "add \"addr:street\"",
-        "name": "Модуль",
-        "source": "survey"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9893078,
-          43.3705509
-        ]
-      },
-      "id": "node/2370240244"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/2373296107",
         "amenity": "restaurant",
         "name": "Экспресс",
@@ -7037,22 +6867,6 @@
         ]
       },
       "id": "node/2390038809"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/2390045182",
-        "amenity": "pub",
-        "name": "Mad Murphys"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9578134,
-          43.2553402
-        ]
-      },
-      "id": "node/2390045182"
     },
     {
       "type": "Feature",
@@ -7215,34 +7029,6 @@
         ]
       },
       "id": "node/2487551042"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/2495856245",
-        "addr:housenumber": "77/85",
-        "addr:postcode": "050000",
-        "amenity": "pub",
-        "cuisine": "american;italian",
-        "email": "napishi.che@gmail.com",
-        "fixme": "add \"addr:street\"",
-        "name": "Чечил Паб",
-        "name:en": "Chechil pub",
-        "name:kk": "Чечил Паб Розыбыкиев",
-        "name:ru": "Чечил Паб на Розыбакиева",
-        "note": "https://vk.com/chechildana",
-        "opening_hours": "Mo-Su 14:00-02:00",
-        "phone": "+77473753899",
-        "website": "https://chechil-pub.kz/"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.8898277,
-          43.2350739
-        ]
-      },
-      "id": "node/2495856245"
     },
     {
       "type": "Feature",
@@ -7631,26 +7417,6 @@
         ]
       },
       "id": "node/2914330299"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/2914623217",
-        "addr:city": "Алматы",
-        "addr:country": "KZ",
-        "addr:housenumber": "194",
-        "addr:street": "Байзақов көшесі",
-        "amenity": "cafe",
-        "name": "\"Красный перец\" кафе"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9122528,
-          43.2493535
-        ]
-      },
-      "id": "node/2914623217"
     },
     {
       "type": "Feature",
@@ -8486,22 +8252,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/3871261826",
-        "amenity": "restaurant",
-        "name": "Отау, Ресторан"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9457524,
-          43.3339007
-        ]
-      },
-      "id": "node/3871261826"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/3874929202",
         "alt_name": "Kentucky Fried Chicken",
         "amenity": "fast_food",
@@ -8640,23 +8390,6 @@
         ]
       },
       "id": "node/3905633145"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/3905633153",
-        "amenity": "pub",
-        "name": "Rox",
-        "source": "survey"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9417897,
-          43.2451293
-        ]
-      },
-      "id": "node/3905633153"
     },
     {
       "type": "Feature",
@@ -9444,24 +9177,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/4252401090",
-        "amenity": "pub",
-        "name": "Yard House, Паб",
-        "opening_hours": "Mo-Th,Su 12:00-00:00; Fr,Sa 12:00-02:00",
-        "outdoor_seating": "yes"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9570323,
-          43.2368941
-        ]
-      },
-      "id": "node/4252401090"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/4252454690",
         "amenity": "restaurant",
         "cuisine": "barbecue;grill;kebab;local",
@@ -9635,26 +9350,6 @@
         ]
       },
       "id": "node/4269911090"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/4271213836",
-        "addr:city": "Алматы",
-        "addr:housenumber": "298а",
-        "addr:postcode": "050060",
-        "addr:street": "проспект Серкебаева",
-        "amenity": "restaurant",
-        "name": "Горыныч"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.8994078,
-          43.2019498
-        ]
-      },
-      "id": "node/4271213836"
     },
     {
       "type": "Feature",
@@ -10177,50 +9872,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/4360459990",
-        "addr:housenumber": "46",
-        "addr:street": "проспект Абылай хана",
-        "amenity": "cafe",
-        "name": "Накатика",
-        "name:ru": "Накатика",
-        "opening_hours": "Mo-Su 11:00-04:00",
-        "phone": "+77272795255",
-        "website": "https://restoran.kz/coffee/5498-nakatika"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9406541,
-          43.2638885
-        ]
-      },
-      "id": "node/4360459990"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/4360827589",
-        "addr:housenumber": "38А",
-        "addr:street": "улица Тулебаева",
-        "amenity": "pub",
-        "check_date": "2022-10-02",
-        "level": "0",
-        "name": "Che Chill Pub",
-        "name:en": "Che Chill Pub",
-        "smoking": "outside"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9475521,
-          43.2643337
-        ]
-      },
-      "id": "node/4360827589"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/4362826895",
         "amenity": "fast_food",
         "contact:phone": "+7 701 991 2708",
@@ -10528,24 +10179,6 @@
         ]
       },
       "id": "node/4425335027"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/4426098391",
-        "amenity": "restaurant",
-        "name": "Узбечка",
-        "name:en": "Uzbek woman",
-        "name:kk": "Узбечка"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9471894,
-          43.2169845
-        ]
-      },
-      "id": "node/4426098391"
     },
     {
       "type": "Feature",
@@ -10890,28 +10523,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/4513826304",
-        "addr:city": "Алматы",
-        "addr:housenumber": "74",
-        "addr:street": "проспект Абылай хана",
-        "amenity": "cafe",
-        "cuisine": "coffee_shop",
-        "internet_access": "wlan",
-        "name": "CoffeeTop",
-        "opening_hours": "Mo-Fr 07:30-00:00"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9414555,
-          43.2593145
-        ]
-      },
-      "id": "node/4513826304"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/4516641558",
         "addr:city": "Алматы",
         "amenity": "restaurant",
@@ -10985,22 +10596,6 @@
         ]
       },
       "id": "node/4517865490"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/4519157982",
-        "amenity": "restaurant",
-        "name": "Pomodoro"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.954154,
-          43.2327925
-        ]
-      },
-      "id": "node/4519157982"
     },
     {
       "type": "Feature",
@@ -11404,22 +10999,6 @@
         ]
       },
       "id": "node/4529809241"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/4531572661",
-        "amenity": "restaurant",
-        "name": "Көктүрік"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9225707,
-          43.3006773
-        ]
-      },
-      "id": "node/4531572661"
     },
     {
       "type": "Feature",
@@ -11968,21 +11547,6 @@
         ]
       },
       "id": "node/4584260888"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/4588688391",
-        "amenity": "pub"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9178938,
-          43.2578355
-        ]
-      },
-      "id": "node/4588688391"
     },
     {
       "type": "Feature",
@@ -13118,18 +12682,21 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/4887895229",
-        "amenity": "restaurant",
-        "name": "Алтай Донер"
+        "@id": "node/4887889560",
+        "amenity": "internet_cafe",
+        "check_date": "2025-06-02",
+        "level": "0",
+        "name": "Omega Cyber Lounge",
+        "wheelchair": "no"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.9535572,
-          43.2327338
+          76.948403,
+          43.2431756
         ]
       },
-      "id": "node/4887895229"
+      "id": "node/4887889560"
     },
     {
       "type": "Feature",
@@ -13271,24 +12838,6 @@
         ]
       },
       "id": "node/4893756421"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/4894355821",
-        "amenity": "cafe",
-        "internet_access": "wlan",
-        "name:ru": "Гараж",
-        "opening_hours": "11:00 - 00:00"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9612255,
-          43.2309343
-        ]
-      },
-      "id": "node/4894355821"
     },
     {
       "type": "Feature",
@@ -14087,40 +13636,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/5046447930",
-        "amenity": "cafe",
-        "name": "День и ночь",
-        "name:kk": "День и ночь"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9474661,
-          43.2167421
-        ]
-      },
-      "id": "node/5046447930"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/5046458526",
-        "amenity": "cafe",
-        "name": "Узбечка",
-        "name:kk": "Узбечка"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9472069,
-          43.2169368
-        ]
-      },
-      "id": "node/5046458526"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/5046464821",
         "addr:housenumber": "193",
         "addr:street": "Проспект Назарбаева",
@@ -14464,32 +13979,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/5224529556",
-        "amenity": "fast_food",
-        "brand": "Burger King",
-        "brand:wikidata": "Q177054",
-        "brand:wikipedia": "en:Burger King",
-        "cuisine": "burger",
-        "indoor_seating": "yes",
-        "internet_access": "wlan",
-        "internet_access:fee": "no",
-        "name": "Burger King",
-        "opening_hours": "Mo-Su 10:00-24:00",
-        "outdoor_seating": "no",
-        "takeaway": "yes"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9044337,
-          43.2401656
-        ]
-      },
-      "id": "node/5224529556"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/5235757909",
         "amenity": "cafe",
         "name": "LaDoni",
@@ -14670,21 +14159,6 @@
         ]
       },
       "id": "node/5242238650"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/5247243624",
-        "amenity": "pub"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9154539,
-          43.2435997
-        ]
-      },
-      "id": "node/5247243624"
     },
     {
       "type": "Feature",
@@ -14950,6 +14424,24 @@
     {
       "type": "Feature",
       "properties": {
+        "@id": "node/5253839370",
+        "amenity": "internet_cafe",
+        "internet_access": "yes",
+        "name": "Seven Cybersport",
+        "opening_hours": "24/7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9495873,
+          43.254884
+        ]
+      },
+      "id": "node/5253839370"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "@id": "node/5254419319",
         "addr:city": "Алматы",
         "addr:street": "улица Байтурсынова",
@@ -14975,7 +14467,7 @@
         "addr:street": "улица Гоголя",
         "amenity": "restaurant",
         "capacity": "200",
-        "cuisine": "kebab;japanese",
+        "cuisine": "georgian",
         "name": "Вахтангури",
         "opening_hours": "Mo-Su 12:00-01:00",
         "outdoor_seating": "yes",
@@ -15118,25 +14610,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/5356006022",
-        "amenity": "pub",
-        "name:en": "Stalker",
-        "name:ru": "Сталкер",
-        "opening_hours": "Mo-Su 15:00-01:00",
-        "phone": "+77272912046"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9566207,
-          43.2552633
-        ]
-      },
-      "id": "node/5356006022"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/5356006023",
         "amenity": "fast_food",
         "name:en": "Andric Burgers",
@@ -15244,23 +14717,6 @@
         ]
       },
       "id": "node/5401216300"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/5425447398",
-        "amenity": "pub",
-        "facebook": "https://www.facebook.com/Drake.Almaty/?rf=588670154638868",
-        "name": "Sir Francis Drake"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9231849,
-          43.2322963
-        ]
-      },
-      "id": "node/5425447398"
     },
     {
       "type": "Feature",
@@ -15506,27 +14962,6 @@
         ]
       },
       "id": "node/5591477023"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/5608454564",
-        "addr:city": "Алматы",
-        "addr:housenumber": "40",
-        "addr:street": "проспект Достык",
-        "amenity": "pub",
-        "name": "Shakepear's (Almaty)",
-        "outdoor_seating": "yes",
-        "smoking": "outside"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9563757,
-          43.2511772
-        ]
-      },
-      "id": "node/5608454564"
     },
     {
       "type": "Feature",
@@ -16229,23 +15664,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/5835707385",
-        "amenity": "cafe",
-        "name:en": "Кафе \"Арбуз\"",
-        "name:ru": "Кафе \"Арбуз, сладкий как персик\""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9609969,
-          43.2612612
-        ]
-      },
-      "id": "node/5835707385"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/5844087485",
         "amenity": "cafe",
         "cuisine": "korean;asian",
@@ -16308,23 +15726,6 @@
         ]
       },
       "id": "node/5875234033"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/5875240793",
-        "amenity": "restaurant",
-        "name": "Navat",
-        "opening_hours": "Mo-Su 10:00-24:00"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9611969,
-          43.2430583
-        ]
-      },
-      "id": "node/5875240793"
     },
     {
       "type": "Feature",
@@ -16415,22 +15816,6 @@
         ]
       },
       "id": "node/5907544461"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/5907544470",
-        "amenity": "pub",
-        "name": "Pivolub"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9837829,
-          43.3389524
-        ]
-      },
-      "id": "node/5907544470"
     },
     {
       "type": "Feature",
@@ -17967,24 +17352,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/6705029886",
-        "amenity": "restaurant",
-        "internet_access": "wlan",
-        "name": "MoMo",
-        "name:en": "MoMo - Best dumplings in Almaty"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9498965,
-          43.2551168
-        ]
-      },
-      "id": "node/6705029886"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/6727070691",
         "amenity": "cafe",
         "name": "Урумчи",
@@ -18083,17 +17450,26 @@
       "type": "Feature",
       "properties": {
         "@id": "node/6764083687",
-        "amenity": "cafe",
+        "addr:housenumber": "133",
+        "addr:street": "улица Кунаева",
+        "amenity": "fast_food",
         "brand": "CoCo",
         "brand:wikidata": "Q65084369",
+        "check_date": "2025-09-28",
         "contact:email": "assel.zhakupova@abr.kz",
         "contact:phone": "+7 771 722 8207",
         "contact:website": "https://abr.kz/restaurant/coco",
-        "cuisine": "bubble_tea",
-        "name": "CoCo Fresh Tea & Juice",
+        "cuisine": "chicken;wings",
+        "drive_through": "no",
+        "level": "0",
+        "name": "CoCo",
         "name:en": "Coco",
         "opening_hours": "Mo-Su 10:00-23:00",
         "operator": "Coco Kitchen",
+        "outdoor_seating": "yes",
+        "payment:cash": "yes",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes",
         "short_name": "CoCo",
         "takeaway": "yes"
       },
@@ -18309,8 +17685,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.9342056,
-          43.2558877
+          76.9341896,
+          43.2559139
         ]
       },
       "id": "node/6842771586"
@@ -19976,33 +19352,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/9047331876",
-        "amenity": "cafe",
-        "brand": "Starbucks",
-        "brand:wikidata": "Q37158",
-        "brand:wikipedia": "en:Starbucks",
-        "contact:email": "CSupport@alshaya.kz",
-        "contact:instagram": "https://instagram.com/starbuckskz",
-        "contact:phone": "+7 727 339 9860;+7 800 0802185",
-        "contact:website": "https://www.starbucks.com.kz/",
-        "cuisine": "coffee_shop",
-        "name": "Starbucks",
-        "name:en": "Starbucks",
-        "opening_hours": "Mo-Fr 08:30-22:00; Sa-Su 09:30-22:00",
-        "operator": "\"Shaya Kazakhstan\""
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.934815,
-          43.235499
-        ]
-      },
-      "id": "node/9047331876"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/9047331877",
         "amenity": "cafe",
         "brand": "Starbucks",
@@ -20778,26 +20127,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/9785211406",
-        "addr:city": "Алматы",
-        "addr:housenumber": "8",
-        "addr:street": "улица Кабанбай Батыра",
-        "amenity": "food_court",
-        "internet_access": "wlan",
-        "name": "Грузинский Дворик"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9671691,
-          43.2511584
-        ]
-      },
-      "id": "node/9785211406"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/9788449018",
         "amenity": "restaurant",
         "name:en": "Shafran",
@@ -21281,21 +20610,6 @@
         ]
       },
       "id": "node/9804269694"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/9804293417",
-        "amenity": "biergarten"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.886262,
-          43.1917422
-        ]
-      },
-      "id": "node/9804293417"
     },
     {
       "type": "Feature",
@@ -22079,22 +21393,6 @@
         ]
       },
       "id": "node/9947957526"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/9952374374",
-        "amenity": "ice_cream",
-        "outdoor_seating": "no"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9461716,
-          43.262129
-        ]
-      },
-      "id": "node/9952374374"
     },
     {
       "type": "Feature",
@@ -22953,6 +22251,45 @@
     {
       "type": "Feature",
       "properties": {
+        "@id": "node/10094733717",
+        "addr:city": "Алматы",
+        "addr:postcode": "050034",
+        "addr:street": "Райымбек даңғылы",
+        "amenity": "internet_cafe",
+        "internet_access": "wlan",
+        "internet_access:fee": "no",
+        "name": "Sharingan (компьюетрный клуб)",
+        "opening_hours": "24/7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9002607,
+          43.2663699
+        ]
+      },
+      "id": "node/10094733717"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10094786017",
+        "addr:postcode": "050034",
+        "amenity": "internet_cafe",
+        "opening_hours": "24/7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9015114,
+          43.266288
+        ]
+      },
+      "id": "node/10094786017"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "@id": "node/10094786018",
         "addr:postcode": "050034",
         "amenity": "fast_food",
@@ -23777,6 +23114,22 @@
     {
       "type": "Feature",
       "properties": {
+        "@id": "node/10203534201",
+        "amenity": "internet_cafe",
+        "name": "Lion Internet club"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.8575457,
+          43.2411245
+        ]
+      },
+      "id": "node/10203534201"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "@id": "node/10203633819",
         "amenity": "bar",
         "name:en": "CELENTANO RETRO BAR"
@@ -24029,24 +23382,6 @@
         ]
       },
       "id": "node/10231255410"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/10237907809",
-        "addr:housenumber": "24б",
-        "addr:street": "4-й микрорайон",
-        "amenity": "pub",
-        "name:en": "Chechil Pub"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.857254,
-          43.2283072
-        ]
-      },
-      "id": "node/10237907809"
     },
     {
       "type": "Feature",
@@ -25127,21 +24462,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/10846054505",
-        "amenity": "ice_cream"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9438672,
-          43.2617377
-        ]
-      },
-      "id": "node/10846054505"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/10846081005",
         "amenity": "fast_food",
         "name:ru": "Чайный дом"
@@ -25279,22 +24599,6 @@
         ]
       },
       "id": "node/10883624506"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/10883624507",
-        "amenity": "fast_food",
-        "name:ru": "Быстро, Вкусно, Доступно"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9558675,
-          43.337718
-        ]
-      },
-      "id": "node/10883624507"
     },
     {
       "type": "Feature",
@@ -25582,22 +24886,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/10958973533",
-        "amenity": "ice_cream",
-        "name": "Бишкекское мороженое"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.8939236,
-          43.247446
-        ]
-      },
-      "id": "node/10958973533"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/10961356405",
         "amenity": "restaurant",
         "name:ru": "Шишка"
@@ -25790,24 +25078,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/10967400405",
-        "amenity": "ice_cream",
-        "indoor_seating": "no",
-        "name:en": "Zheka's ice",
-        "outdoor_seating": "yes"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9215604,
-          43.2408808
-        ]
-      },
-      "id": "node/10967400405"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/10967400506",
         "amenity": "restaurant",
         "name:ru": "Тим Дим домашняя кухня блинная"
@@ -25920,22 +25190,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/10984444512",
-        "amenity": "ice_cream",
-        "name": "Umami"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9460377,
-          43.2499433
-        ]
-      },
-      "id": "node/10984444512"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/10991117726",
         "amenity": "fast_food",
         "fast_food": "cafeteria",
@@ -25974,6 +25228,23 @@
     {
       "type": "Feature",
       "properties": {
+        "@id": "node/11001480600",
+        "amenity": "internet_cafe",
+        "check_date": "2023-06-09",
+        "name": "Dofu"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.8698228,
+          43.221087
+        ]
+      },
+      "id": "node/11001480600"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "@id": "node/11001503411",
         "amenity": "cafe",
         "check_date": "2023-06-09",
@@ -25987,6 +25258,26 @@
         ]
       },
       "id": "node/11001503411"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11007841520",
+        "amenity": "internet_cafe",
+        "contact:instagram": "https://instagram.com/ps5_puff.n.play_almaty",
+        "contact:phone": "+7 7272 66 66 66;+7 775 488 1800",
+        "contact:website": "https://puffnplay.2gis.biz",
+        "name": "Puff n Play",
+        "opening_hours": "Mo-Su 13:00-06:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.8875706,
+          43.1985086
+        ]
+      },
+      "id": "node/11007841520"
     },
     {
       "type": "Feature",
@@ -26022,26 +25313,6 @@
         ]
       },
       "id": "node/11012403277"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/11012403282",
-        "amenity": "ice_cream",
-        "check_date": "2023-06-28",
-        "drive_through": "no",
-        "name": "Zheka's Ice",
-        "outdoor_seating": "no",
-        "takeaway": "only"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9451468,
-          43.2536641
-        ]
-      },
-      "id": "node/11012403282"
     },
     {
       "type": "Feature",
@@ -26127,26 +25398,6 @@
         ]
       },
       "id": "node/11014279943"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/11014279945",
-        "addr:floor": "2",
-        "addr:housenumber": "42/3",
-        "addr:street": "улица Тимирязева",
-        "amenity": "food_court",
-        "check_date": "2023-06-29",
-        "level": "1"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9088179,
-          43.2251226
-        ]
-      },
-      "id": "node/11014279945"
     },
     {
       "type": "Feature",
@@ -26332,13 +25583,13 @@
         "amenity": "fast_food",
         "check_date": "2023-06-30",
         "cuisine": "burger;hot_dog",
-        "name": "Salan Bro"
+        "name": "Salam Bro"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.9415272,
-          43.2615344
+          76.9415294,
+          43.2615744
         ]
       },
       "id": "node/11015644388"
@@ -26375,28 +25626,11 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.9412736,
-          43.261524
+          76.941275,
+          43.261561
         ]
       },
       "id": "node/11015644390"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/11015644391",
-        "amenity": "ice_cream",
-        "check_date": "2023-06-30",
-        "name": "Zheka's ice"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9414306,
-          43.261532
-        ]
-      },
-      "id": "node/11015644391"
     },
     {
       "type": "Feature",
@@ -26635,26 +25869,9 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/11037520757",
-        "amenity": "fast_food",
-        "fast_food": "cafeteria",
-        "name": "3 этаж"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.8905854,
-          43.2868821
-        ]
-      },
-      "id": "node/11037520757"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/11046648007",
         "amenity": "restaurant",
-        "name:ru": "Pro 100 вкусно"
+        "name": "Pro100vkysno"
       },
       "geometry": {
         "type": "Point",
@@ -26723,43 +25940,6 @@
         ]
       },
       "id": "node/11065087205"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/11075452065",
-        "amenity": "ice_cream",
-        "check_date": "2023-07-29",
-        "name": "Umami",
-        "outdoor_seating": "no",
-        "wheelchair": "no"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9437849,
-          43.2485841
-        ]
-      },
-      "id": "node/11075452065"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/11075452066",
-        "amenity": "food_court",
-        "check_date": "2023-07-29",
-        "name": "Synesthesia",
-        "wheelchair": "no"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9437601,
-          43.248591
-        ]
-      },
-      "id": "node/11075452066"
     },
     {
       "type": "Feature",
@@ -27047,23 +26227,6 @@
         ]
       },
       "id": "node/11204795652"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/11204994837",
-        "amenity": "biergarten",
-        "name:en": "Local bear",
-        "name:ru": "Пивнушка"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9433738,
-          43.2698992
-        ]
-      },
-      "id": "node/11204994837"
     },
     {
       "type": "Feature",
@@ -27465,6 +26628,25 @@
     {
       "type": "Feature",
       "properties": {
+        "@id": "node/11345962094",
+        "amenity": "internet_cafe",
+        "contact:instagram": "https://instagram.com/tema_komputer_club",
+        "contact:phone": "+7 776 535 5315;+7 778 333 1344",
+        "name": "Tema club",
+        "opening_hours": "24/7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.844894,
+          43.2187426
+        ]
+      },
+      "id": "node/11345962094"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "@id": "node/11345962096",
         "amenity": "cafe",
         "contact:email": "wuqqa@bk.ru",
@@ -27610,9 +26792,11 @@
       "type": "Feature",
       "properties": {
         "@id": "node/11515701669",
-        "amenity": "fast_food",
+        "amenity": "restaurant",
+        "cuisine": "pizza",
         "internet_access": "wlan",
         "level": "1",
+        "name": "Додо Пицца",
         "name:en": "Dodo Pizza",
         "name:ru": "Додо Пицца",
         "opening_hours": "24/7",
@@ -27810,28 +26994,6 @@
         ]
       },
       "id": "node/11591523664"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/11594573414",
-        "amenity": "pub",
-        "contact:email": "grizzlybarboutique@gmail.com",
-        "contact:instagram": "https://www.instagram.com/grizzly_boutique_bar",
-        "contact:phone": "+7 777 555 0020",
-        "contact:website": "https://grizzlybar.kz/",
-        "name": "Grizzly",
-        "opening_hours": "Mo-Th 11:00-23:00; Fr-Sa 11:00-01:00, Su 11:00-00:00",
-        "operator": "ИП Абдулла Ксения"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9546561,
-          43.2522953
-        ]
-      },
-      "id": "node/11594573414"
     },
     {
       "type": "Feature",
@@ -28200,6 +27362,26 @@
     {
       "type": "Feature",
       "properties": {
+        "@id": "node/11830548872",
+        "amenity": "internet_cafe",
+        "contact:email": "unitycyersports@gmail.com",
+        "contact:instagram": "https://instagram.com/unitycybersport.kz",
+        "contact:phone": "+7 706 667 9604",
+        "name": "Unity Cyber Sport",
+        "opening_hours": "24/7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9565785,
+          43.2614874
+        ]
+      },
+      "id": "node/11830548872"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "@id": "node/11831010773",
         "amenity": "restaurant",
         "name:en": "Platform A"
@@ -28290,6 +27472,26 @@
         ]
       },
       "id": "node/11837522585"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11838851170",
+        "amenity": "internet_cafe",
+        "email": "info.overgamekz@gmail.com",
+        "name:en": "overgame",
+        "opening_hours": "24/7",
+        "phone": "87059511548",
+        "website": "https://www.instagram.com/overgamekz?igsh=MXIyam8yN2xkcXA1NQ=="
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9086872,
+          43.2366037
+        ]
+      },
+      "id": "node/11838851170"
     },
     {
       "type": "Feature",
@@ -28535,18 +27737,21 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/11916009873",
-        "amenity": "restaurant",
-        "name": "Uzbek"
+        "@id": "node/11925892167",
+        "amenity": "internet_cafe",
+        "contact:instagram": "https://instagram.com/kms_cyber.club",
+        "contact:phone": "+7 778 066 5505",
+        "name": "KMS",
+        "opening_hours": "24/7"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          77.0047635,
-          43.2874996
+          76.8800711,
+          43.2194306
         ]
       },
-      "id": "node/11916009873"
+      "id": "node/11925892167"
     },
     {
       "type": "Feature",
@@ -28587,8 +27792,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.9490046,
-          43.2421438
+          76.9490025,
+          43.2421793
         ]
       },
       "id": "node/11929667709"
@@ -28794,6 +27999,23 @@
         ]
       },
       "id": "node/11950064995"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11951531872",
+        "amenity": "internet_cafe",
+        "name:en": "Chill & Game",
+        "opening_hours": "24/7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9410584,
+          43.2542737
+        ]
+      },
+      "id": "node/11951531872"
     },
     {
       "type": "Feature",
@@ -29257,6 +28479,56 @@
     {
       "type": "Feature",
       "properties": {
+        "@id": "node/11987820202",
+        "addr:city": "Алматы",
+        "addr:housenumber": "323a",
+        "addr:postcode": "050060",
+        "addr:street": "улица Радостовца",
+        "amenity": "internet_cafe",
+        "contact:instagram": "kyoto_gc",
+        "contact:telegram": "77079351111",
+        "internet_access": "wlan",
+        "internet_access:fee": "customers",
+        "name": "Kyoto Game Club",
+        "opening_hours": "24/7",
+        "phone": "+77079351111"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.8957138,
+          43.208803
+        ]
+      },
+      "id": "node/11987820202"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11987820213",
+        "addr:city": "Алматы",
+        "addr:housenumber": "310a",
+        "addr:street": "Розыбакиев көшесі",
+        "amenity": "internet_cafe",
+        "contact:instagram": "ps_21_you",
+        "description": "Playstation club",
+        "internet_access": "wlan",
+        "internet_access:fee": "customers",
+        "name": "21",
+        "phone": "+77000233335"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.8943935,
+          43.2087499
+        ]
+      },
+      "id": "node/11987820213"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "@id": "node/11994800069",
         "addr:housenumber": "280",
         "addr:postcode": "050060",
@@ -29442,8 +28714,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.9535437,
-          43.232787
+          76.9535031,
+          43.2328337
         ]
       },
       "id": "node/12000638659"
@@ -29616,8 +28888,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.9156009,
-          43.2367162
+          76.9153108,
+          43.2367344
         ]
       },
       "id": "node/12035329744"
@@ -30024,22 +29296,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/12120085001",
-        "amenity": "pub",
-        "name": "Hoper’s"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9485427,
-          43.2620304
-        ]
-      },
-      "id": "node/12120085001"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/12122222295",
         "amenity": "fast_food",
         "fast_food": "cafeteria",
@@ -30104,6 +29360,21 @@
         ]
       },
       "id": "node/12141414119"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12141414303",
+        "amenity": "internet_cafe"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9312996,
+          43.2678244
+        ]
+      },
+      "id": "node/12141414303"
     },
     {
       "type": "Feature",
@@ -30355,22 +29626,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/12208655368",
-        "amenity": "restaurant",
-        "name": "Yakuza Sushi & Wok"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9499234,
-          43.2549295
-        ]
-      },
-      "id": "node/12208655368"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/12210103794",
         "amenity": "cafe",
         "name": "У Иваныча"
@@ -30503,8 +29758,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.9491948,
-          43.2392025
+          76.9491636,
+          43.2391666
         ]
       },
       "id": "node/12228082196"
@@ -30530,23 +29785,6 @@
         ]
       },
       "id": "node/12234357350"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/12249726351",
-        "amenity": "pub",
-        "microbrewery": "yes",
-        "name": "Good Beer"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.8971597,
-          43.2306305
-        ]
-      },
-      "id": "node/12249726351"
     },
     {
       "type": "Feature",
@@ -30619,18 +29857,19 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/12292633633",
-        "amenity": "pub",
-        "name": "Munchen Pub"
+        "@id": "node/12285215367",
+        "amenity": "internet_cafe",
+        "check_date": "2024-10-24",
+        "level": "0"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.945423,
-          43.2552484
+          76.8779271,
+          43.2118149
         ]
       },
-      "id": "node/12292633633"
+      "id": "node/12285215367"
     },
     {
       "type": "Feature",
@@ -31828,22 +31067,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/12638379748",
-        "amenity": "food_court",
-        "name": "PlatformA"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9412374,
-          43.2472498
-        ]
-      },
-      "id": "node/12638379748"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/12640843002",
         "amenity": "cafe",
         "cuisine": "breakfast;burger;local",
@@ -32837,24 +32060,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/12864706315",
-        "amenity": "ice_cream",
-        "indoor_seating": "no",
-        "outdoor_seating": "no",
-        "takeaway": "only"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9553475,
-          43.2558804
-        ]
-      },
-      "id": "node/12864706315"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/12871329189",
         "amenity": "fast_food",
         "name": "Dönerci"
@@ -32977,6 +32182,23 @@
     {
       "type": "Feature",
       "properties": {
+        "@id": "node/12871405716",
+        "amenity": "internet_cafe",
+        "name": "Taipan Cyber gaming",
+        "opening_hours": "24/7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9260691,
+          43.2429034
+        ]
+      },
+      "id": "node/12871405716"
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "@id": "node/12875469070",
         "amenity": "cafe",
         "cuisine": "coffee_shop",
@@ -33051,25 +32273,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/12875735231",
-        "amenity": "ice_cream",
-        "indoor_seating": "no",
-        "name": "Zheka's Ice",
-        "outdoor_seating": "no",
-        "takeaway": "only"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.9446733,
-          43.2575682
-        ]
-      },
-      "id": "node/12875735231"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/12876103439",
         "amenity": "restaurant",
         "name": "All seasons"
@@ -33087,13 +32290,14 @@
       "type": "Feature",
       "properties": {
         "@id": "node/12876164742",
-        "amenity": "fast_food"
+        "amenity": "fast_food",
+        "name": "PikaPika"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.9492304,
-          43.2548568
+          76.9493069,
+          43.2548411
         ]
       },
       "id": "node/12876164742"
@@ -33102,13 +32306,14 @@
       "type": "Feature",
       "properties": {
         "@id": "node/12876187856",
-        "amenity": "cafe"
+        "amenity": "cafe",
+        "name": "Presso"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.9493246,
-          43.2548579
+          76.949333,
+          43.2548866
         ]
       },
       "id": "node/12876187856"
@@ -33265,6 +32470,21 @@
         ]
       },
       "id": "node/12876981160"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12877094426",
+        "amenity": "internet_cafe"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9262478,
+          43.2404492
+        ]
+      },
+      "id": "node/12877094426"
     },
     {
       "type": "Feature",
@@ -33765,7 +32985,7 @@
         "@id": "node/12969237456",
         "amenity": "fast_food",
         "check_date": "2025-06-02",
-        "name": "Тандыр нан, самса"
+        "name": "Тандыр нан"
       },
       "geometry": {
         "type": "Point",
@@ -33783,7 +33003,8 @@
         "addr:housenumber": "124",
         "addr:street": "Yermek Serkebayev Avenue",
         "amenity": "cafe",
-        "name": "Milky Cafe"
+        "name": "Milky Cafe",
+        "opening_hours": "Mo-Su 08:00-24:00"
       },
       "geometry": {
         "type": "Point",
@@ -33888,20 +33109,34 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/13042573302",
-        "amenity": "pub",
-        "name": "Пивмаг",
-        "opening_hours": "Mo-Fr 11:00-23:00; Sa-Su 09:00-23:00",
-        "phone": "+77273178020;+77053178020"
+        "@id": "node/13042585503",
+        "amenity": "internet_cafe",
+        "name": "Meta Arena"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.863346,
-          43.2346412
+          76.8627106,
+          43.2338978
         ]
       },
-      "id": "node/13042573302"
+      "id": "node/13042585503"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13042586201",
+        "amenity": "internet_cafe",
+        "name": "TeamPlay"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.8633544,
+          43.2348743
+        ]
+      },
+      "id": "node/13042586201"
     },
     {
       "type": "Feature",
@@ -33920,24 +33155,6 @@
         ]
       },
       "id": "node/13042586302"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/13042586601",
-        "amenity": "cafe",
-        "cuisine": "asian;oriental;russian",
-        "name": "Basma",
-        "opening_hours": "Mo-Su 09:00-23:00"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.858624,
-          43.2299884
-        ]
-      },
-      "id": "node/13042586601"
     },
     {
       "type": "Feature",
@@ -34137,22 +33354,6 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/13107626248",
-        "amenity": "pub",
-        "microbrewery": "yes"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.8983002,
-          43.2309465
-        ]
-      },
-      "id": "node/13107626248"
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "@id": "node/13107649723",
         "amenity": "fast_food",
         "cuisine": "regional",
@@ -34199,7 +33400,7 @@
         "addr:street": "проспект Сейфуллина",
         "amenity": "bar",
         "min_age": "21",
-        "name": "Гараж \"Бараж\""
+        "name": "\"Бараж\""
       },
       "geometry": {
         "type": "Point",
@@ -34276,13 +33477,13 @@
       "properties": {
         "@id": "node/13133059001",
         "amenity": "cafe",
-        "name": "Nefis"
+        "name": "Samarkand"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.8305728,
-          43.2357923
+          76.8304707,
+          43.2358062
         ]
       },
       "id": "node/13133059001"
@@ -34302,22 +33503,6 @@
         ]
       },
       "id": "node/13133933601"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/13133933901",
-        "amenity": "ice_cream",
-        "name": "Славица"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          76.8295045,
-          43.2382709
-        ]
-      },
-      "id": "node/13133933901"
     },
     {
       "type": "Feature",
@@ -34386,17 +33571,24 @@
     {
       "type": "Feature",
       "properties": {
-        "@id": "node/13135119001",
-        "amenity": "ice_cream"
+        "@id": "node/13136802201",
+        "addr:housenumber": "66",
+        "addr:street": "Abdulliny street",
+        "amenity": "internet_cafe",
+        "name": "Академсеть",
+        "name:en": "Ahost (Akademset)",
+        "name:ru": "Академсеть",
+        "opening_hours": "24/7",
+        "website": "http://ahost.kz"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          76.8341666,
-          43.2398104
+          76.9608223,
+          43.2544652
         ]
       },
-      "id": "node/13135119001"
+      "id": "node/13136802201"
     },
     {
       "type": "Feature",
@@ -34486,6 +33678,558 @@
         ]
       },
       "id": "node/13167256948"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13173360547",
+        "addr:city": "Алматы",
+        "addr:country": "KZ",
+        "addr:housenumber": "21",
+        "addr:postcode": "050013",
+        "addr:street": "Аль-Фараби",
+        "amenity": "cafe",
+        "brand": "WHITE ENTERPRISE",
+        "cuisine": "breakfast;brunch;dessert",
+        "delivery": "yes",
+        "internet_access": "wlan",
+        "internet_access:fee": "no",
+        "name": "Лето",
+        "outdoor_seating": "yes",
+        "payment:american_express": "yes",
+        "payment:cash": "yes",
+        "payment:mastercard": "yes",
+        "payment:visa": "yes",
+        "phone": "+77003009393",
+        "website": "https://white.kz/leto-cafe-almaty/",
+        "website:menu": "https://leto-almaty.kamiqr.com/menu/at-place"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9439348,
+          43.2293815
+        ]
+      },
+      "id": "node/13173360547"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13173386739",
+        "addr:city": "Алматы",
+        "addr:housenumber": "378",
+        "addr:postcode": "050044",
+        "addr:street": "Каппарова",
+        "amenity": "restaurant",
+        "brand": "WHITE ENTERPRISE",
+        "cuisine": "japanese;asian;chinese",
+        "min_age": "21",
+        "name": "Lапша Bar & Wok",
+        "opening_hours": "Mo-Su 12:00-02:00",
+        "outdoor_seating": "yes",
+        "payment:american_express": "yes",
+        "payment:apple_pay": "yes",
+        "payment:cash": "yes",
+        "payment:mastercard": "yes",
+        "payment:visa": "yes",
+        "phone": "87079091717",
+        "reservation": "recommended",
+        "website": "https://white.kz/lapsha-almaty/",
+        "website:menu": "https://lapsha-barwok-almaty.kamiqr.com/menu/at-place"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9299481,
+          43.2174982
+        ]
+      },
+      "id": "node/13173386739"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13174943522",
+        "amenity": "cafe",
+        "check_date": "2025-09-27",
+        "name": "Jel Coffee"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9447621,
+          43.2587962
+        ]
+      },
+      "id": "node/13174943522"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13179533486",
+        "amenity": "fast_food",
+        "name": "Durum"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9492454,
+          43.2548771
+        ]
+      },
+      "id": "node/13179533486"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13185742048",
+        "amenity": "restaurant",
+        "name": "Navat",
+        "opening_hours": "Mo-Su 10:00-24:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9569536,
+          43.2463441
+        ]
+      },
+      "id": "node/13185742048"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13190207359",
+        "amenity": "fast_food",
+        "name": "Danosh plov"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9546648,
+          43.2326996
+        ]
+      },
+      "id": "node/13190207359"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13191789678",
+        "amenity": "cafe",
+        "brand": "Costa",
+        "brand:wikidata": "Q608845",
+        "check_date": "2025-10-04",
+        "cuisine": "coffee_shop",
+        "name": "Costa",
+        "name:en": "Costa",
+        "takeaway": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.0121815,
+          43.3495241
+        ]
+      },
+      "id": "node/13191789678"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13191789679",
+        "alt_name": "Kentucky Fried Chicken",
+        "amenity": "fast_food",
+        "brand": "KFC",
+        "brand:wikidata": "Q524757",
+        "check_date": "2025-10-04",
+        "cuisine": "chicken",
+        "name": "KFC",
+        "takeaway": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.0121694,
+          43.349298
+        ]
+      },
+      "id": "node/13191789679"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13197736146",
+        "amenity": "restaurant",
+        "cuisine": "pizza",
+        "name": "Наша Пицца1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9331805,
+          43.2558834
+        ]
+      },
+      "id": "node/13197736146"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13197736147",
+        "amenity": "fast_food",
+        "name": "Наши чебуреки"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9332224,
+          43.2558977
+        ]
+      },
+      "id": "node/13197736147"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13200242601",
+        "addr:housenumber": "14",
+        "addr:street": "улица Тынышбаева",
+        "amenity": "fast_food",
+        "name": "Bauyrdaq (Qazaq fastfood)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9477077,
+          43.3397105
+        ]
+      },
+      "id": "node/13200242601"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13202101701",
+        "addr:housenumber": "117",
+        "addr:street": "Kabanbai Batyr Street",
+        "amenity": "cafe",
+        "internet_access": "wlan",
+        "name": "Coffee Orginal",
+        "opening_hours": "24/7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9256622,
+          43.2484188
+        ]
+      },
+      "id": "node/13202101701"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13202906041",
+        "amenity": "cafe",
+        "name": "Qfood"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9532185,
+          43.2313113
+        ]
+      },
+      "id": "node/13202906041"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13204902701",
+        "addr:housenumber": "272",
+        "addr:street": "Zhamakaev Street",
+        "amenity": "cafe",
+        "name": "Ozen"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9550694,
+          43.2096531
+        ]
+      },
+      "id": "node/13204902701"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13205289682",
+        "amenity": "restaurant",
+        "name": "Hayalet Steak House"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.953549,
+          43.2326965
+        ]
+      },
+      "id": "node/13205289682"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13205289683",
+        "amenity": "fast_food",
+        "name": "ЛЧГ-легкое чувство голода"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9666461,
+          43.3068488
+        ]
+      },
+      "id": "node/13205289683"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13205289684",
+        "amenity": "fast_food",
+        "name": "Como Chicken"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9538167,
+          43.2330036
+        ]
+      },
+      "id": "node/13205289684"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13205289686",
+        "amenity": "fast_food",
+        "name": "MqDoner"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9457235,
+          43.3338717
+        ]
+      },
+      "id": "node/13205289686"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13205289689",
+        "amenity": "fast_food",
+        "name": "Hot Point"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9487289,
+          43.241565
+        ]
+      },
+      "id": "node/13205289689"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13205289692",
+        "amenity": "cafe",
+        "name": "Vkus Samarkanda"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9474794,
+          43.2167289
+        ]
+      },
+      "id": "node/13205289692"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13205289693",
+        "amenity": "restaurant",
+        "name": "Palau"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.0048451,
+          43.2873521
+        ]
+      },
+      "id": "node/13205289693"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13205289697",
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "Спот"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9496972,
+          43.2421848
+        ]
+      },
+      "id": "node/13205289697"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13207976284",
+        "amenity": "restaurant",
+        "delivery": "only",
+        "name": "Доставка обедов"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9599018,
+          43.2752877
+        ]
+      },
+      "id": "node/13207976284"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13227411660",
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "WeDrink"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.952398,
+          43.2632961
+        ]
+      },
+      "id": "node/13227411660"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13227411662",
+        "amenity": "restaurant",
+        "name": "Fish&Fest Restaurant"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9406457,
+          43.2640594
+        ]
+      },
+      "id": "node/13227411662"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13227411663",
+        "addr:housenumber": "46",
+        "addr:street": "Абылай хан даңғылы",
+        "amenity": "cafe",
+        "cuisine": "coffee_shop",
+        "name": "Arabica Coffee House"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9406869,
+          43.263978
+        ]
+      },
+      "id": "node/13227411663"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13228865911",
+        "amenity": "bar",
+        "name": "Selfie"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.8885297,
+          43.2387811
+        ]
+      },
+      "id": "node/13228865911"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13239292927",
+        "amenity": "fast_food",
+        "name": "Донерная",
+        "name:ru": "Донерная"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9734149,
+          43.1951071
+        ]
+      },
+      "id": "node/13239292927"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13239292936",
+        "amenity": "fast_food",
+        "cuisine": "pizza",
+        "name": "Pizza Pizza"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9732525,
+          43.1954749
+        ]
+      },
+      "id": "node/13239292936"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/13242768318",
+        "addr:city": "Алматы",
+        "addr:housenumber": "106/2",
+        "addr:postcode": "050012",
+        "addr:street": "улица Ади Шарипова",
+        "amenity": "fast_food",
+        "cuisine": "kebab",
+        "name": "Doner Go"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.9237901,
+          43.2450431
+        ]
+      },
+      "id": "node/13242768318"
     }
   ]
 }

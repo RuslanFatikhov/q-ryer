@@ -10,3 +10,7 @@ input{
     color: var(--black050);
     font-weight: 500;
 }
+
+#searchRadius{
+    background-color: var(--white30);
+}

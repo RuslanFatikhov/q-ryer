@@ -1,12 +1,34 @@
 {
   "cities": [
     {
+      "id": "alingsas",
+      "name": "Алингсос",
+      "name_en": "Alingsås",
+      "center": {
+        "lat": 12.536772865471164,
+        "lng": 57.93004269637348
+      },
+      "zoom": 12,
+      "active": true
+    },
+    {
       "id": "almaty",
       "name": "Алматы",
       "name_en": "Almaty",
       "center": {
         "lat": 43.2380,
         "lng": 76.9452
+      },
+      "zoom": 12,
+      "active": true
+    },
+    {
+      "id": "barselona",
+      "name": "Барселона",
+      "name_en": "Barselona",
+      "center": {
+        "lat": 41.3871657453258,
+        "lng": 2.1652707588087594
       },
       "zoom": 12,
       "active": true
@@ -43,17 +65,18 @@
       },
       "zoom": 12,
       "active": true
-    },
-    {
-      "id": "alingsas",
-      "name": "Алингсос",
-      "name_en": "Alingsås",
+    },{
+      "id": "novi_sad",
+      "name": "Нови Сад",
+      "name_en": "Novi Sad",
       "center": {
-        "lat": 12.536772865471164,
-        "lng": 57.93004269637348
+        "lat": 45.25535792109457,
+        "lng": 19.845524655119874
+        
       },
       "zoom": 12,
       "active": true
     }
+    
   ]
 }

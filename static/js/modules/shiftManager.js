@@ -200,13 +200,13 @@ class ShiftManager {
 
         this.updateShiftButton(this.SHIFT_STATES.TO_DROPOFF);
 
-        alert("✅ Заказ забран! Теперь доставьте его клиенту.");
+        alertModal.success("Заказ забран! Теперь доставьте его клиенту.");
       } else {
-        alert("❌ Ошибка: " + (result.error || 'Неизвестная ошибка'));
+        alertModal.error((result.error || 'Неизвестная ошибка'));
       }
     } catch (error) {
       console.error("Ошибка pickup:", error);
-      alert("❌ Ошибка забора заказа: " + error.message);
+      alertModal.error("Ошибка забора заказа: " + error.message);
     }
   }
 
@@ -248,10 +248,10 @@ class ShiftManager {
         window.mapManager.clearOrderMarkers();
       }
 
-      alert(
-        `✅ Заказ доставлен!\n\n` +
-        `💰 Выплата: $${Number(payoutValue).toFixed(2)}${bonusText}\n` +
-        `📦 Новый баланс: $${Number(result.new_balance).toFixed(2)}`
+      alertModal.showBalance(
+        payoutValue,
+        result.new_balance,
+        bonusText
       );
 
       const balanceEl = document.getElementById('balanceAmount');
@@ -262,11 +262,11 @@ class ShiftManager {
       setTimeout(() => this.startSearching(), 1000);
 
     } else {
-      alert("❌ Ошибка: " + (result.error || 'Неизвестная ошибка'));
+      alertModal.error((result.error || 'Неизвестная ошибка'));
     }
   } catch (error) {
     console.error("Ошибка delivery:", error);
-    alert("❌ Ошибка доставки заказа: " + error.message);
+    alertModal.error("Ошибка доставки заказа: " + error.message);
   }
   }
 
@@ -393,7 +393,7 @@ class ShiftManager {
         break;
 
       case this.SHIFT_STATES.START_SHIFT:
-        buttonText.textContent = "Начать смену";
+        buttonText.textContent = "Получить заказ";
         button.style.backgroundColor = "#121212";
         button.disabled = false;
         break;
@@ -406,37 +406,37 @@ class ShiftManager {
 
       case this.SHIFT_STATES.SEARCHING:
         buttonText.textContent = "Ищем заказы...";
-        button.style.backgroundColor = "#00aa44";
+        button.className = "action_button gr8";
         button.disabled = false;
         break;
 
       case this.SHIFT_STATES.TO_PICKUP:
         buttonText.textContent = "К ресторану";
-        button.style.backgroundColor = "#007cbf";
+        button.className = "action_button gr7";
         button.disabled = false;
         break;
 
       case this.SHIFT_STATES.AT_PICKUP:
         buttonText.textContent = "Забрать заказ";
-        button.style.backgroundColor = "#00aa44";
+        button.className = "action_button gr8";
         button.disabled = false;
         break;
 
       case this.SHIFT_STATES.TO_DROPOFF:
         buttonText.textContent = "К клиенту";
-        button.style.backgroundColor = "#9b59b6";
+        button.className = "action_button gr9";
         button.disabled = false;
         break;
 
       case this.SHIFT_STATES.AT_DROPOFF:
         buttonText.textContent = "Доставить заказ";
-        button.style.backgroundColor = "#ff4444";
+        button.className = "action_button gr8";
         button.disabled = false;
         break;
 
       case 'UNSUPPORTED':
         buttonText.textContent = "GPS недоступен";
-        button.style.backgroundColor = "#666666";
+        button.className = "action_button gr1";
         button.disabled = true;
         break;
     }

@@ -113,6 +113,66 @@ class SocketManager {
     console.log("Заказы не найдены:", data.message);
     this.gameState.setSearchingStatus(false);
     
+    // Показываем модалку с предупреждением об отсутствии заказов
+    if (window.alertModal) {
+      // Используем стандартную модалку с warning
+      const modal = document.getElementById('alertModal');
+      const titleEl = document.getElementById('alertModalTitle');
+      const messageEl = document.getElementById('alertModalMessage');
+      const iconEl = document.getElementById('alertModalIcon');
+      const btn = document.getElementById('alertModalBtn');
+      
+      // Устанавливаем заголовок и иконку
+      titleEl.textContent = 'Заказов нет';
+      iconEl.innerHTML = window.alertModal.getIcon('warning');
+      
+      // Создаем кастомное сообщение с кнопкой перехода на tally
+      messageEl.innerHTML = `
+        <p class="black100 tac" style="margin-bottom: 16px;">
+          В вашем радиусе поиска нет доступных заказов. 
+          Возможно, ваш город еще не добавлен в игру.
+        </p>
+        <button 
+          onclick="window.open('https://tally.so/r/3EjQYA', '_blank')" 
+          class="secondary_button">
+          <h3 class="accent100">Хочу свой город</h3>
+        </button>
+      `;
+      
+      // Устанавливаем класс для стилизации
+      modal.className = 'alert-modal active alert-modal-warning';
+      modal.style.display = 'flex';
+      
+      // Обработчик закрытия
+      const closeModal = () => {
+        modal.classList.remove('active');
+        setTimeout(() => {
+          modal.style.display = 'none';
+          messageEl.innerHTML = '';
+        }, 300);
+      };
+      
+      // Меняем текст кнопки OK на "Закрыть"
+      btn.querySelector('h3').textContent = 'Закрыть';
+      btn.onclick = closeModal;
+      
+      // Закрытие по клику вне модального окна
+      modal.onclick = (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      };
+      
+      // Закрытие по Escape
+      const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+          closeModal();
+          document.removeEventListener('keydown', handleEscape);
+        }
+      };
+      document.addEventListener('keydown', handleEscape);
+    }
+    
     if (window.shiftManager) {
       window.shiftManager.updateShiftButton('end_shift');
     }

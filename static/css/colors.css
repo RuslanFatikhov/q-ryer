@@ -24,8 +24,14 @@
 
     --shadow: filter: drop-shadow(0px 4px 16px rgba(18,18,18,0.25));
 
-
+    --gr3: linear-gradient(180deg, #121212 0%, #5C5C5C 100%);
     --gr4: linear-gradient(180deg, #5D23CE 0%, #8E4EF6 100%);
+    --gr5: linear-gradient(180deg, #E966DE 0%, #EE7FEF 10%, #EB4FCC 25%, #EA3DBE 50%, #E939B7 75%, #D739A6 90%, #CF37A5 100%);
+    --gr6: linear-gradient(180deg, rgba(15, 187, 30 , 0) 0%, rgba(167, 229, 30 , 61) 100%);
+    --gr7: linear-gradient(180deg, #57D2F1 0%, #3D8EE5 100%);
+    --gr8: linear-gradient(180deg, #0FBB1E 0%, #A7E53D 100%);
+
+
 
 }
 
@@ -81,5 +87,15 @@
     background-color: var(--green005);
 }
 
+.gr7{
+    background: var(--gr7) !important;
+    
+    box-shadow: 0 4px 8px 0 rgba(69, 165, 223, 0.35), -1px -1px 1px 0 rgba(254, 254, 254, 0.25) inset, 1px 1px 1px 0 rgba(254, 254, 254, 0.40) inset !important;
+}
+
+.gr8{
+    background: var(--gr8) !important;
+    box-shadow: 0 4px 8px 0 rgba(46, 196, 36, 0.35), -1px -1px 1px 0 rgba(254, 254, 254, 0.25) inset, 1px 1px 1px 0 rgba(254, 254, 254, 0.40) inset !important;
+}
 
 

@@ -1,5 +1,5 @@
 /* Модальное окно логина */
-.login-modal {
+.login-modal, .alert-modal {
   display: none;
   position: fixed;
   z-index: 2000;
@@ -19,12 +19,12 @@
 }
 
 /* Когда модалка активна */
-.login-modal.active {
+.login-modal.active, .alert-modal.active  {
   display: flex;
 }
 
 /* Контент модального окна */
-.login-modal-content {
+.login-modal-content, .alert-modal-content{
   background: var(--white100);
   padding: 16px;
   border-radius: 16px;
@@ -32,6 +32,12 @@
   position: relative;
   animation: slideUp 0.3s ease;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 560px;
+}
+
+.alert-modal-content{
+  padding-top: 24px;
 }
 
 
@@ -62,4 +68,75 @@
   }
 }
 
+
+
+#orderModal{
+  position: fixed !important;
+  background: none;
+  height: 330px;
+  position: absolute;
+  bottom: 0px;
+  background: var(--gr6);
+  
+}
+
+.modal_header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 12px;
+}
+
+
+.alert_modal_icon{
+  position: absolute;
+  left: 50%;
+  top: -10px;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: 100px;
+  object-fit: contain;
+}
+
+/* ============================================ */
+/* Alert Modal - замена стандартных alert()    */
+/* ============================================ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Типы alert-модалок */
+.alert-modal-success .alert-modal-btn {
+  background: #10B981;
+}
+
+.alert-modal-error .alert-modal-btn {
+  background: #EF4444;
+}
+
+.alert-modal-warning .alert-modal-btn {
+  background: #F59E0B;
+}
+
+.alert-modal-info .alert-modal-btn {
+  background: #3B82F6;
+}
 

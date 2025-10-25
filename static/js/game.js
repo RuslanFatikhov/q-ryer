@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   restoreState().catch(err => console.error("Ошибка восстановления:", err));
 
+  initializeSwipeHandlers();
   console.log("Инициализация завершена");
 });
 
@@ -171,10 +172,10 @@ function initializeUI() {
           window.location.reload();
         } else {
           const error = await response.json().catch(() => ({}));
-          alert("Ошибка: " + (error.error || 'Неизвестная ошибка'));
+          alertModal.error((error.error || 'Неизвестная ошибка'));
         }
       } catch (e) {
-        alert("Ошибка: " + e.message);
+        alertModal.error(e.message);
       }
     });
   }
@@ -194,8 +195,9 @@ function initializeUI() {
 function initializeModals() {
   const profileButton = document.getElementById("profileButton");
   if (profileButton) {
+    // Станет:
     profileButton.addEventListener("click", () => {
-      openModal("profileModal");
+      toggleMapButton();
     });
   }
 
@@ -259,7 +261,7 @@ document.getElementById('centerLocationButton').addEventListener('click', () => 
   
   // Проверяем доступность геолокации
   if (!window.geoManager?.currentPosition) {
-    alert("⚠️ Геолокация недоступна. Включите GPS.");
+    alertModal.warning("Геолокация недоступна. Включите GPS.", "Внимание");
   }
 });
 
@@ -274,6 +276,110 @@ function openModal(id) {
 function closeModal(id) {
   const modal = document.getElementById(id);
   if (modal) modal.style.display = "none";
+}
+
+
+/**
+ * Переключение позиции элемента map_button
+ * При клике поднимает/опускает панель на 400px
+ */
+/**
+ * Переключение позиции элемента map_button
+ * При клике поднимает/опускает панель на 400px
+ * Закрывается при клике вне области или повторном клике на кнопку профиля
+ */
+function toggleMapButton() {
+  const mapButton = document.querySelector('.map_button');
+  if (!mapButton) return;
+  
+  // Проверяем текущее состояние (поднят или нет)
+  const isRaised = mapButton.classList.contains('raised');
+  
+  if (isRaised) {
+    // Опускаем обратно (скрываем)
+    closeMapButton();
+  } else {
+    // Поднимаем вверх (показываем)
+    mapButton.classList.add('raised');
+    mapButton.style.transform = 'translateY(-400px)';
+    
+    // Добавляем обработчик клика вне области (с небольшой задержкой)
+    setTimeout(() => {
+      document.addEventListener('click', handleOutsideClick);
+    }, 100);
+  }
+}
+
+/**
+ * Закрытие панели map_button
+ */
+function closeMapButton() {
+  const mapButton = document.querySelector('.map_button');
+  if (!mapButton) return;
+  
+  mapButton.classList.remove('raised');
+  mapButton.removeAttribute('style');
+  
+  // Удаляем обработчик клика вне области
+  document.removeEventListener('click', handleOutsideClick);
+}
+
+/**
+ * Обработчик клика вне области map_button
+ */
+function handleOutsideClick(event) {
+  const mapButton = document.querySelector('.map_button');
+  const profileButton = document.getElementById('profileButton');
+  
+  // Проверяем, что клик был не по map_button и не по кнопке профиля
+  if (mapButton && !mapButton.contains(event.target) && event.target !== profileButton) {
+    closeMapButton();
+  }
+}
+
+
+/**
+ * Инициализация обработчиков свайпа для map_button
+ */
+function initializeSwipeHandlers() {
+  const mapButton = document.querySelector('.map_button');
+  if (!mapButton) return;
+  
+  let touchStartY = 0;
+  let touchEndY = 0;
+  
+  // Начало касания
+  mapButton.addEventListener('touchstart', (e) => {
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+  
+  // Конец касания
+  mapButton.addEventListener('touchend', (e) => {
+    touchEndY = e.changedTouches[0].screenY;
+    handleSwipe();
+  }, { passive: true });
+  
+  // Обработка свайпа
+  function handleSwipe() {
+    const swipeDistance = touchStartY - touchEndY;
+    const minSwipeDistance = 50; // Минимальное расстояние для распознавания свайпа
+    
+    // Свайп вверх (открытие панели)
+    if (swipeDistance > minSwipeDistance) {
+      const isRaised = mapButton.classList.contains('raised');
+      if (!isRaised) {
+        toggleMapButton();
+      }
+    }
+    
+    // Свайп вниз (закрытие панели)
+    if (swipeDistance < -minSwipeDistance) {
+      const isRaised = mapButton.classList.contains('raised');
+      if (isRaised) {
+        closeMapButton();
+      }
+    }
+  }
 }
 
 // Экспорт

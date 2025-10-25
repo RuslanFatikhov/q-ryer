@@ -168,7 +168,7 @@ class DebugPanel {
         // 4. Обновляем зоны в UI
         this.updateZones(result.zones);
         
-        alert(`✅ Телепортировано к ресторану\n\nВ зоне pickup: ${result.zones.in_pickup_zone ? 'ДА ✅' : 'НЕТ ❌'}`);
+        alertModal.success(`Телепортировано к ресторану\n\nВ зоне pickup: ${result.zones.in_pickup_zone ? 'ДА ✅' : 'НЕТ ❌'}`);
       } else {
         alert('❌ Ошибка: ' + result.error);
       }

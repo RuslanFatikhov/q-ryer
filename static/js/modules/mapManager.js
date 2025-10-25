@@ -52,25 +52,28 @@ class MapManager {
       this.userMarker.remove();
     }
     
-    // Создаем кастомный элемент для игрока (синий круг с иконкой пользователя)
+    // Создаем кастомный маркер игрока с изображением
     const el = document.createElement('div');
-    el.style.width = '30px';
-    el.style.height = '30px';
-    el.style.borderRadius = '50%';
-    el.style.backgroundColor = '#007cbf';
-    el.style.border = '3px solid white';
-    el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
-    el.style.display = 'flex';
-    el.style.alignItems = 'center';
-    el.style.justifyContent = 'center';
-    
-    // Добавляем маленькую иконку внутри
-    const icon = document.createElement('div');
-    icon.style.width = '16px';
-    icon.style.height = '16px';
-    icon.style.backgroundColor = 'white';
-    icon.style.borderRadius = '50%';
-    el.appendChild(icon);
+    const img = document.createElement('img');
+    img.src = '/static/img/cursor/cursor.png';
+    img.style.width = '40px';
+    img.style.height = '40px';
+    img.style.objectFit = 'contain';
+    el.appendChild(img);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     this.userMarker = new mapboxgl.Marker({element: el})
       .setLngLat([coords.longitude, coords.latitude])

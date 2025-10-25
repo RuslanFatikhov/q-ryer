@@ -44,7 +44,7 @@ class OrderModal {
       orderDropoffAddress: dropoffAddress,
       orderDistance: `${order.distance_km} км`,
       orderTime: `~${Math.ceil(order.timer_seconds / 60)} мин`,
-      orderPayout: `$${order.amount}`
+      orderPayout: `${order.amount}`
     };
     
     Object.entries(elements).forEach(([id, text]) => {
@@ -156,7 +156,7 @@ class OrderModal {
 
     } catch (error) {
       console.error("Ошибка принятия заказа:", error);
-      alert("Не удалось принять заказ: " + error.message);
+      alertModal.error("Не удалось принять заказ: " + error.message);
     }
   }
 }

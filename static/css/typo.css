@@ -8,6 +8,7 @@ h1, h2, h3, h4, h5, h6, p, a, span, div {
 
 h1{
     font-size: 44px;
+    line-height: 38px;
     font-weight: 700;
     line-height: 54px;
     letter-spacing: -1px;

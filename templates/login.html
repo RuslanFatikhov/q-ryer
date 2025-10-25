@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Вход — Courier Sim{% endblock %}
+{% block title %}Вход — Q-RYER{% endblock %}
 {% block content %}
 <div class="bg-gr4" style="width: 100%; height: 100vh; display: flex; align-items: flex-end; justify-content:center; padding-bottom: 24px; overflow-y: hidden; padding-left: 16px; padding-right: 16px;">
 
@@ -19,9 +19,13 @@
     
     <!-- Вход через Telegram -->
     <div style="margin-bottom: 24px;">
-      <div id="telegram-login-container" style="display: flex; justify-content: center; margin-bottom: 16px;">
-        <!-- Telegram Login Widget будет вставлен сюда через JavaScript -->
-      </div>
+      <div id="telegram-login-container" style="display: flex; justify-content: center; margin-bottom: 16px; margin-top: 16px;">
+        <script async src="https://telegram.org/js/telegram-widget.js?22"
+                data-telegram-login="qryer_bot"
+                data-size="large"
+                data-onauth="onTelegramAuth(user)"
+                data-request-access="write">
+        </script>      </div>
       
       <div style="display: flex; align-items: center; margin: 24px 0;">
         <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
@@ -72,13 +76,6 @@
   <img src="/static/img/landing/landing-hero.png" alt="hero" style="position: fixed; width: 100%; margin-bottom: 400px;">
 </div>
 
-<!-- Telegram Login Widget Script -->
-<script async src="https://telegram.org/js/telegram-widget.js?22"
-        data-telegram-login="qryer_bot"
-        data-size="large"
-        data-onauth="onTelegramAuth(user)"
-        data-request-access="write">
-</script>
 
 <script>
 // Обработка авторизации через Telegram

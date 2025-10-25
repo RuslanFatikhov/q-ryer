@@ -9,18 +9,10 @@
 
 {# Основной контент #}
 {% block content %}
-<div>
+<div class="faq">
     <!--Modal header-->
-    <span class="modal_header" style="gap: 8px; justify-content: flex-start;">
-
-    <!-- Back -->
-        <span class="icon_button graybg" onclick="closeModal('profileSettingsModal'); openModal('profileModal');">
-            <img src="{{ url_for('static', filename='img/icon/arrow_left.svg') }}" alt="Back" class="icon">
-        </span>
-
+    <span class="modal_header" style="gap: 8px; justify-content: flex-start; padding-right: 48px; padding-bottom: 24px;">
         <h2 class="black100">Ответы на вопросы</h2>
-          
-
     </span>
     
 
@@ -48,13 +40,36 @@
             </div>
         </div>
 
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                <h4>Нужно ли регистрироваться для игры?</h4>
+                <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
+            </div>
+            <div class="faq-answer black100">
+                <p>Да, вы можете создать аккаунт в игре. Это бесплатно. </p>
+            </div>
+        </div>
+
         <div class="faq-item">
             <div class="faq-question">
                 <h4>В каких городах доступна игра?</h4>
                 <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
             </div>
             <div class="faq-answer black100">
-                <p>Сейчас игра доступна только в Алматы. Точки pickup и delivery генерируются на основе реальных ресторанов и зданий города. Если хотите другие города, напишите мне в телеграм. <a href="https://t.me/fuzlan" target="_blank">https://t.me/fuzlan</a></p>
+                <p>В списке доступных городов.</p>
+                <ul>
+                    <li><p>Алматы</p></li>
+                    <li><p>Alingsas</p></li>
+                    <li><p>Москва</p></li>
+                    <li><p>Malmo</p></li>
+                    <li><p>Париж</p></li>
+                    <li><p>Нови-Сад</p></li>
+                    <li><p>Барселона</p></li>
+
+                </ul>
+                    
+                <p>Точки pickup и delivery генерируются на основе реальных ресторанов и зданий города. Если хотите другие города, напишите мне в телеграм. <a href="https://t.me/fuzlan" target="_blank">https://t.me/fuzlan</a></p>
             </div>
         </div>
 
@@ -62,7 +77,178 @@
     </div>
 
 
-</div>
+    <!-- 🎮 Игровой процесс -->
+    <div class="faq-category">
+        <h3 class="category-title">🎮 Игровой процесс</h3>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <h4>Как получить заказ?</h4>
+                <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
+            </div>
+            <div class="faq-answer black100">
+                <p>Нажмите кнопку "Получить заказ" система найдем вам ближайший заказ.</p>
+                <p>Вам будут показаны точки pickup (ресторан) и dropoff (доставка)</p>
+        </div>
+
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                <h4>Что означают точки на карте?</h4>
+                <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
+            </div>
+            <div class="faq-answer black100">
+                <p>Зеленая иконка с сумкой на карте - это ресторан. Откуда надо забрать заказ</p>
+                <p>Красная  иконка с домиком карте - это здание. Туда надо доставить заказ</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <h4>Как забрать и доставить заказ</h4>
+                <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
+            </div>
+            <div class="faq-answer black100">
+                
+                <p class="fw700">Забрать (Pickup):</p>
+                <p>Подойдите к ресторану в радиусе 30 метров и нажмите кнопку "Забрать заказ". Кнопка появится когда вы будете в зоне радиуса.</p>
+
+                <p class="fw700" style="margin-top: 16px;">Доставить (Dropoff):</p>
+                <p>Подойдите к зданию в радиусе 30 метров и нажмите кнопку "Доставить заказ". После доставки вы получите оплату</p>
+
+            </div>
+        </div>
+
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <h4>Можно ли отменить заказ?</h4>
+                <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
+            </div>
+            <div class="faq-answer black100">
+                
+                <p>Зайдите в профиль и нажмите кнопку “Завершить смену”. После отмены заказа, вы можете заного начать смену</p>
+                
+
+            </div>
+        </div>
+
+    </div>
+
+
+    </div>
+
+    <!-- 💰 Экономика и выплаты -->
+    <div class="faq-category">
+        <h3 class="category-title">💰 Экономика и выплаты</h3>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <h4>Как рассчитывается выплата</h4>
+                <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
+            </div>
+            <div class="faq-answer black100">
+                <p>Базовая плата состоит из:</p>
+                <p>- Базовая ставка — $1.50<br>
+                    - Pickup — $0.50<br>
+                    - Dropoff — $0.50<br>
+                    - Расстояние — $0.80/км<br>
+                    - Бонус за вовремя — $1.00
+                </p>
+        </div>
+
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                <h4>Что такое таймер доставки</h4>
+                <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
+            </div>
+            <div class="faq-answer black100">
+                <p>Формула:</p>
+                <p>- В таймер → бонус $1<br>
+                - Позже таймера → без бонуса<br>
+                - 2× таймера → автоотмена</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <h4>Что если не забрать заказ вовремя</h4>
+                <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
+            </div>
+            <div class="faq-answer black100">
+                
+               <p>- Есть 1 чаc после принятия<br>
+                - За 15 мин до конца — предупреждение<br>
+                - После 1 часа — автоотмена, без оплаты</p>
+
+            </div>
+        </div>
+
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <h4>Можно ли вывести заработанные деньги?</h4>
+                <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
+            </div>
+            <div class="faq-answer black100">
+                
+                <p>Нет. Это виртуальная валюта для симуляции игрового прогресса. Игра не является реальной работой.</p>
+                
+
+            </div>
+        </div>
+
+    </div>
+
+
+    </div>
+
+    <!-- ⚙️ Технические вопросы -->
+    <div class="faq-category">
+        <h3 class="category-title">⚙️ Технические вопросы</h3>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <h4>Работает ли оффлайн?</h4>
+                <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
+            </div>
+            <div class="faq-answer black100">
+                <p>Частично:<br>
+
+                - Карта может кэшироваться<br>
+                - Активный заказ сохраняется<br>
+                - Для новых заказов нужен интернет<br><br>
+
+                Рекомендуется стабильное подключение.</p>
+        </div>
+
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                <h4>Как пожаловаться на проблему</h4>
+                <img src="{{ url_for('static', filename='img/icon/chevron_down.svg') }}" alt=">" class="faq-icon">
+            </div>
+            <div class="faq-answer black100">
+                <p>Во время заказа нажмите ⚠️ Report и опишите:<br>
+
+                - Неправильный адрес<br>
+                - Недоступная точка<br>
+                - Ошибка системы<br>
+
+                Жалоба отправится администрации.</p>
+
+                <p>Или можете написать мне в <a href="https://t.me/fuzlan" target="_blank">Telegram</a></p>
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+    </div>
 {% endblock %}
 
 {# JavaScript для аккордеона #}

@@ -41,6 +41,24 @@ a{
     align-items: center;
 }
 
+.action_button2{
+    width: 100%;
+    height: 48px;
+    border-radius: 16px;
+    background: var(--gr5);
+    border-radius: 16px;
+    border: 2px solid rgba(254, 254, 254, 0.35);
+    box-shadow: 0 4px 8px 0 rgba(103, 44, 214, 0.25), -1px -1px 1px 0 rgba(254, 254, 254, 0.25) inset, 1px 1px 1px 0 rgba(254, 254, 254, 0.40) inset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: -1px -1px 2px 0 rgba(254, 254, 254, 0.25) inset, 1px 1px 2px 0 rgba(254, 254, 254, 0.40) inset;
+}
+
+.action_button2 h3{
+    text-shadow: 0 1px 2px #D739A6;
+}
+
 .secondary_button{
     width: 100%;
     height: 48px;
@@ -63,7 +81,7 @@ a{
 .myloc{
     position: absolute;
     right: 12px;
-    bottom: 120px;
+    bottom: 640px;
 }
 /* Дополнительные состояния кнопки смены */
 .action_button:disabled {
@@ -100,7 +118,12 @@ a{
   background-color: none !important;
   position: relative;
   width: 100%;
-    margin-top: 8px;
+  color: var(--black100);
+  border-bottom: 1px solid var(--black020);
+}
+
+.cell:last-child{
+    border-bottom: 0px;
 }
 
 .cell_chevron{
@@ -109,6 +132,20 @@ a{
     top: 16px;
 }
 
+.cell_icon{
+  width: 30px !important;
+  height: 30px !important;
+}
+
+.cells_group_body{
+  display: flex;
+  flex-direction: column;
+  background-color: var(--white100);
+  border-radius: 16px;
+}
+
+
+
 #selectedMapServiceName{
     display: flex;
     flex-direction: row;
@@ -116,10 +153,7 @@ a{
     align-items: center;
 }
 
-.cell_icon{
-    width: 48px;
-    height: 48px;
-}
+
 
 input[type="radio" i]{
     position: absolute;
@@ -132,9 +166,10 @@ input[type="radio" i]{
 }
 
 #reportButton{
-    position: absolute;
+    position: fixed;
     right: 12px;
-    bottom: 180px;
+    bottom: 240px;
+    z-index: 10;
 }
 
 .gps-excellent { background: rgba(0,170,68,0.9); }
